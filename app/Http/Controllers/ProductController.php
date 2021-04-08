@@ -13,12 +13,14 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
         $title = "Data Produk";
-        $products = Product::all();
+        $products = Product::where('jenis_id','=', $id)->orderBy('id','desc')->get();
         $jenis = Jenis::all();
-        return view('product.index', compact('title', 'products', 'jenis'));
+        $selected = $id;
+        // dd($selected);
+        return view('product.index', compact('title', 'products', 'jenis', 'selected'));
     }
 
     /**
@@ -85,5 +87,10 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function filter(Request $request)
+    {
+        
     }
 }

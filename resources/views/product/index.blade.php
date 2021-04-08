@@ -7,12 +7,12 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-inline">
-                  <label class="label">Jenis Produk :</label>&nbsp;
-                  <select class="form-control form-control-sm">
-                    @foreach($jenis as $j)
-                      <option value="{{$j->id}}">{{$j->nama}}</option>
-                    @endforeach
-                  </select>
+                    <label class="label">Jenis Produk :</label>&nbsp;
+                    <select class="custom-select custom-select-sm form-control form-control-sm" id="jenis">
+                      @foreach($jenis as $j)
+                        <option value="{{$j->id}}" {{ $selected == $j->id ? "selected" : "" }}>{{$j->nama}}</option>
+                      @endforeach
+                    </select>
                 </div>
               </div>
               <div class="col-lg-6">
@@ -56,7 +56,14 @@
   <script>
     // Page level custom scripts
     $(document).ready(function () {
+
       $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+
+      $('#jenis').on('change', function(){
+          var id = $('#jenis').val();
+          window.location.href = '{{url("product")}}/'+id;
+      });
+
     });
   </script>
 @endpush

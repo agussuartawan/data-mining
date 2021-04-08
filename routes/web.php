@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $title = "Dashboard";
+    return view('welcome', compact('title'));
 });
 
 # Produk
-Route::resource('product', 'ProductController');
+Route::get('product/{id}', 'ProductController@index')->name('product.index');
+Route::post('product/filter', 'ProductController@filter')->name('product.filter.post');

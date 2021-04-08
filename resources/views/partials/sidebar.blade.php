@@ -16,7 +16,7 @@
       Data Master
     </div>
     <li class="nav-item">
-      <a class="nav-link" href="{{route('product.index')}}">
+      <a class="nav-link" href="{{route('product.index',1)}}">
         <i class="fas fa-fw fa-glass-martini-alt"></i>
         <span>Produk</span>
       </a>
