@@ -16,10 +16,16 @@ class ProductController extends Controller
     public function index($id)
     {
         $title = "Data Produk";
-        $products = Product::where('jenis_id','=', $id)->orderBy('id','desc')->get();
+
+        if ($id == 0) {
+            $products = Product::all();
+        } else {
+            $products = Product::where('jenis_id','=', $id)->orderBy('id','desc')->get();
+        }
+
         $jenis = Jenis::all();
         $selected = $id;
-        // dd($selected);
+
         return view('product.index', compact('title', 'products', 'jenis', 'selected'));
     }
 
@@ -30,7 +36,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $title = "Tambah Produk";
+        $jenis = Jenis::all();
+        return view('product.create', compact('title','jenis'));
     }
 
     /**
@@ -41,7 +49,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        // dd($request->redirect_to);
+        Product::create($data);
+
+        if ($request->redirect_to == 'index') {
+            return redirect()->route('product.index',0)->with('success', 'Produk berhasil ditambahkan');
+        } else {
+            return redirect()->route('product.create')->with('success', 'Produk berhasil ditambahkan');   
+        }
     }
 
     /**
@@ -87,10 +103,5 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function filter(Request $request)
-    {
-        
     }
 }
