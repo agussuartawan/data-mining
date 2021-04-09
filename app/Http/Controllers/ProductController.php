@@ -18,12 +18,12 @@ class ProductController extends Controller
         $title = "Data Produk";
 
         if ($id == 0) {
-            $products = Product::all();
+            $products = Product::orderBy('id', 'desc')->get();
         } else {
             $products = Product::where('jenis_id','=', $id)->orderBy('id','desc')->get();
         }
 
-        $jenis = Jenis::all();
+        $jenis = Jenis::get();
         $selected = $id;
 
         return view('product.index', compact('title', 'products', 'jenis', 'selected'));
@@ -37,7 +37,7 @@ class ProductController extends Controller
     public function create()
     {
         $title = "Tambah Produk";
-        $jenis = Jenis::all();
+        $jenis = Jenis::get();
         return view('product.create', compact('title','jenis'));
     }
 
