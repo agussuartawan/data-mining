@@ -25,10 +25,16 @@
                 </div>
               </div>
               <div class="col-lg-6">
-                <a href="{{route('product.create')}}" class="btn btn-sm btn-primary float-right">
-                  <i class="fas fa-plus"></i>
-                  Tambah Produk
-                </a>
+                <div class="btn-group float-right" role="group">
+                  <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus"></i>
+                    Tambah Produk
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="{{route('product.create')}}">Produk</a>
+                    <a class="dropdown-item" href="{{route('product.create.bundle')}}">Produk Bundle</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

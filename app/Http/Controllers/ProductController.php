@@ -41,6 +41,12 @@ class ProductController extends Controller
         return view('product.create', compact('title','jenis'));
     }
 
+    public function create_bundle()
+    {
+        $title = "Tambah Produk Bundle";
+        return view('product.create-bundle', compact('title'));
+    }
+
     /**
      * Store a newly created resource in storage.
      *

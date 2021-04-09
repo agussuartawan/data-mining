@@ -20,5 +20,6 @@ Route::get('/', function () {
 
 # Produk
 Route::get('product/create', 'ProductController@create')->name('product.create');
+Route::get('product/create/bundle', 'ProductController@create_bundle')->name('product.create.bundle');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/{id}', 'ProductController@index')->name('product.index');
