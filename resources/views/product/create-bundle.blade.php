@@ -31,13 +31,13 @@
           <input type="text" class="form-control" id="nama" name="nama">
         </div>
 
-        <table class="table">
+        <table class="table table-responsive">
             <thead>
                 <tr>
-                    <th>Produk</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th></th>
+                    <th width="50%">Produk</th>
+                    <th width="20%">Qty</th>
+                    <th width="20%">Harga</th>
+                    <th width="10%"></th>
                 </tr>
             </thead>
             <tfoot>
@@ -53,11 +53,13 @@
             <tbody>
                 <tr>
                     <td>
-                        <select class="select2-single-placeholder form-control" name="product_id" id="select2SinglePlaceholder">
-                            <option value="Maluku Utara">Maluku Utara</option>
-                            <option value="Papua Barat">Papua Barat</option>
-                            <option value="Papua">Papua</option>
-                        </select>
+                        <div class="form-group">
+                            <select class="select2-single-placeholder form-control" name="product_id" id="select2SinglePlaceholder">
+                                @foreach($products as $product)
+                                <option value="{{$product->id}}">{{$product->nama}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </td>
                     <td>
                         <input type="number" class="form-control" name="qty">
@@ -100,6 +102,7 @@
             }); 
 		});
 	</script>
+    <livewire:scripts />
 @endpush
 
 @push('styles')
@@ -112,4 +115,5 @@
             height: 39px !important;
         }
     </style>
+    <livewire:styles />
 @endpush

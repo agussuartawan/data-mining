@@ -44,7 +44,8 @@ class ProductController extends Controller
     public function create_bundle()
     {
         $title = "Tambah Produk Bundle";
-        return view('product.create-bundle', compact('title'));
+        $products = Product::orderBy('id', 'desc')->get();
+        return view('product.create-bundle', compact('title', 'products'));
     }
 
     /**
@@ -74,7 +75,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+    	$title = "Detail Produk " .  $product->nama;
+
+    	return view('product.show', compact('product', 'title'));
     }
 
     /**
@@ -85,7 +89,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+    	$title = "Edit Produk";
+    	$product = Product::find($id);
+    	$jenis = Jenis::get();
+
+        return view('product.edit', compact('product', 'jenis', 'title'));
     }
 
     /**
@@ -97,7 +105,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        Product::find($id)->update($data);
+
+        return redirect()->route('product.index',0)->with('success', 'Produk berhasil diubah');
     }
 
     /**
@@ -108,6 +119,8 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // dd($product->nama);
+        Product::find($id)->delete();
+        return redirect()->route('product.index',0)->with('success', 'Produk berhasil dihapus');
     }
 }

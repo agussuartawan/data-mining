@@ -42,6 +42,7 @@
             <table class="table align-items-center table-flush table-hover" id="dataTableHover">
               <thead class="thead-light">
                 <tr>
+                  <th>#</th>
                   <th width="15%">Kode</th>
                   <th>Nama Produk</th>
                   <th width="15%">Stok</th>
@@ -50,15 +51,20 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach($products as $product)
+                @foreach($products as $index=>$product)
                   <tr>
-                    <td><a href="">{{$product->kode}}</a></td>
-                    <td><a href="">{{$product->nama}}</a></td>
+                    <td>{{$index + 1}}</td>
+                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{$product->kode}}</a></td>
+                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{$product->nama}}</a></td>
                     <td>{{$product->stok}}</td>
-                    <td><a href="">{{$product->jenis->nama}}</a></td></td>
+                    <td><a class="card-link" href="">{{$product->jenis->nama}}</a></td></td>
                     <td>
-                      <a href="#" class="badge badge-info">edit</a>
-                      <a href="#" class="badge badge-danger">hapus</a>
+                      <form class="form-inline" method="post" action="{{route('product.destroy',$product->id)}}">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <a href="{{route('product.edit', $product->id)}}" class="badge badge-info">edit</a>&nbsp;
+                        <a href="#" class="badge badge-danger btn-delete" title="{{$product->nama}}" >hapus</a>
+                      </form>
                     </td>
                   </tr>
                 @endforeach
@@ -82,6 +88,14 @@
           window.location.href = '{{url("product")}}/'+id;
       });
 
+      $('body').on('click', '.btn-delete', function(event) {
+        event.preventDefault();
+        var title = $(this).attr('title');
+        var choice = confirm('Yakin menghapus produk '+title+'?');
+        if (choice) {
+          $(this).closest('form').submit();
+        }
+      });
     });
   </script>
 @endpush
