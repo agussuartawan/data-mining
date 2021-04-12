@@ -50,24 +50,24 @@
 
 @push('scripts')
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#btn-simpan').click(function(event) {
-				event.preventDefault();
-				$('#redirect_to').val('index');
-				$('form').submit();
-			});
+    	$('#btn-simpan').click(function(event) {
+    		event.preventDefault();
+    		$('#redirect_to').val('index');
+    		$('form').submit();
+    	});
 
-			$('#btn-simpan-baru').click(function(event) {
-				event.preventDefault();
-				$('#redirect_to').val('create');
-				$('form').submit();
-			});
+    	$('#btn-simpan-baru').click(function(event) {
+    		event.preventDefault();
+    		$('#redirect_to').val('create');
+    		$('form').submit();
+    	});
 
-            $('.select2-single-placeholder').select2({
+        function select2(){
+            $('.select-product').select2({
                 placeholder: "Pilih Produk",
                 allowClear: true
-            }); 
-		});
+            });
+        }
 	</script>
     @livewireScripts
 @endpush
