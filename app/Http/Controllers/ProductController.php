@@ -44,8 +44,7 @@ class ProductController extends Controller
     public function create_bundle()
     {
         $title = "Tambah Produk Bundle";
-        $products = Product::orderBy('id', 'desc')->get();
-        return view('product.create-bundle', compact('title', 'products'));
+        return view('product.create-bundle', compact('title'));
     }
 
     /**
