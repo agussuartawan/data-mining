@@ -1,56 +1,88 @@
 <div>
     <div class="shadow-sm mb-4 bg-light table-responsive rounded">
         <div class="card-header bg-primary text-white">
-            Produk
+            Produk {{$product_id}}
         </div>
 
         <div class="card-body">
-            <table class="table" style="min-width: 40rem;">
-                <thead>
-                    <tr>
-                        <th style="width: 40%;">Nama</th>
-                        <th>Qty</th>
-                        <th>Harga</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>
-                            <button class="btn btn-sm btn-primary btn-tambah" wire:click.prevent="addProduct">
-                                <i class="fas fa-plus"></i>Tambah Data
+            <form {{ $formType == 0 ? 'wire:submit.prevent="store"' : 'wire:submit.prevent="update"' }}>
+                <div class="row">
+                        <div class="col-lg-4">
+                            <select class="select-produc form-control" name="product_id" wire:model="product_id">
+                                @foreach($allProducts as $product)
+                                    <option value="{{$product->id}}">{{$product->nama}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="number" class="form-control" name="qty" placeholder="Qty" wire:model="qty">
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="number" class="form-control" name="price" placeholder="Harga" wire:model="price">
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-primary btn-tambah mt-1">
+                                {{$btnTitle}}
                             </button>
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    @foreach ($orderProducts as $index=>$orderProduct)
+                        </div>
+                </div>
+            </form>
+            <hr>
+            <div class="row">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
                         <tr>
-                            <td>
-                                <div class="form-group">
-                                    <div wire:ignore wire:key="{{$index}}">
-                                        <select class="selectpicker form-control" name="orderProducts[{{$index}}][product_id]" wire:model="orderProducts.{{$index}}.product_id">
-                                            @foreach($allProducts as $product)
-                                            <option value="{{$product->id}}">{{$product->nama}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="orderProducts[{{$index}}][qty]" wire:model="orderProducts.{{$index}}.qty">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="orderProducts[{{$index}}][price]" wire:model="orderProducts.{{$index}}.price">
-                            </td>
-                            <td><a href="#" class="badge badge-danger" wire:click.prevent="removeProduct({{$index}})">hapus</a></td>
+                            <th>#</th>
+                            <th style="width: 40%;">Nama</th>
+                            <th>Qty</th>
+                            <th>Harga</th>
+                            <th></th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($product_temp as $index=>$pt)
+                            <tr>
+                                <td>{{$index+1}}</td>
+                                <td>{{$pt->nama}}</td>
+                                <td>{{$pt->qty}}</td>
+                                <td>{{$pt->price}}</td>
+                                <td>
+                                    <a href="#" class="badge badge-info" wire:click.prevent="getDataProduct({{$pt->id}})">edit</a>
+                                    <a href="#" class="badge badge-danger" wire:click.prevent="destroy({{$pt->id}})">hapus</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.select-product').select2({
+                placeholder: "Pilih Produk",
+                allowClear: true,
+                theme: "classic"
+            });
+        });
+    </script>
+@endpush
+
+@push('styles')
+    <style type="text/css">
+        .select2-selection__rendered {
+            line-height: 41px !important;
+        }
+
+        .select2-selection {
+            height: 41px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 40px !important;
+        }
+    </style>
+@endpush
