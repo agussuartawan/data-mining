@@ -31,11 +31,13 @@
                         <tr>
                             <td>
                                 <div class="form-group">
-                                    <select class="select-product form-control" name="orderProducts[{{$index}}][product_id]" id="select2SinglePlaceholder" wire:model="orderProduct.{{$index}}.product_id">
-                                        @foreach($allProducts as $product)
-                                        <option value="{{$product->id}}">{{$product->nama}}</option>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore wire:key="{{$index}}">
+                                        <select class="selectpicker form-control" name="orderProducts[{{$index}}][product_id]" wire:model="orderProducts.{{$index}}.product_id">
+                                            @foreach($allProducts as $product)
+                                            <option value="{{$product->id}}">{{$product->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </td>
                             <td>

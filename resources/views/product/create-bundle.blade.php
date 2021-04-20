@@ -49,38 +49,9 @@
 @endsection
 
 @push('scripts')
-	<script type="text/javascript">
-    	$('#btn-simpan').click(function(event) {
-    		event.preventDefault();
-    		$('#redirect_to').val('index');
-    		$('form').submit();
-    	});
-
-    	$('#btn-simpan-baru').click(function(event) {
-    		event.preventDefault();
-    		$('#redirect_to').val('create');
-    		$('form').submit();
-    	});
-
-        function select2(){
-            $('.select-product').select2({
-                placeholder: "Pilih Produk",
-                allowClear: true
-            });
-        }
-	</script>
     @livewireScripts
 @endpush
 
 @push('styles')
-    <style>
-        .select2-selection__rendered {
-            line-height: 32px !important;
-        }
-
-        .select2-selection {
-            height: 39px !important;
-        }
-    </style>
     @livewireStyles
 @endpush

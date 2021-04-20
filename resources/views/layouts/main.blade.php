@@ -12,9 +12,7 @@
   <link href="{{asset('')}}vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="{{asset('')}}css/ruang-admin.min.css" rel="stylesheet">
   <link href="{{asset('')}}vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-  <!-- Select2 -->
-  <link href="{{asset('')}}vendor/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
-  <link href="{{asset('')}}vendor/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{{asset('')}}css/bootstrap-select.min.css">
   @stack('styles')
 </head>
 
@@ -59,11 +57,9 @@
   <script src="{{asset('')}}vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="{{asset('')}}vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="{{asset('')}}js/ruang-admin.min.js"></script>
-  <!-- Page level plugins -->
   <script src="{{asset('')}}vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="{{asset('')}}vendor/datatables/dataTables.bootstrap4.min.js"></script>
-  <!-- Select2 -->
-  <script src="{{asset('')}}vendor/select2/dist/js/select2.min.js"></script>
+  <script src="{{asset('')}}js/bootstrap-select.min.js"></script>
   @stack('scripts')  
 </body>
 
