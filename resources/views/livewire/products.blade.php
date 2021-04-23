@@ -1,14 +1,17 @@
 <div>
     <div class="shadow-sm mb-4 bg-light table-responsive rounded">
         <div class="card-header bg-primary text-white">
-            Pilih Produk {{$product_id}}
+            Pilih Produk
+            <div class="spinner-border float-right" role="status" wire:loading>
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
 
         <div class="card-body">
             <form>
                 <div class="row">
-                        <div class="col-lg-4">
-                            <select class="select-produc form-control" name="product_id" wire:model="product_id">
+                        <div class="col-lg-4" wire:ignore>
+                            <select class="form-control" name="product_id" wire:model="product_id" id="select-product" data-livewire="@this">
                                 @foreach($allProducts as $product)
                                     <option value="{{$product->id}}">{{$product->nama}}</option>
                                 @endforeach
@@ -22,11 +25,8 @@
                         </div>
                         <div class="col-lg-2">
                             <button wire:loading.attr="disabled"
-                            {{ $formType == 0 ? 'wire:click.prevent="store"' : 'wire:click.prevent="update"' }} 
+                            wire:click.prevent="store"
                             class="btn btn-primary btn-tambah mt-1">
-                                <div class="spinner-grow spinner-grow-sm" role="status" wire:loading>
-                                    <span class="sr-only">Loading...</span>
-                                </div>
                                 {{$btnTitle}}
                             </button>
                         </div>
@@ -35,31 +35,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12">
-                    <table class="table table-bordered" id="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>#</th>
-                                <th style="width: 40%;">Nama</th>
-                                <th>Qty</th>
-                                <th>Harga</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($product_temp as $index=>$pt)
-                                <tr>
-                                    <td>{{$index+1}}</td>
-                                    <td>{{$pt->nama}}</td>
-                                    <td>{{$pt->qty}}</td>
-                                    <td>{{$pt->price}}</td>
-                                    <td>
-                                        <a href="#" class="badge badge-info" wire:click.prevent="getDataProduct({{$pt->id}})">edit</a>
-                                        <a href="#" class="badge badge-danger" wire:click.prevent="destroy({{$pt->id}})">hapus</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    @livewire('table-product')
                 </div>
             </div>
         </div>
@@ -69,13 +45,23 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function(){
-            $('.select-product').select2({
+            $('#select-product').select2({
                 placeholder: "Pilih Produk",
                 allowClear: true,
                 theme: "classic"
+            }).on('change', function (e) {
+                let livewire = $(this).data('livewire');
+                eval(livewire).set('product_id', $(this).val());
             });
-
-            $('#table').dataTable({searching: false, paging: false, info: false});
+        });
+        document.addEventListener("livewire:load", function (event) {
+            window.livewire.hook('afterDomUpdate', () => {
+                $('#select-product').select2({
+                    placeholder: "Pilih Produk",
+                    allowClear: true,
+                    theme: "classic"
+                });
+            });
         });
     </script>
 @endpush
