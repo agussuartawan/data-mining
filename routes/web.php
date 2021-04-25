@@ -19,6 +19,8 @@ Route::get('/', function () {
 });
 
 # Produk
+Route::get('product/find/price/{id}', 'ProductController@find_price');
+Route::post('product/find', 'ProductController@find')->name('find.product');
 Route::get('product/create', 'ProductController@create')->name('product.create');
 Route::get('product/create/bundle', 'ProductController@create_bundle')->name('product.create.bundle');
 Route::post('product', 'ProductController@store')->name('product.store');
@@ -27,3 +29,4 @@ Route::put('product/{id}/update', 'ProductController@update')->name('product.upd
 Route::delete('product/{id}/destroy/', 'ProductController@destroy')->name('product.destroy');
 Route::get('product/{id}/show', 'ProductController@show')->name('product.show');
 Route::get('product/{id}', 'ProductController@index')->name('product.index');
+

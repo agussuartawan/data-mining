@@ -55,53 +55,36 @@
             <div class="shadow-sm mb-4 bg-light table-responsive rounded">
                 <div class="card-header bg-primary text-white">
                     Pilih Produk
-                    <div class="spinner-border float-right" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
+                    <div class="spinner-border float-right" role="status" id="ajax-loading" hidden=""><span class="sr-only">Loading...</span></div>
                 </div>
 
-                <div class="card-body">
-                    <form>
-                        <div class="row">
-                                <div class="col-lg-4">
-                                    <select class="form-control" name="product_id" id="select-product">
-                                        @foreach($allProducts as $product)
-                                            <option value="{{$product->id}}">{{$product->nama}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
-                                    <input type="number" class="form-control" name="qty" placeholder="Qty">
-                                </div>
-                                <div class="col-lg-3">
-                                    <input type="number" class="form-control" name="price" placeholder="Harga">
-                                </div>
-                                <div class="col-lg-2">
-                                    <button class="btn btn-primary btn-tambah mt-1">
+                <div class="card-body">                                    
+                    <table cellpadding="8">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Qty</th>
+                                <th>Harga</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" id="tambah-baris">
+                                        <i class="fas fa-plus"></i>
                                         Tambah
                                     </button>
-                                </div>
-                        </div>
-                    </form>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <table class="table table-bordered" id="table">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th style="width: 40%;">Nama</th>
-                                        <th>Qty</th>
-                                        <th>Harga</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
           </div> 
@@ -118,14 +101,89 @@
 @endsection
 
 @push('scripts')
+    <script src="{{asset('')}}js/jquery.maskMoney.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('#select-product').select2({
-                placeholder: "Pilih Produk",
-                allowClear: true,
-                theme: "classic"
+        $(document).ready( function(){
+            var count = 1;
+            for (var i = 1; i <= count; i++) {
+                dinamis_field(i);
+            }
+
+            $('#tambah-baris').click(function(event){
+                event.preventDefault();
+                count++;
+                dinamis_field(count);
+            });
+
+            $(document).on('click', '.remove-row', function(event){
+                event.preventDefault();
+                var row_id = $(this).attr('id');
+                $('#row'+row_id).remove();
             });
         });
+
+        function dinamis_field(count){
+            var html = '<tr id="row'+count+'" class="td">';
+            html += '<td width="40%"><select class="form-control" name="product_id[]" id="select-product'+count+'"></select></td>';
+            html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control" value="1" name="qty[]"></td>';
+            html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
+
+            if (count > 1){
+                html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="'+count+'" >hapus</a></td></tr>';
+                $('tbody').append(html);
+            } else {
+                html += '<td></td></tr>';
+                $('tbody').html(html);
+            }
+
+            $('#select-product'+count).select2({
+                placeholder: "Pilih Produk",
+                allowClear: true,
+                theme: "classic",
+                minimumInputLength: 1,
+                ajax: {
+                    url: '{{ route("find.product") }}',
+                    dataType: 'json',
+                    type: 'post',
+                    delay: 100,
+                    data: function(params){
+                        return {
+                            search: params.term
+                        }
+                    },
+                    processResults: function(data){
+                        return {
+                            results: data
+                        }
+                    },
+                    cache: true
+                }
+            }).on('change', function() {
+                var selected = $(this).val();
+                $.ajax({
+                    url: '{{ url('product/find/price') }}/'+selected,
+                    type: 'get',
+                    dataType: 'text',
+                    beforeSend: function() {
+                        $('#ajax-loading').removeAttr('hidden');
+                    },
+                    success: function(data){
+                        $('#ajax-loading').attr('hidden',true);
+                        $('#price'+count).val(data);
+                        $('#price'+count).maskMoney({
+                            thousands:'.', 
+                            decimal:',', 
+                            affixesStay: false, 
+                            precision: 0,
+                            allowZero: true,
+                            selectAllOnFocus: true,
+                            prefix:'Rp. '
+                        });
+                        $('#price'+count).focus();
+                    }
+                });
+            });
+        }
     </script>
 @endpush
 

@@ -44,7 +44,9 @@ class ProductController extends Controller
     public function create_bundle()
     {
         $title = "Tambah Produk Bundle";
-        return view('product.create-bundle', compact('title'));
+        $allProducts = Product::all();
+        $count = count($allProducts);
+        return view('product.create-bundle', compact('title','allProducts','count'));
     }
 
     /**
@@ -121,5 +123,35 @@ class ProductController extends Controller
         // dd($product->nama);
         Product::find($id)->delete();
         return redirect()->route('product.index',0)->with('success', 'Produk berhasil dihapus');
+    }
+
+    public function find(Request $request)
+    {
+        $search = $request->search;
+        $data = Product::orderBy('nama', 'asc')
+                            ->select('id', 'nama', 'harga_jual')
+                            ->where('nama', 'LIKE', "%{$search}%")
+                            ->get();
+
+        $results = [];
+        foreach($data as $d){
+            $results[] = array(
+                'id' => $d->id,
+                'text' => $d->nama
+            );
+        }
+        return response()->json($results);
+    }
+
+    public function find_price($id)
+    {
+        if ($id > 0) {
+            $data = Product::select('harga_jual')->where('id', '=', $id)->get();
+            $price = $data[0]['harga_jual'];
+        } else {
+            $price = 0;
+        }
+        
+        return $price;
     }
 }
