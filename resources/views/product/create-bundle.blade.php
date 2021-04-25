@@ -43,7 +43,7 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                         <label for="nama-jual" class="font-weight-bold">Harga Jual</label>
-                        <input type="number" class="form-control" id="harga-jual" name="harga_jual">
+                        <input type="text" class="form-control" id="harga-jual" name="harga_jual" value="0">
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                             <tr>
                                 <th>Nama</th>
                                 <th>Qty</th>
-                                <th>Harga</th>
+                                <th>Harga Per Produk</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -80,8 +80,10 @@
                                     </button>
                                 </th>
                                 <th></th>
-                                <th></th>
-                                <th></th>
+                                <th colspan="2" class="float-right">
+                                    Total <span id="total-harga">0</span>
+                                    <input type="hidden" name="sum" id="grand_total">
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -108,6 +110,9 @@
             for (var i = 1; i <= count; i++) {
                 dinamis_field(i);
             }
+            show_grand_total(
+                hitung_grand_total(count)
+            );
 
             $('#tambah-baris').click(function(event){
                 event.preventDefault();
@@ -119,6 +124,18 @@
                 event.preventDefault();
                 var row_id = $(this).attr('id');
                 $('#row'+row_id).remove();
+                show_grand_total(
+                    hitung_grand_total(count)
+                ); 
+            });
+
+            $('#harga-jual').maskMoney({
+                thousands:'.', 
+                decimal:',', 
+                affixesStay: false, 
+                precision: 0,
+                allowZero: true,
+                selectAllOnFocus: true
             });
         });
 
@@ -127,6 +144,7 @@
             html += '<td width="40%"><select class="form-control" name="product_id[]" id="select-product'+count+'"></select></td>';
             html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
+            html += '<td><input id="sub'+count+'" type="hidden" value="0"></td>';
 
             if (count > 1){
                 html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="'+count+'" >hapus</a></td></tr>';
@@ -136,8 +154,17 @@
                 $('tbody').html(html);
             }
 
+            $('#price'+count).maskMoney({
+                thousands:'.', 
+                decimal:',', 
+                affixesStay: false, 
+                precision: 0,
+                allowZero: true,
+                selectAllOnFocus: true
+            });
+
             $('#select-product'+count).select2({
-                placeholder: "Pilih Produk",
+                placeholder: "Cari Produk",
                 allowClear: true,
                 theme: "classic",
                 minimumInputLength: 1,
@@ -176,13 +203,70 @@
                             affixesStay: false, 
                             precision: 0,
                             allowZero: true,
-                            selectAllOnFocus: true,
-                            prefix:'Rp. '
+                            selectAllOnFocus: true
                         });
                         $('#price'+count).focus();
+                        $('#sub'+count).val(sub_total(count));
+                        show_grand_total(
+                            hitung_grand_total(count)
+                        );
                     }
                 });
             });
+
+            $('#qty'+count).change(function() {
+                $('#sub'+count).val(sub_total(count));
+                show_grand_total(
+                    hitung_grand_total(count)
+                );
+            });
+        }
+
+        function sub_total(row){
+            var qty = [];
+            var harga = [];
+            var sub_total = [];
+
+            var value = $('#price'+row).val();
+            if (value > 0) {
+                var fix_value = value.replace(/\./g, "");
+                harga[row] = fix_value;            
+            } else {
+                harga[row] = value;
+            }         
+
+            qty[row] = $('#qty'+row).val();            
+            sub_total[row] = parseInt(qty[row]) * parseInt(harga[row]);
+
+            return sub_total[row];
+        }
+
+        function hitung_grand_total(row) {
+            var total = 0;
+            var subtotal = [];
+            for (var i = 1; i <= row; i++) {
+                subtotal[i] = parseInt($("#sub"+i).val());
+                if (subtotal[i] > 0) {
+                    total = total + subtotal[i];
+                }
+            }
+            return total;
+        }
+
+        function show_grand_total(value) {
+            $('#grand_total').maskMoney({
+                thousands:'.', 
+                decimal:',', 
+                affixesStay: false, 
+                precision: 0,
+                prefix:'Rp. '
+            });
+            
+            $('#grand_total').each(function(){
+                $(this).maskMoney('mask', value);
+            });
+
+            $('#total-harga').html($('#grand_total').val());
         }
     </script>
 @endpush

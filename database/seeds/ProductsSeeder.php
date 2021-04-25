@@ -29,7 +29,21 @@ class ProductsSeeder extends Seeder
             ],
             [
                 'kode'           => 'CM001',
-                'nama'          => 'Captain Morgan',
+                'nama'          => 'Captain Morgan Gold',
+                'jenis_id'          => '1',
+                'harga_beli'       => '150000',
+                'harga_jual'       => '250000'
+            ],
+            [
+                'kode'           => 'CM002',
+                'nama'          => 'Captain Morgan White',
+                'jenis_id'          => '1',
+                'harga_beli'       => '150000',
+                'harga_jual'       => '250000'
+            ],
+            [
+                'kode'           => 'CM003',
+                'nama'          => 'Captain Morgan Orange',
                 'jenis_id'          => '1',
                 'harga_beli'       => '150000',
                 'harga_jual'       => '250000'
