@@ -52,7 +52,58 @@
           </div>
 
           <div class="col-lg-8">
-            @livewire('products')
+            <div class="shadow-sm mb-4 bg-light table-responsive rounded">
+                <div class="card-header bg-primary text-white">
+                    Pilih Produk
+                    <div class="spinner-border float-right" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                                <div class="col-lg-4">
+                                    <select class="form-control" name="product_id" id="select-product">
+                                        @foreach($allProducts as $product)
+                                            <option value="{{$product->id}}">{{$product->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="number" class="form-control" name="qty" placeholder="Qty">
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="number" class="form-control" name="price" placeholder="Harga">
+                                </div>
+                                <div class="col-lg-2">
+                                    <button class="btn btn-primary btn-tambah mt-1">
+                                        Tambah
+                                    </button>
+                                </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table table-bordered" id="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="width: 40%;">Nama</th>
+                                        <th>Qty</th>
+                                        <th>Harga</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div> 
 
         </div>
@@ -67,9 +118,29 @@
 @endsection
 
 @push('scripts')
-    @livewireScripts
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#select-product').select2({
+                placeholder: "Pilih Produk",
+                allowClear: true,
+                theme: "classic"
+            });
+        });
+    </script>
 @endpush
 
 @push('styles')
-    @livewireStyles
+    <style type="text/css">
+        .select2-selection__rendered {
+            line-height: 41px !important;
+        }
+
+        .select2-selection {
+            height: 41px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 40px !important;
+        }
+    </style>
 @endpush
