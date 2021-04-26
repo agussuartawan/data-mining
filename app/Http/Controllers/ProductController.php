@@ -154,4 +154,22 @@ class ProductController extends Controller
         
         return $price;
     }
+
+    public function sum(Request $request)
+    {
+        $grand_total = 0;
+        $subtotal = [];
+        $qty = $request->qty;
+        $prices = $request->price;
+        $count = count($qty);
+
+        if($count > 0){
+            for ($i=0; $i < $count; $i++) { 
+                $price = str_replace('.', '', $prices[$i]);
+                $subtotal[$i] = $qty[$i] * $price;
+                $grand_total = $grand_total + $subtotal[$i];
+            }
+        }
+        return currency($grand_total);
+    }
 }

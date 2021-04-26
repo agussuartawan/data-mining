@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 # Produk
+Route::post('product/bundle/sum', 'ProductController@sum')->name('product.bundle.sum');
 Route::get('product/find/price/{id}', 'ProductController@find_price');
 Route::post('product/find', 'ProductController@find')->name('find.product');
 Route::get('product/create', 'ProductController@create')->name('product.create');

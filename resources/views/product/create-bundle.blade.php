@@ -10,7 +10,7 @@
 	        {{Session('success')}}
 	      </div>
 	    @endif
-      <form method="post" action="{{route('product.store')}}">
+      {{-- <form method="post" action="{{route('product.store')}}"> --}}
       	@csrf
 
         <div class="row">
@@ -58,7 +58,8 @@
                     <div class="spinner-border float-right" role="status" id="ajax-loading" hidden=""><span class="sr-only">Loading...</span></div>
                 </div>
 
-                <div class="card-body">                                    
+                <div class="card-body">   
+                <form id="form-sum">                                 
                     <table cellpadding="8">
                         <thead>
                             <tr>
@@ -74,6 +75,7 @@
                         <tfoot>
                             <tr>
                                 <th>
+                                    
                                     <button class="btn btn-sm btn-primary" id="tambah-baris">
                                         <i class="fas fa-plus"></i>
                                         Tambah
@@ -81,12 +83,12 @@
                                 </th>
                                 <th></th>
                                 <th colspan="2" class="float-right">
-                                    Total <span id="total-harga">0</span>
-                                    <input type="hidden" name="sum" id="grand_total">
+                                    Total Rp. <span id="total-harga">0</span>
                                 </th>
                             </tr>
                         </tfoot>
                     </table>
+                    </form>
                 </div>
             </div>
           </div> 
@@ -97,7 +99,7 @@
         <a href="{{route('product.index',0)}}" class="btn btn-outline-danger">Batal</a>
         <button type="submit" class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
         <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
-      </form>
+      {{-- </form> --}}
     </div>
   </div>
 @endsection
@@ -110,9 +112,6 @@
             for (var i = 1; i <= count; i++) {
                 dinamis_field(i);
             }
-            show_grand_total(
-                hitung_grand_total(count)
-            );
 
             $('#tambah-baris').click(function(event){
                 event.preventDefault();
@@ -124,9 +123,7 @@
                 event.preventDefault();
                 var row_id = $(this).attr('id');
                 $('#row'+row_id).remove();
-                show_grand_total(
-                    hitung_grand_total(count)
-                ); 
+                autosum(); 
             });
 
             $('#harga-jual').maskMoney({
@@ -139,28 +136,36 @@
             });
 
             $('body').on('change', '.quantity', function(){
-                var id = $(this).parents('tr').attr('id');
-                $('#sub'+id).val(sub_total(id));
-                show_grand_total(
-                    hitung_grand_total(count)
-                );
+                autosum();
             });
 
             $('body').on('change', '.money', function(){
-                var id = $(this).parents('tr').attr('id');
-                $('#sub'+id).val(sub_total(id));
-                show_grand_total(
-                    hitung_grand_total(count)
-                );
+                autosum();
             });
         });
 
+        function autosum(){
+            var form = $('#form-sum');
+            $.ajax({
+                url: '{{route('product.bundle.sum')}}',
+                type: 'post',
+                dataType: 'text',
+                data: form.serialize(),
+                beforeSend: function(){
+                    $('#ajax-loading').removeAttr('hidden');
+                },
+                success: function(data){
+                    $('#ajax-loading').attr('hidden',true);
+                    $('#total-harga').html(data);
+                }
+            });
+        }
+
         function dinamis_field(count){
-            var html = '<tr id="'+count+'" class="td">';
-            html += '<td width="40%"><select class="form-control" name="product_id[]" id="select-product'+count+'"></select></td>';
+            var html = '<tr id="row'+count+'" class="td">';
+            html += '<td width="40%"><select class="form-control select-product-id" name="product_id[]" id="select-product'+count+'"></select></td>';
             html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
-            html += '<td><input id="sub'+count+'" type="" value="0"></td>';
 
             if (count > 1){
                 html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="'+count+'" >hapus</a></td></tr>';
@@ -221,62 +226,13 @@
                             allowZero: true,
                             selectAllOnFocus: true
                         });
-                        $('#price'+count).focus();
-                        $('#sub'+count).val(sub_total(count));
-                        show_grand_total(
-                            hitung_grand_total(count)
-                        );
+                        $('#price'+count).each(function() {
+                            $(this).maskMoney('mask', data);
+                        });
+                        autosum();
                     }
                 });
             });
-        }
-
-        function sub_total(row){
-            var qty = [];
-            var harga = [];
-            var sub_total = [];
-
-            var value = $('#price'+row).val();
-            if (value > 0) {
-                value = parseInt(value.replace(/[^0-9\.]+/g, ""));
-                console.log(value);
-                harga[row] = value;            
-            } else {
-                harga[row] = value;
-            }         
-
-            qty[row] = $('#qty'+row).val();            
-            sub_total[row] = parseInt(qty[row]) * parseInt(harga[row]);
-
-            return sub_total[row];
-        }
-
-        function hitung_grand_total(row) {
-            var total = 0;
-            var subtotal = [];
-            for (var i = 1; i <= row; i++) {
-                subtotal[i] = parseInt($("#sub"+i).val());
-                if (subtotal[i] > 0) {
-                    total = total + subtotal[i];
-                }
-            }
-            return total;
-        }
-
-        function show_grand_total(value) {
-            $('#grand_total').maskMoney({
-                thousands:'.', 
-                decimal:',', 
-                affixesStay: false, 
-                precision: 0,
-                prefix:'Rp. '
-            });
-            
-            $('#grand_total').each(function(){
-                $(this).maskMoney('mask', value);
-            });
-
-            $('#total-harga').html($('#grand_total').val());
         }
     </script>
 @endpush
