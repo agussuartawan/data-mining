@@ -8,7 +8,7 @@ class BundleProduct extends Model
 {
     public $table = "bundle_product";
 
-    protected $fillable = ['product_bundle_id', 'product_id'];
+    protected $fillable = ['bundle_id', 'product_id', 'qty'];
 
     public function bundle()
     {

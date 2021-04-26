@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Jenis;
+use App\Bundle;
+use App\BundleProduct;
 
 class ProductController extends Controller
 {
@@ -65,6 +67,48 @@ class ProductController extends Controller
             return redirect()->route('product.index',0)->with('success', 'Produk berhasil ditambahkan');
         } else {
             return redirect()->route('product.create')->with('success', 'Produk berhasil ditambahkan');   
+        }
+    }
+
+    public function store_bundle(Request $request)
+    {
+        $new_price = 0;
+        $harga_jual = str_replace('.', '', $request->harga_jual);
+        if($harga_jual == 0) {
+            $prices = $request->price;
+            foreach ($prices as $price) {
+                $new_price = $new_price + str_replace('.', '', $price);
+            }
+        } else {
+            $new_price = $harga_jual;
+        }
+
+        # insert into table bundles
+        $product = array(
+            'kode' => $request->kode,
+            'nama' => $request->nama,
+            'harga_jual' => $new_price
+        );
+        $last_data = Bundle::create($product);
+
+        # insert into table bundle_product
+        $product_id = $request->product_id;
+        $qty = $request->qty;
+        for ($i = 0; $i < count($product_id); $i++) {
+            if($product_id[$i] != 0){
+                $products[] = array(
+                    'bundle_id' => $last_data->id,
+                    'product_id' => $product_id[$i], 
+                    'qty' => $qty[$i]
+                );
+            }
+        }
+        BundleProduct::insert($products);
+
+        if ($request->redirect_to == 'index') {
+            return redirect()->route('product.index',0)->with('success', 'Produk bundel berhasil ditambahkan');
+        } else {
+            return redirect()->route('product.create.bundle')->with('success', 'Produk bundel berhasil ditambahkan');   
         }
     }
 
@@ -155,12 +199,12 @@ class ProductController extends Controller
         return $price;
     }
 
-    public function sum(Request $request)
+    public function sum()
     {
         $grand_total = 0;
         $subtotal = [];
-        $qty = $request->qty;
-        $prices = $request->price;
+        $qty = $_POST['qty'];
+        $prices = $_POST['price'];
         $count = count($qty);
 
         if($count > 0){

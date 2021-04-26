@@ -24,6 +24,7 @@ Route::get('product/find/price/{id}', 'ProductController@find_price');
 Route::post('product/find', 'ProductController@find')->name('find.product');
 Route::get('product/create', 'ProductController@create')->name('product.create');
 Route::get('product/create/bundle', 'ProductController@create_bundle')->name('product.create.bundle');
+Route::post('product/create/bundle', 'ProductController@store_bundle')->name('product.store.bundle');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/{id}/edit', 'ProductController@edit')->name('product.edit');
 Route::put('product/{id}/update', 'ProductController@update')->name('product.update');

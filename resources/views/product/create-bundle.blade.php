@@ -10,7 +10,7 @@
 	        {{Session('success')}}
 	      </div>
 	    @endif
-      {{-- <form method="post" action="{{route('product.store')}}"> --}}
+      <form id="form-product" method="post" action="{{route('product.store.bundle')}}">
       	@csrf
 
         <div class="row">
@@ -58,8 +58,7 @@
                     <div class="spinner-border float-right" role="status" id="ajax-loading" hidden=""><span class="sr-only">Loading...</span></div>
                 </div>
 
-                <div class="card-body">   
-                <form id="form-sum">                                 
+                <div class="card-body">
                     <table cellpadding="8">
                         <thead>
                             <tr>
@@ -88,7 +87,6 @@
                             </tr>
                         </tfoot>
                     </table>
-                    </form>
                 </div>
             </div>
           </div> 
@@ -99,7 +97,7 @@
         <a href="{{route('product.index',0)}}" class="btn btn-outline-danger">Batal</a>
         <button type="submit" class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
         <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
-      {{-- </form> --}}
+      </form>
     </div>
   </div>
 @endsection
@@ -108,6 +106,18 @@
     <script src="{{asset('')}}js/jquery.maskMoney.min.js"></script>
     <script type="text/javascript">
         $(document).ready( function(){
+            $('#btn-simpan').click(function(event) {
+                event.preventDefault();
+                $('#redirect_to').val('index');
+                $('#form-product').submit();
+            });
+
+            $('#btn-simpan-baru').click(function(event) {
+                event.preventDefault();
+                $('#redirect_to').val('create');
+                $('#form-product').submit();
+            });
+
             var count = 1;
             for (var i = 1; i <= count; i++) {
                 dinamis_field(i);
@@ -145,12 +155,18 @@
         });
 
         function autosum(){
-            var form = $('#form-sum');
+            var qty = $('input[name^=qty]').map(function(idx, elem) {
+                            return $(elem).val();
+                          }).get();
+
+            var price = $('input[name^=price]').map(function(idx, elem) {
+                            return $(elem).val();
+                          }).get();
             $.ajax({
                 url: '{{route('product.bundle.sum')}}',
                 type: 'post',
                 dataType: 'text',
-                data: form.serialize(),
+                data: {qty,price},
                 beforeSend: function(){
                     $('#ajax-loading').removeAttr('hidden');
                 },
@@ -163,7 +179,7 @@
 
         function dinamis_field(count){
             var html = '<tr id="row'+count+'" class="td">';
-            html += '<td width="40%"><select class="form-control select-product-id" name="product_id[]" id="select-product'+count+'"></select></td>';
+            html += '<td width="40%"><input type="hidden" id="product_id'+count+'" name="product_id[]" value="0" readonly><select class="form-control select-product-id" id="select-product'+count+'"></select></td>';
             html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
 
@@ -185,7 +201,10 @@
             });
 
             $('#select-product'+count).select2({
-                placeholder: "Cari Produk",
+                placeholder: {
+                    id : null,
+                    text : "Cari Produk"
+                },
                 allowClear: true,
                 theme: "classic",
                 minimumInputLength: 1,
@@ -208,6 +227,7 @@
                 }
             }).on('change', function() {
                 var selected = $(this).val();
+                $('#product_id'+count).val(selected);
                 $.ajax({
                     url: '{{ url('product/find/price') }}/'+selected,
                     type: 'get',
