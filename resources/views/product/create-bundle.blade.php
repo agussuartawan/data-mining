@@ -137,14 +137,30 @@
                 allowZero: true,
                 selectAllOnFocus: true
             });
+
+            $('body').on('change', '.quantity', function(){
+                var id = $(this).parents('tr').attr('id');
+                $('#sub'+id).val(sub_total(id));
+                show_grand_total(
+                    hitung_grand_total(count)
+                );
+            });
+
+            $('body').on('change', '.money', function(){
+                var id = $(this).parents('tr').attr('id');
+                $('#sub'+id).val(sub_total(id));
+                show_grand_total(
+                    hitung_grand_total(count)
+                );
+            });
         });
 
         function dinamis_field(count){
-            var html = '<tr id="row'+count+'" class="td">';
+            var html = '<tr id="'+count+'" class="td">';
             html += '<td width="40%"><select class="form-control" name="product_id[]" id="select-product'+count+'"></select></td>';
-            html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control" value="1" name="qty[]"></td>';
+            html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
-            html += '<td><input id="sub'+count+'" type="hidden" value="0"></td>';
+            html += '<td><input id="sub'+count+'" type="" value="0"></td>';
 
             if (count > 1){
                 html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="'+count+'" >hapus</a></td></tr>';
@@ -213,13 +229,6 @@
                     }
                 });
             });
-
-            $('#qty'+count).change(function() {
-                $('#sub'+count).val(sub_total(count));
-                show_grand_total(
-                    hitung_grand_total(count)
-                );
-            });
         }
 
         function sub_total(row){
@@ -229,8 +238,9 @@
 
             var value = $('#price'+row).val();
             if (value > 0) {
-                var fix_value = value.replace(/\./g, "");
-                harga[row] = fix_value;            
+                value = parseInt(value.replace(/[^0-9\.]+/g, ""));
+                console.log(value);
+                harga[row] = value;            
             } else {
                 harga[row] = value;
             }         
