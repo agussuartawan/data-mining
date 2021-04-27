@@ -8,8 +8,14 @@ class Bundle extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function product_bundle_detail()
+    public function bundle_product()
     {
     	return $this->hasMany('App\BundleProduct');
     }
+
+    public function product()
+    {
+    	return $this->hasMany('App\Product');
+    }
+    
 }

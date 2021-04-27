@@ -39,7 +39,12 @@ class ProductController extends Controller
     public function create()
     {
         $title = "Tambah Produk";
-        $jenis = Jenis::get();
+        $data = Jenis::get();
+        foreach($data as $key=>$d){
+            if($d->id == 4){
+                $jenis = $data->forget($key);
+            }
+        }
         return view('product.create', compact('title','jenis'));
     }
 
@@ -84,10 +89,17 @@ class ProductController extends Controller
         }
 
         # insert into table bundles
+        if($request->stok == null){
+            $stok = 1;
+        } else {
+            $stok = $request->stok;
+        }
         $product = array(
             'kode' => $request->kode,
             'nama' => $request->nama,
+            'stok' => $stok,
             'harga_jual' => $new_price
+
         );
         $last_data = Bundle::create($product);
 
@@ -95,7 +107,7 @@ class ProductController extends Controller
         $product_id = $request->product_id;
         $qty = $request->qty;
         for ($i = 0; $i < count($product_id); $i++) {
-            if($product_id[$i] != 0){
+            if($product_id[$i] != 0 && $product_id[$i] != null){
                 $products[] = array(
                     'bundle_id' => $last_data->id,
                     'product_id' => $product_id[$i], 
@@ -104,6 +116,10 @@ class ProductController extends Controller
             }
         }
         BundleProduct::insert($products);
+        Product::create([
+            'bundle_id' => $last_data->id,
+            'jenis_id' => 4
+        ]);
 
         if ($request->redirect_to == 'index') {
             return redirect()->route('product.index',0)->with('success', 'Produk bundel berhasil ditambahkan');

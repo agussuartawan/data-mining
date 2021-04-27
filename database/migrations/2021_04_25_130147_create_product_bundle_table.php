@@ -18,6 +18,7 @@ class CreateProductBundleTable extends Migration
             $table->string('kode');
             $table->string('nama');
             $table->double('harga_jual');
+            $table->integer('stok');
             $table->timestamps();
         });
     }

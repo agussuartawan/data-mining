@@ -42,6 +42,15 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group">
+                          <label for="stok_awal" class="font-weight-bold">Stok awal</label>
+                          <input type="number" class="form-control" id="stok_awal" name="stok" placeholder="Default 1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
                         <label for="nama-jual" class="font-weight-bold">Harga Jual</label>
                         <input type="text" class="form-control" id="harga-jual" name="harga_jual" value="0">
                         </div>
@@ -179,7 +188,7 @@
 
         function dinamis_field(count){
             var html = '<tr id="row'+count+'" class="td">';
-            html += '<td width="40%"><input type="hidden" id="product_id'+count+'" name="product_id[]" value="0" readonly><select class="form-control select-product-id" id="select-product'+count+'"></select></td>';
+            html += '<td width="40%"><input type="hidden" id="product_id'+count+'" name="product_id[]" readonly><select class="form-control select-product-id" id="select-product'+count+'"></select></td>';
             html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
 

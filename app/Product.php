@@ -12,4 +12,9 @@ class Product extends Model
     {
     	return $this->belongsTo('App\Jenis');
     }
+
+    public function bundle()
+    {
+        return $this->belongsTo('App\Bundle');
+    }
 }

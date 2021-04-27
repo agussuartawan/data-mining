@@ -20,6 +20,9 @@ class JenisSeeder extends Seeder
             ],
             [
                 'nama'           => 'Campagne',
+            ],
+            [
+                'nama'           => 'Produk Bundel',
             ]
         ];
 

@@ -43,6 +43,7 @@
               <thead class="thead-light">
                 <tr>
                   <th>#</th>
+                  <th></th>
                   <th width="15%">Kode</th>
                   <th>Nama Produk</th>
                   <th width="15%">Stok</th>
@@ -54,16 +55,21 @@
                 @foreach($products as $index=>$product)
                   <tr>
                     <td>{{$index + 1}}</td>
-                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{$product->kode}}</a></td>
-                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{$product->nama}}</a></td>
-                    <td>{{$product->stok}}</td>
+                    <td>
+                      @if($product->jenis_id == 4)
+                        <i class="fas fa-box-open"></i>
+                      @endif
+                    </td>
+                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{ $product->jenis_id == 4 ?  $product->bundle->kode : $product->kode}}</a></td>
+                    <td><a class="card-link" href="{{route('product.show', $product->id)}}">{{ $product->jenis_id == 4 ?  $product->bundle->nama : $product->nama}}</a></td>
+                    <td>{{ $product->jenis_id == 4 ?  $product->bundle->stok : $product->stok}}</td>
                     <td><a class="card-link" href="">{{$product->jenis->nama}}</a></td></td>
                     <td>
                       <form class="form-inline" method="post" action="{{route('product.destroy',$product->id)}}">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <a href="{{route('product.edit', $product->id)}}" class="badge badge-info">edit</a>&nbsp;
-                        <a href="#" class="badge badge-danger btn-delete" title="{{$product->nama}}" >hapus</a>
+                        <a href="#" class="badge badge-danger btn-delete" title="{{ $product->jenis_id == 4 ?  $product->bundle->nama : $product->nama}}" >hapus</a>
                       </form>
                     </td>
                   </tr>
