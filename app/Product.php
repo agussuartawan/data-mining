@@ -8,13 +8,13 @@ class Product extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function jenis()
+    public function group()
     {
-    	return $this->belongsTo('App\Jenis');
+    	return $this->belongsTo('App\Group');
     }
 
-    public function bundle()
+    public function product_bundle()
     {
-        return $this->belongsTo('App\Bundle');
+        return $this->belongsTo('App\ProductBundle');
     }
 }

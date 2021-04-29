@@ -13,12 +13,11 @@ class CreateProductBundleTable extends Migration
      */
     public function up()
     {
-        Schema::create('bundles', function (Blueprint $table) {
+        Schema::create('product_bundles', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
-            $table->string('nama');
-            $table->double('harga_jual');
-            $table->integer('stok');
+            $table->foreignId('product_id')->constrained();
+            $table->integer('product');
+            $table->integer('qty');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateProductBundleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_bundle');
+        Schema::dropIfExists('product_bundles');
     }
 }

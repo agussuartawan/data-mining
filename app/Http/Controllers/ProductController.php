@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
-use App\Jenis;
-use App\Bundle;
-use App\BundleProduct;
+use App\Group;
+use App\ProductBundle;
 
 class ProductController extends Controller
 {
@@ -22,13 +21,13 @@ class ProductController extends Controller
         if ($id == 0) {
             $products = Product::orderBy('id', 'desc')->get();
         } else {
-            $products = Product::where('jenis_id','=', $id)->orderBy('id','desc')->get();
+            $products = Product::where('group_id','=', $id)->orderBy('id','desc')->get();
         }
 
-        $jenis = Jenis::get();
+        $group = Group::get();
         $selected = $id;
 
-        return view('product.index', compact('title', 'products', 'jenis', 'selected'));
+        return view('product.index', compact('title', 'products', 'group', 'selected'));
     }
 
     /**
@@ -39,13 +38,8 @@ class ProductController extends Controller
     public function create()
     {
         $title = "Tambah Produk";
-        $data = Jenis::get();
-        foreach($data as $key=>$d){
-            if($d->id == 4){
-                $jenis = $data->forget($key);
-            }
-        }
-        return view('product.create', compact('title','jenis'));
+        $group = Group::get();
+        return view('product.create', compact('title','group'));
     }
 
     public function create_bundle()
@@ -95,13 +89,15 @@ class ProductController extends Controller
             $stok = $request->stok;
         }
         $product = array(
+            'group_id' => 1,
             'kode' => $request->kode,
             'nama' => $request->nama,
+            'tipe' => "Bundle",
             'stok' => $stok,
             'harga_jual' => $new_price
 
         );
-        $last_data = Bundle::create($product);
+        $last_data = Product::create($product);
 
         # insert into table bundle_product
         $product_id = $request->product_id;
@@ -109,17 +105,13 @@ class ProductController extends Controller
         for ($i = 0; $i < count($product_id); $i++) {
             if($product_id[$i] != 0 && $product_id[$i] != null){
                 $products[] = array(
-                    'bundle_id' => $last_data->id,
-                    'product_id' => $product_id[$i], 
+                    'product_id' => $last_data->id,
+                    'product' => $product_id[$i], 
                     'qty' => $qty[$i]
                 );
             }
         }
-        BundleProduct::insert($products);
-        Product::create([
-            'bundle_id' => $last_data->id,
-            'jenis_id' => 4
-        ]);
+        ProductBundle::insert($products);
 
         if ($request->redirect_to == 'index') {
             return redirect()->route('product.index',0)->with('success', 'Produk bundel berhasil ditambahkan');
@@ -152,7 +144,7 @@ class ProductController extends Controller
     {
     	$title = "Edit Produk";
     	$product = Product::find($id);
-    	$jenis = Jenis::get();
+    	$jenis = Group::get();
 
         return view('product.edit', compact('product', 'jenis', 'title'));
     }

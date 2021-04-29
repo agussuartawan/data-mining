@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Jenis extends Model
+class Group extends Model
 {
-    public $table = "jenis";
     protected $fillable = ['nama'];
 
     public function product()

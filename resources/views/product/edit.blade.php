@@ -22,6 +22,13 @@
           </select>
         </div>
         <div class="form-group">
+          <label for="tipe" class="font-weight-bold">Tipe Produk</label>
+          <select class="form-control custom-select mb-3" id="tipe" name="tipe">
+              <option value="Single">Single</option>
+              <option value="Bundle">Bundle</option>
+            </select>
+          </div>
+        <div class="form-group">
           <label for="harga-beli" class="font-weight-bold">Harga Beli</label>
           <input type="number" class="form-control" id="harga-beli" name="harga_beli" value="{{$product->harga_beli}}">
         </div>

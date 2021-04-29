@@ -10,8 +10,14 @@
       <ul class="list-group list-group-flush">
           <li class="list-group-item">
             <div class="row">
-              <div class="col-2"><span>Jenis</span></div>
-              <div class="col-10">:&nbsp;&nbsp;{{$product->jenis->nama}}</div>
+              <div class="col-2"><span>Group</span></div>
+              <div class="col-10">:&nbsp;&nbsp;{{$product->group->nama}}</div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-2"><span>Tipe</span></div>
+              <div class="col-10">:&nbsp;&nbsp;{{$product->tipe}}</div>
             </div>
           </li>
           <li class="list-group-item">

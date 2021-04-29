@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductBundleDetailTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateProductBundleDetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('bundle_product', function (Blueprint $table) {
-            $table->foreignId('bundle_id')->constrained();
-            $table->foreignId('product_id')->constrained();
-            $table->integer('qty');
+        Schema::create('groups', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +27,6 @@ class CreateProductBundleDetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_bundle_detail');
+        Schema::dropIfExists('groups');
     }
 }

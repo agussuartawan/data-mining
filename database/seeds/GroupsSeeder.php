@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class JenisSeeder extends Seeder
+class GroupsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,10 @@ class JenisSeeder extends Seeder
      */
     public function run()
     {
-        $jenis = [
+        $groups = [
+            [
+                'nama'           => 'Paket',
+            ],
             [
                 'nama'           => 'Spirit',
             ],
@@ -22,10 +25,10 @@ class JenisSeeder extends Seeder
                 'nama'           => 'Campagne',
             ],
             [
-                'nama'           => 'Produk Bundel',
+                'nama'           => 'Beer',
             ]
         ];
 
-        App\Jenis::insert($jenis);
+        App\Group::insert($groups);
     }
 }

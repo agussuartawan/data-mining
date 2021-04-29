@@ -31,11 +31,22 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="jenis" class="font-weight-bold">Jenis Produk</label>
-                <select class="form-control custom-select mb-3" id="jenis" name="jenis_id" name="jenis_id">
-                  @foreach($jenis as $j)
+              <label for="jenis" class="font-weight-bold">Group Produk</label>
+                <select class="form-control custom-select mb-3" id="jenis" name="group_id">
+                  @foreach($group as $j)
                   <option value="{{$j->id}}">{{$j->nama}}</option>
                   @endforeach
+                </select>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="tipe" class="font-weight-bold">Tipe Produk</label>
+              <select class="form-control custom-select mb-3" id="tipe" name="tipe">
+                  <option value="Single">Single</option>
+                  <option value="Bundle">Bundle</option>
                 </select>
               </div>
           </div>
