@@ -16,7 +16,7 @@ class CreateProductBundleTable extends Migration
         Schema::create('product_bundles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained();
-            $table->integer('product');
+            $table->foreignId('product')->constrained('products');
             $table->integer('qty');
             $table->timestamps();
         });
