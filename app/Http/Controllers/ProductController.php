@@ -183,6 +183,7 @@ class ProductController extends Controller
         $data = Product::orderBy('nama', 'asc')
                             ->select('id', 'nama', 'harga_jual')
                             ->where('nama', 'LIKE', "%{$search}%")
+                            ->where('tipe', '=', 'Single')
                             ->get();
 
         $results = [];
