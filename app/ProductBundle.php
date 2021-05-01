@@ -3,19 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class ProductBundle extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function bundle_product()
+    public function product_nama($product)
     {
-    	return $this->hasMany('App\BundleProduct');
-    }
+    	$product_detail = DB::table('product_bundles')
+    				->join('products', 'product_bundles.product', '=', 'products.id')
+    				->select('products.nama')
+    				->where('products.id', '=', $product)
+    				->first();
 
-    public function product()
-    {
-    	return $this->hasMany('App\Product');
+    	return $product_detail->nama;
     }
     
 }

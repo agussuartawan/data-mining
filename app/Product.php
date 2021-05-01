@@ -15,6 +15,6 @@ class Product extends Model
 
     public function product_bundle()
     {
-        return $this->belongsTo('App\ProductBundle');
+        return $this->hasMany('App\ProductBundle');
     }
 }
