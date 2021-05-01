@@ -46,8 +46,8 @@
                   <th></th>
                   <th width="15%">Kode</th>
                   <th>Nama Produk</th>
-                  <th width="15%">Stok</th>
-                  <th width="20%">Jenis</th>
+                  <th width="10%">Stok</th>
+                  <th width="10%">Jenis</th>
                   <th width="15%">###</th>
                 </tr>
               </thead>
