@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Group;
 use App\ProductBundle;
+use DB;
 
 class ProductController extends Controller
 {
@@ -38,7 +39,7 @@ class ProductController extends Controller
     public function create()
     {
         $title = "Tambah Produk";
-        $group = Group::get();
+        $group = Group::where('id','!=', 1)->get();
         return view('product.create', compact('title','group'));
     }
 
@@ -173,7 +174,17 @@ class ProductController extends Controller
     public function destroy($id)
     {
         // dd($product->nama);
-        Product::find($id)->delete();
+        $product = Product::find($id);
+
+        if ($product->tipe == "Bundle") {
+            DB::transaction(function () use ($product,$id) {
+                ProductBundle::where('product_id', '=', $id)->delete();
+
+                $product->delete();
+            });
+        } else {
+            $product->delete();
+        }
         return redirect()->route('product.index',0)->with('success', 'Produk berhasil dihapus');
     }
 

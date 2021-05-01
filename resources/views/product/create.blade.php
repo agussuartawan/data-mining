@@ -46,7 +46,6 @@
               <label for="tipe" class="font-weight-bold">Tipe Produk</label>
               <select class="form-control custom-select mb-3" id="tipe" name="tipe">
                   <option value="Single">Single</option>
-                  <option value="Bundle">Bundle</option>
                 </select>
               </div>
           </div>
