@@ -16,7 +16,13 @@
           <div class="col-lg-6">
             <div class="form-group">
               <label for="kode" class="font-weight-bold">*Kode Produk</label>
-              <input type="text" class="form-control" id="kode" placeholder="Contoh AB001 untuk Absolut Blue" name="kode">
+              <input type="text" class="form-control @error('kode') is-invalid @enderror" 
+              id="kode" placeholder="Contoh AB001 untuk Absolut Blue" name="kode" value="{{old('kode')}}">
+              @error('kode')
+              <div class="invalid-feedback">
+                {{$message}}
+              </div>
+              @enderror
             </div>
           </div>
         </div>
@@ -24,7 +30,12 @@
           <div class="col-lg-6">
             <div class="form-group">
               <label for="nama" class="font-weight-bold">*Nama Produk</label>
-              <input type="text" class="form-control" id="nama" name="nama">
+              <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{old('nama')}}">
+              @error('nama')
+              <div class="invalid-feedback">
+                {{$message}}
+              </div>
+              @enderror
             </div>
           </div>
         </div>        

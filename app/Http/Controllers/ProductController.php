@@ -7,6 +7,8 @@ use App\Product;
 use App\Group;
 use App\ProductBundle;
 use DB;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\StoreProductBundleRequest;
 
 class ProductController extends Controller
 {
@@ -51,16 +53,9 @@ class ProductController extends Controller
         return view('product.create-bundle', compact('title','allProducts','count'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $data = $request->all();
-        // dd($request->redirect_to);
+        $data = $request->validated();
         Product::create($data);
 
         if ($request->redirect_to == 'index') {
@@ -70,7 +65,7 @@ class ProductController extends Controller
         }
     }
 
-    public function store_bundle(Request $request)
+    public function store_bundle(StoreProductBundleRequest $request)
     {
         $new_price = 0;
         $harga_jual = str_replace('.', '', $request->harga_jual);
@@ -83,42 +78,39 @@ class ProductController extends Controller
             $new_price = $harga_jual;
         }
 
-        # insert into table bundles
-        if($request->stok == null){
-            $stok = 1;
-        } else {
-            $stok = $request->stok;
-        }
-        $product = array(
-            'group_id' => 1,
-            'kode' => $request->kode,
-            'nama' => $request->nama,
-            'tipe' => "Bundle",
-            'stok' => $stok,
-            'harga_jual' => $new_price
-
-        );
-        $last_data = Product::create($product);
-
-        # insert into table bundle_product
-        $product_id = $request->product_id;
-        $qty = $request->qty;
-        for ($i = 0; $i < count($product_id); $i++) {
-            if($product_id[$i] != 0 && $product_id[$i] != null){
-                $products[] = array(
-                    'product_id' => $last_data->id,
-                    'product' => $product_id[$i], 
-                    'qty' => $qty[$i]
-                );
+        DB::transaction(function () use ($request,$new_price) {
+            # insert into table bundles
+            if($request->stok == null){
+                $stok = 1;
+            } else {
+                $stok = $request->stok;
             }
-        }
-        ProductBundle::insert($products);
+            $product = array(
+                'group_id' => 1,
+                'kode' => $request->kode,
+                'nama' => $request->nama,
+                'tipe' => "Bundle",
+                'stok' => $stok,
+                'harga_jual' => $new_price
 
-        if ($request->redirect_to == 'index') {
-            return redirect()->route('product.index',0)->with('success', 'Produk bundel berhasil ditambahkan');
-        } else {
-            return redirect()->route('product.create.bundle')->with('success', 'Produk bundel berhasil ditambahkan');   
-        }
+            );
+            $last_data = Product::create($product);
+
+            # insert into table bundle_product
+            $product_id = $request->product_id;
+            $qty = $request->qty;
+            for ($i = 0; $i < count($product_id); $i++) {
+                if($product_id[$i] != 0 && $product_id[$i] != null){
+                    $products[] = array(
+                        'product_id' => $last_data->id,
+                        'product' => $product_id[$i], 
+                        'qty' => $qty[$i]
+                    );
+                }
+            }
+            ProductBundle::insert($products);
+        });
+        return response()->json('Data produk bundel berhasil ditambahkan');
     }
 
     /**

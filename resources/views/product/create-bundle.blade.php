@@ -2,17 +2,8 @@
 @section('content')
   <div class="card mb-4">
     <div class="card-body">
-    	@if(Session::has('success'))
-	      <div class="alert alert-info alert-dismissible" role="alert">
-	        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	        {{Session('success')}}
-	      </div>
-	    @endif
-      <form id="form-product" method="post" action="{{route('product.store.bundle')}}">
+      <form id="form-product">
       	@csrf
-
         <div class="row">
           <div class="col-lg-4">
             <div class="shadow-sm mb-4 bg-light table-responsive rounded">
@@ -25,7 +16,8 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                             <label for="kode" class="font-weight-bold">*Kode Produk</label>
-                            <input type="text" class="form-control" id="kode" placeholder="Contoh AB001 untuk Absolut Blue" name="kode">
+                            <input type="text" class="form-control" id="kode" 
+                            placeholder="Contoh AB001 untuk Absolut Blue" name="kode">
                         </div>
                     </div>
                 </div>
@@ -34,7 +26,8 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                           <label for="nama" class="font-weight-bold">*Nama Produk Bundle</label>
-                          <input type="text" class="form-control" id="nama" name="nama">
+                          <input type="text" class="form-control" 
+                          id="nama" name="nama">
                         </div>
                     </div>
                 </div>
@@ -43,7 +36,8 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                           <label for="stok_awal" class="font-weight-bold">Stok awal</label>
-                          <input type="number" class="form-control" id="stok_awal" name="stok" placeholder="Default 1">
+                          <input type="number" class="form-control" id="stok_awal" name="stok" 
+                          placeholder="Default 1">
                         </div>
                     </div>
                 </div>
@@ -67,7 +61,7 @@
                     <div class="spinner-border float-right" role="status" id="ajax-loading" hidden=""><span class="sr-only">Loading...</span></div>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" id="card-product">
                     <table cellpadding="8">
                         <thead>
                             <tr>
@@ -101,12 +95,15 @@
           </div> 
 
         </div>
-        <hr>
-        <input type="hidden" name="redirect_to" id="redirect_to">
-        <a href="{{route('product.index',0)}}" class="btn btn-outline-danger">Batal</a>
-        <button type="submit" class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
-        <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
       </form>
+    </div>
+    <div class="card-footer">
+        <a href="{{route('product.index',0)}}" class="btn btn-outline-danger" id="btn-cancle">Batal</a>
+        <button class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
+        <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
+        <div class="spinner-border spinner-border-sm text-primary" role="status" hidden="hidden" id="button-loading">
+          <span class="sr-only">Loading...</span>
+        </div>
     </div>
   </div>
 @endsection
@@ -115,16 +112,92 @@
     <script src="{{asset('')}}js/jquery.maskMoney.min.js"></script>
     <script type="text/javascript">
         $(document).ready( function(){
-            $('#btn-simpan').click(function(event) {
-                event.preventDefault();
-                $('#redirect_to').val('index');
-                $('#form-product').submit();
-            });
-
             $('#btn-simpan-baru').click(function(event) {
                 event.preventDefault();
-                $('#redirect_to').val('create');
-                $('#form-product').submit();
+                const form = $('#form-product');
+                form.find('.invalid-feedback').remove();
+                form.find('.form-control').removeClass('is-invalid');
+                $('#alert-product').remove();
+
+                $.ajax({
+                    url: '{{route('product.store.bundle')}}',
+                    type: 'POST',
+                    data: form.serialize(),
+                    beforeSend: function() {
+                        $('#btn-simpan').attr('disabled','disabled');
+                        $('#btn-simpan-baru').attr('disabled','disabled');
+                        $('#btn-cancle').addClass('btn-cancle-disable');
+                        $('#button-loading').attr('hidden',false);
+                    },
+                    success: function(response) {
+                        toastr["success"](response);
+                        $('#btn-simpan').attr('disabled',false);
+                        $('#btn-simpan-baru').attr('disabled',false);
+                        $('#btn-cancle').removeClass('btn-cancle-disable');
+                        $('#button-loading').attr('hidden','hidden');
+                        dinamis_field(1);
+                        form.trigger('reset');
+                        $('#total-harga').text(0);
+                    },
+                    error: function(xhr) {
+                        var res = xhr.responseJSON;
+                        if ($.isEmptyObject(res) == false) {
+                            $.each(res.errors ,function(key, value) {
+                                $('#' + key)
+                                .addClass('is-invalid')
+                                .after('<div class="invalid-feedback">'+ value +'</div>');
+                                if (key == "produk") {
+                                    $('#card-product').prepend('<div class="alert alert-danger mt-0 mb-0" role="alert" id="alert-product">'+ value +'</div>');
+                                }
+                            });
+                        }
+                        $('#btn-simpan').attr('disabled',false);
+                        $('#btn-simpan-baru').attr('disabled',false);
+                        $('#btn-cancle').removeClass('btn-cancle-disable');
+                        $('#button-loading').attr('hidden','hidden');
+                    }
+                });
+            });
+
+            $('#btn-simpan').click(function(event) {
+                event.preventDefault();
+                const form = $('#form-product');
+                form.find('.invalid-feedback').remove();
+                form.find('.form-control').removeClass('is-invalid');
+                $('#alert-product').remove();
+
+                $.ajax({
+                    url: '{{route('product.store.bundle')}}',
+                    type: 'POST',
+                    data: form.serialize(),
+                    beforeSend: function() {
+                        $('#btn-simpan').attr('disabled','disabled');
+                        $('#btn-simpan-baru').attr('disabled','disabled');
+                        $('#btn-cancle').addClass('btn-cancle-disable');
+                        $('#button-loading').attr('hidden',false);
+                    },
+                    success: function(response) {
+                        toastr["success"](response);
+                        window.location.href = '{{route('product.index',0)}}';
+                    },
+                    error: function(xhr) {
+                        var res = xhr.responseJSON;
+                        if ($.isEmptyObject(res) == false) {
+                            $.each(res.errors ,function(key, value) {
+                                $('#' + key)
+                                .addClass('is-invalid')
+                                .after('<div class="invalid-feedback">'+ value +'</div>');
+                                if (key == "produk") {
+                                    $('#card-product').prepend('<div class="alert alert-danger mt-0 mb-0" role="alert" id="alert-product">'+ value +'</div>');
+                                }
+                            });
+                        }
+                        $('#btn-simpan').attr('disabled',false);
+                        $('#btn-simpan-baru').attr('disabled',false);
+                        $('#btn-cancle').removeClass('btn-cancle-disable');
+                        $('#button-loading').attr('hidden','hidden');
+                    }
+                });
             });
 
             var count = 1;
@@ -188,7 +261,7 @@
 
         function dinamis_field(count){
             var html = '<tr id="row'+count+'" class="td">';
-            html += '<td width="40%"><input type="hidden" id="product_id'+count+'" name="product_id[]" readonly><select class="form-control select-product-id" id="select-product'+count+'"></select></td>';
+            html += '<td width="40%"><input type="hidden" id="product_id'+count+'" name="product_id[]" readonly><select class="form-control select-product-id" name="produk[]" id="select-product'+count+'"></select></td>';
             html += '<td width="20%"><input id="qty'+count+'" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
             html += '<td><input id="price'+count+'" type="text" name="price[]" value="0" class="form-control money"></td>';
 
@@ -278,6 +351,12 @@
 
         .select2-selection__arrow {
             height: 40px !important;
+        }
+
+        .btn-cancle-disable {
+          opacity: .4;
+          cursor: default !important;
+          pointer-events: none;
         }
     </style>
 @endpush
