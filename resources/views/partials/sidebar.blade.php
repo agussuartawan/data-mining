@@ -16,10 +16,19 @@
       Data Master
     </div>
     <li class="nav-item {{ request()->is('product/*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{route('product.index', 0)}}">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+        aria-expanded="true" aria-controls="collapseBootstrap">
         <i class="fas fa-fw fa-glass-martini-alt"></i>
         <span>Produk</span>
       </a>
+      <div id="collapseBootstrap" class="collapse {{ request()->is('product/*') ? 'show' : '' }}" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item {{ request()->is('product/group') ? 'active' : '' }}" href="{{ route('group.index') }}">Data group</a>
+          <a class="collapse-item {{ request()->is('product/0') ? 'active' : '' }}" href="{{ route('product.index',0) }}">Data Produk</a>
+          <a class="collapse-item {{ request()->is('product/create') ? 'active' : '' }}" href="{{ route('product.create') }}">Produk baru</a>
+          <a class="collapse-item {{ request()->is('product/create/bundle') ? 'active' : '' }}" href="{{ route('product.create.bundle') }}">Produk bundel baru</a>
+        </div>
+      </div>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="charts.html">

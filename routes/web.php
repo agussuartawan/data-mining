@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome', compact('title'));
 });
 
-# Produk
+# Product
 Route::post('product/bundle/sum', 'ProductController@sum')->name('product.bundle.sum');
 Route::get('product/find/price/{id}', 'ProductController@find_price');
 Route::post('product/find', 'ProductController@find')->name('find.product');
@@ -30,5 +30,7 @@ Route::get('product/{id}/edit', 'ProductController@edit')->name('product.edit');
 Route::put('product/{id}/update', 'ProductController@update')->name('product.update');
 Route::delete('product/{id}/destroy/', 'ProductController@destroy')->name('product.destroy');
 Route::get('product/{id}/show', 'ProductController@show')->name('product.show');
-Route::get('product/{id}', 'ProductController@index')->name('product.index');
+Route::get('product/index/{id}', 'ProductController@index')->name('product.index');
 
+# Group Product
+Route::resource('product/group', 'GroupController');

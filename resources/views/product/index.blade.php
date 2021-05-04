@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="table-responsive p-3">
-            <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+            <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
               <thead class="thead-light">
                 <tr>
                   <th>#</th>

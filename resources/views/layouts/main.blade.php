@@ -29,19 +29,15 @@
         <!-- Topbar -->
 
         <!-- Container Fluid-->
-        <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
-          </div>
-
-          <!-- main content -->
+        <div class="container-fluid" id="container-wrapper">          
+          {{-- main content --}}
           @yield('content')
 
           <!-- Modal Logout -->
           @include('partials.modal-logout')
-
         </div>
         <!---Container Fluid-->
+
       </div>
       <!-- Footer -->
       @include('partials.footer')
