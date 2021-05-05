@@ -19,12 +19,12 @@ class ProductController extends Controller
      */
     public function index($id)
     {
-        $title = "Data Produk";
+        $title = "Produk";
 
         if ($id == 0) {
             $products = Product::orderBy('id', 'desc')->get();
         } else {
-            $products = Product::where('group_id','=', $id)->orderBy('id','desc')->get();
+            $products = Product::where('group_id', '=', $id)->orderBy('id', 'desc')->get();
         }
 
         $group = Group::get();
@@ -40,17 +40,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $title = "Tambah Produk";
-        $group = Group::where('id','!=', 1)->get();
-        return view('product.create', compact('title','group'));
+        $title = "Produk";
+        $group = Group::where('id', '!=', 1)->get();
+        return view('product.create', compact('title', 'group'));
     }
 
     public function create_bundle()
     {
-        $title = "Tambah Produk Bundle";
+        $title = "Produk Bundle";
         $allProducts = Product::all();
         $count = count($allProducts);
-        return view('product.create-bundle', compact('title','allProducts','count'));
+        return view('product.create-bundle', compact('title', 'allProducts', 'count'));
     }
 
     public function store(StoreProductRequest $request)
@@ -59,9 +59,9 @@ class ProductController extends Controller
         Product::create($data);
 
         if ($request->redirect_to == 'index') {
-            return redirect()->route('product.index',0)->with('success', 'Produk berhasil ditambahkan');
+            return redirect()->route('product.index', 0)->with('success', 'Produk berhasil ditambahkan');
         } else {
-            return redirect()->route('product.create')->with('success', 'Produk berhasil ditambahkan');   
+            return redirect()->route('product.create')->with('success', 'Produk berhasil ditambahkan');
         }
     }
 
@@ -69,7 +69,7 @@ class ProductController extends Controller
     {
         $new_price = 0;
         $harga_jual = str_replace('.', '', $request->harga_jual);
-        if($harga_jual == 0) {
+        if ($harga_jual == 0) {
             $prices = $request->price;
             foreach ($prices as $price) {
                 $new_price = $new_price + str_replace('.', '', $price);
@@ -78,9 +78,9 @@ class ProductController extends Controller
             $new_price = $harga_jual;
         }
 
-        DB::transaction(function () use ($request,$new_price) {
+        DB::transaction(function () use ($request, $new_price) {
             # insert into table bundles
-            if($request->stok == null){
+            if ($request->stok == null) {
                 $stok = 1;
             } else {
                 $stok = $request->stok;
@@ -100,10 +100,10 @@ class ProductController extends Controller
             $product_id = $request->product_id;
             $qty = $request->qty;
             for ($i = 0; $i < count($product_id); $i++) {
-                if($product_id[$i] != 0 && $product_id[$i] != null){
+                if ($product_id[$i] != 0 && $product_id[$i] != null) {
                     $products[] = array(
                         'product_id' => $last_data->id,
-                        'product' => $product_id[$i], 
+                        'product' => $product_id[$i],
                         'qty' => $qty[$i]
                     );
                 }
@@ -122,9 +122,9 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
-    	$title = "Detail Produk " .  $product->nama;
+        $title = "Detail Produk " .  $product->nama;
 
-    	return view('product.show', compact('product', 'title'));
+        return view('product.show', compact('product', 'title'));
     }
 
     /**
@@ -135,9 +135,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-    	$title = "Edit Produk";
-    	$product = Product::find($id);
-    	$jenis = Group::get();
+        $title = "Produk";
+        $product = Product::find($id);
+        $jenis = Group::get();
 
         return view('product.edit', compact('product', 'jenis', 'title'));
     }
@@ -154,7 +154,7 @@ class ProductController extends Controller
         $data = $request->all();
         Product::find($id)->update($data);
 
-        return redirect()->route('product.index',0)->with('success', 'Produk berhasil diubah');
+        return redirect()->route('product.index', 0)->with('success', 'Produk berhasil diubah');
     }
 
     /**
@@ -169,7 +169,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if ($product->tipe == "Bundle") {
-            DB::transaction(function () use ($product,$id) {
+            DB::transaction(function () use ($product, $id) {
                 ProductBundle::where('product_id', '=', $id)->delete();
 
                 $product->delete();
@@ -177,20 +177,20 @@ class ProductController extends Controller
         } else {
             $product->delete();
         }
-        return redirect()->route('product.index',0)->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('product.index', 0)->with('success', 'Produk berhasil dihapus');
     }
 
     public function find(Request $request)
     {
         $search = $request->search;
         $data = Product::orderBy('nama', 'asc')
-                            ->select('id', 'nama', 'harga_jual')
-                            ->where('nama', 'LIKE', "%{$search}%")
-                            ->where('tipe', '=', 'Single')
-                            ->get();
+            ->select('id', 'nama', 'harga_jual')
+            ->where('nama', 'LIKE', "%{$search}%")
+            ->where('tipe', '=', 'Single')
+            ->get();
 
         $results = [];
-        foreach($data as $d){
+        foreach ($data as $d) {
             $results[] = array(
                 'id' => $d->id,
                 'text' => $d->nama
@@ -207,7 +207,7 @@ class ProductController extends Controller
         } else {
             $price = 0;
         }
-        
+
         return $price;
     }
 
@@ -219,8 +219,8 @@ class ProductController extends Controller
         $prices = $_POST['price'];
         $count = count($qty);
 
-        if($count > 0){
-            for ($i=0; $i < $count; $i++) { 
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
                 $price = str_replace('.', '', $prices[$i]);
                 $subtotal[$i] = $qty[$i] * $price;
                 $grand_total = $grand_total + $subtotal[$i];

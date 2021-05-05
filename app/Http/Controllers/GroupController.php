@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Group;
+use Illuminate\Http\Request;
+
 
 class GroupController extends Controller
 {
@@ -16,17 +17,7 @@ class GroupController extends Controller
     {
         $title = "Group Produk";
         $groups = Group::all();
-        return view('product.group.index',compact('title','groups'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('product.group.index', compact('title', 'groups'));
     }
 
     /**

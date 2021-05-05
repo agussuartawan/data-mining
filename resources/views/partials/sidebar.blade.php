@@ -1,62 +1,67 @@
 <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-      <div class="sidebar-brand-icon">
-        <i class="fas fa-cocktail"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">Trisno App</div>
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-cocktail fa-2x"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Trisno App</div>
     </a>
     <hr class="sidebar-divider my-0">
     <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
-      <a class="nav-link" href="{{url('/')}}">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
+        <a class="nav-link" href="{{ url('/') }}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
-      Data Master
+        Data Master
     </div>
     <li class="nav-item {{ request()->is('product/*') ? 'active' : '' }}">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
-        aria-expanded="true" aria-controls="collapseBootstrap">
-        <i class="fas fa-fw fa-glass-martini-alt"></i>
-        <span>Produk</span>
-      </a>
-      <div id="collapseBootstrap" class="collapse {{ request()->is('product/*') ? 'show' : '' }}" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item {{ request()->is('product/group') ? 'active' : '' }}" href="{{ route('group.index') }}">Data group</a>
-          <a class="collapse-item {{ request()->is('product/0') ? 'active' : '' }}" href="{{ route('product.index',0) }}">Data Produk</a>
-          <a class="collapse-item {{ request()->is('product/create') ? 'active' : '' }}" href="{{ route('product.create') }}">Produk baru</a>
-          <a class="collapse-item {{ request()->is('product/create/bundle') ? 'active' : '' }}" href="{{ route('product.create.bundle') }}">Produk bundel baru</a>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+            aria-expanded="true" aria-controls="collapseBootstrap">
+            <i class="fas fa-fw fa-glass-martini-alt"></i>
+            <span>Produk</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse {{ request()->is('product/*') ? 'show' : '' }}"
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{ request()->is('product/group') ? 'active' : '' }}"
+                    href="{{ route('group.index') }}">Data group</a>
+                <a class="collapse-item {{ request()->is('product/index/0') ? 'active' : '' }}"
+                    href="{{ route('product.index', 0) }}">Data Produk</a>
+                <a class="collapse-item {{ request()->is('product/create') ? 'active' : '' }}"
+                    href="{{ route('product.create') }}">Produk baru</a>
+                <a class="collapse-item {{ request()->is('product/create/bundle') ? 'active' : '' }}"
+                    href="{{ route('product.create.bundle') }}">Produk bundel baru</a>
+            </div>
         </div>
-      </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-users"></i>
-        <span>Pelanggan</span>
-      </a>
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Pelanggan</span>
+        </a>
     </li>
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
-      Transaksi
+        Transaksi
     </div>
     <li class="nav-item">
-      <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-shopping-cart"></i>
-        <span>Penjualan</span>
-      </a>
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>Penjualan</span>
+        </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-cart-arrow-down"></i>
-        <span>Pembelian</span>
-      </a>
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-cart-arrow-down"></i>
+            <span>Pembelian</span>
+        </a>
     </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item">
-      <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
-        <i class="fas fa-fw fa-sign-out-alt"></i>
-        <span>Logout</span>
-      </a>
+        <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+            <i class="fas fa-fw fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
     </li>
-  </ul>
+</ul>
