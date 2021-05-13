@@ -19,7 +19,7 @@
                         Produk</h5>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive p-3">
+                    <div class="table-responsive">
                         <div class="row mb-3">
                             <div class="col-lg-6">
                                 <div class="form-inline">
@@ -84,7 +84,8 @@
                                                 action="{{ route('product.destroy', $product->id) }}">
                                                 @csrf
                                                 <input type="hidden" name="_method" value="DELETE">
-                                                <a href="{{ route('product.edit', $product->id) }}"
+                                                <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id)
+                                                            : route('product.edit.bundle', $product->id) }}"
                                                     class="badge badge-info">edit</a>&nbsp;
                                                 <a href="#" class="badge badge-danger btn-delete"
                                                     title="{{ $product->nama }}">hapus</a>

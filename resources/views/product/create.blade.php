@@ -83,12 +83,15 @@
                 </div>
 
                 <input type="hidden" name="redirect_to" id="redirect_to">
-                <a href="{{ route('product.index', 0) }}" class="btn btn-outline-danger">Batal</a>
                 <button type="submit" class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
                 <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
             </form>
         </div>
     </div>
+    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
+        <i class="fas fa-chevron-left"></i>
+        Kembali
+    </a>
 @endsection
 
 @push('scripts')

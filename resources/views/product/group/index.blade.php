@@ -57,9 +57,9 @@
                             @foreach ($groups as $index => $group)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td><a class="card-link"
-                                            href="{{ route('product.show', $group->id) }}">{{ $group->nama }}</a></td>
+                                    <td>{{ $group->nama }}</td>
                                     <td>
+                                        @if($group->id != 1)
                                         <form class="form-inline" method="post"
                                             action="{{ route('group.destroy', $group->id) }}">
                                             @csrf
@@ -69,6 +69,7 @@
                                             <a href="#" class="badge badge-danger btn-delete"
                                                 title="{{ $group->nama }}">hapus</a>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -64,12 +64,14 @@
                     </tbody>
                 </table>
             @endif
-
-            <div class="card-body">
-                <a href="{{ route('product.index', 0) }}" class="card-link text-info">Kembali</a>
-                <a href="{{ route('product.edit', $product->id) }}" class="card-link text-info">Edit</a>
-            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id)
+                        : route('product.edit.bundle', $product->id) }}" class="btn btn-info">Edit</a>
         </div>
     </div>
-
+    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
+        <i class="fas fa-chevron-left"></i>
+        Kembali
+    </a>
 @endsection

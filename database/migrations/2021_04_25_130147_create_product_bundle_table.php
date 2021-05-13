@@ -18,6 +18,7 @@ class CreateProductBundleTable extends Migration
             $table->foreignId('product_id')->constrained();
             $table->foreignId('product')->constrained('products');
             $table->integer('qty');
+            $table->double('price');
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@
     </div>
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Produk Bundel Baru</h5>
+            <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Edit Produk Bundel</h5>
         </div>
         <div class="card-body">
             <form id="form-product">
@@ -22,8 +22,7 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="kode" class="font-weight-bold">*Kode Produk</label>
-                                            <input type="text" class="form-control" id="kode"
-                                                placeholder="Contoh AB001 untuk Absolut Blue" name="kode">
+                                            <input type="text" class="form-control" id="kode" value="{{ $product->kode }}" name="kode">
                                         </div>
                                     </div>
                                 </div>
@@ -32,7 +31,7 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="nama" class="font-weight-bold">*Nama Produk Bundle</label>
-                                            <input type="text" class="form-control" id="nama" name="nama">
+                                            <input type="text" class="form-control" id="nama" name="nama" value="{{ $product->nama }}">
                                         </div>
                                     </div>
                                 </div>
@@ -41,8 +40,7 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="stok_awal" class="font-weight-bold">Stok awal</label>
-                                            <input type="number" class="form-control" id="stok_awal" name="stok"
-                                                placeholder="Default 1">
+                                            <input type="number" class="form-control" id="stok_awal" name="stok" value="{{ $product->stok }}">
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +50,7 @@
                                         <div class="form-group">
                                             <label for="nama-jual" class="font-weight-bold">Harga Jual</label>
                                             <input type="text" class="form-control" id="harga-jual" name="harga_jual"
-                                                value="0">
+                                                value="{{ $product->harga_jual }}">
                                         </div>
                                     </div>
                                 </div>
@@ -99,6 +97,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -214,10 +213,14 @@
                 });
             });
 
-            var count = 1;
-            for (var i = 1; i <= count; i++) {
-                dinamis_field(i);
-            }
+            @foreach( $product->product_bundle as $index => $product_bundle )
+                var index =  {{ $index + 1}};
+                var product_id = {{ $product_bundle->product }};
+                var product_name = '{{ $product_bundle->product_nama($product_bundle->product) }}';
+                var qty = {{$product_bundle->qty}};
+                var price = {{$product_bundle->price}};
+                dinamis_field(index, product_id, product_name, qty, price);
+            @endforeach
 
             $('#tambah-baris').click(function(event) {
                 event.preventDefault();
@@ -239,6 +242,10 @@
                 precision: 0,
                 allowZero: true,
                 selectAllOnFocus: true
+            });
+
+            $('#harga-jual').each(function() {
+                $(this).maskMoney('mask');
             });
 
             $('body').on('change', '.quantity', function() {
@@ -276,15 +283,15 @@
             });
         }
 
-        function dinamis_field(count) {
+        function dinamis_field(count, product_id, product_name, qty, price) {
             var html = '<tr id="row' + count + '" class="td">';
             html += '<td width="40%"><input type="hidden" id="product_id' + count +
                 '" name="product_id[]" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
-                count + '"></select></td>';
+                count + '"><option value="'+ product_id +'" selected>'+ product_name +'</option></select></td>';
             html += '<td width="20%"><input id="qty' + count +
-                '" type="number" class="form-control quantity" value="1" name="qty[]"></td>';
+                '" type="number" class="form-control quantity" value="'+ qty +'" name="qty[]"></td>';
             html += '<td><input id="price' + count +
-                '" type="text" name="price[]" value="0" class="form-control money"></td>';
+                '" type="text" name="price[]" value="'+ price +'" class="form-control money"></td>';
 
             if (count > 1) {
                 html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="' + count +

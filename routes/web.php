@@ -27,6 +27,7 @@ Route::get('product/create/bundle', 'ProductController@create_bundle')->name('pr
 Route::post('product/create/bundle', 'ProductController@store_bundle')->name('product.store.bundle');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/{id}/edit', 'ProductController@edit')->name('product.edit');
+Route::get('product/{id}/edit/bundle', 'ProductController@edit_bundle')->name('product.edit.bundle');
 Route::put('product/{id}/update', 'ProductController@update')->name('product.update');
 Route::delete('product/{id}/destroy/', 'ProductController@destroy')->name('product.destroy');
 Route::get('product/{id}/show', 'ProductController@show')->name('product.show');

@@ -99,12 +99,15 @@ class ProductController extends Controller
             # insert into table bundle_product
             $product_id = $request->product_id;
             $qty = $request->qty;
+            $subprices = $request->price;
             for ($i = 0; $i < count($product_id); $i++) {
                 if ($product_id[$i] != 0 && $product_id[$i] != null) {
+                    $subprice = str_replace('.', '', $subprices[$i]);
                     $products[] = array(
                         'product_id' => $last_data->id,
                         'product' => $product_id[$i],
-                        'qty' => $qty[$i]
+                        'qty' => $qty[$i],
+                        'price' => $subprice
                     );
                 }
             }
@@ -133,6 +136,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function edit_bundle($id)
+    {
+        $title = "Produk";
+        $product = Product::find($id);
+        // dd($product->product_bundle);
+
+        return view('product.edit-bundle', compact('product', 'title'));
+    }
+
     public function edit($id)
     {
         $title = "Produk";
