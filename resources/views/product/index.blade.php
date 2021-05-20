@@ -5,50 +5,49 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg-12">
+            @if (Session::has('success'))
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ Session('success') }}
+                </div>
+            @endif
+            <div class="row mb-3">
+                <div class="col-lg-6">
+                    <div class="form-inline">
+                        <label class="label">Jenis Produk </label>&nbsp;
+                        <select class="custom-select custom-select-sm form-control form-control-sm" id="jenis">
+                            <option value="0" {{ $selected == 0 ? 'selected' : '' }}>Semua</option>
+                            @foreach ($group as $j)
+                                <option value="{{ $j->id }}" {{ $selected == $j->id ? 'selected' : '' }}>
+                                    {{ $j->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="btn-group float-right" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-plus"></i>
+                            Tambah Baru
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item" href="{{ route('product.create') }}">Produk</a>
+                            <a class="dropdown-item" href="{{ route('product.create.bundle') }}">Produk
+                                Bundle</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card mb-4">
                 <div class="card-header">
-                    @if (Session::has('success'))
-                        <div class="alert alert-info alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            {{ Session('success') }}
-                        </div>
-                    @endif
                     <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-glass-martini-alt"></i> &nbsp; Data
                         Produk</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <div class="row mb-3">
-                            <div class="col-lg-6">
-                                <div class="form-inline">
-                                    <label class="label">Jenis Produk </label>&nbsp;
-                                    <select class="custom-select custom-select-sm form-control form-control-sm" id="jenis">
-                                        <option value="0" {{ $selected == 0 ? 'selected' : '' }}>Semua</option>
-                                        @foreach ($group as $j)
-                                            <option value="{{ $j->id }}"
-                                                {{ $selected == $j->id ? 'selected' : '' }}>
-                                                {{ $j->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="btn-group float-right" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-plus"></i>
-                                        Tambah Produk
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <a class="dropdown-item" href="{{ route('product.create') }}">Produk</a>
-                                        <a class="dropdown-item" href="{{ route('product.create.bundle') }}">Produk
-                                            Bundle</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
                             <thead class="thead-light">
                                 <tr>
@@ -84,8 +83,7 @@
                                                 action="{{ route('product.destroy', $product->id) }}">
                                                 @csrf
                                                 <input type="hidden" name="_method" value="DELETE">
-                                                <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id)
-                                                            : route('product.edit.bundle', $product->id) }}"
+                                                <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id) : route('product.edit.bundle', $product->id) }}"
                                                     class="badge badge-info">edit</a>&nbsp;
                                                 <a href="#" class="badge badge-danger btn-delete"
                                                     title="{{ $product->nama }}">hapus</a>
@@ -111,7 +109,7 @@
 
             $('#jenis').on('change', function() {
                 var id = $('#jenis').val();
-                window.location.href = '{{ url('product') }}/' + id;
+                window.location.href = '{{ url('product/index') }}/' + id;
             });
 
             $('body').on('click', '.btn-delete', function(event) {

@@ -3,6 +3,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
     </div>
+    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
+        <i class="fas fa-chevron-left"></i>
+        Kembali
+    </a>
     <div class="card mb-4">
         <div class="card-header">
             <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-edit"></i> &nbsp; Edit Produk</h5>
@@ -45,8 +49,7 @@
                     <input type="number" class="form-control" id="harga-jual" name="harga_jual"
                         value="{{ $product->harga_jual }}">
                 </div>
-                <a href="{{ route('product.index', 0) }}" class="btn btn-outline-danger">Batal</a>
-                <button type="submit" class="btn btn-outline-warning" id="btn-simpan">Edit</button>
+                <button type="submit" class="btn btn-outline-warning" id="btn-simpan">Simpan</button>
             </form>
         </div>
     </div>
