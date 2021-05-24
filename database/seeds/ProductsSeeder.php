@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Product;
+use App\ProductBundle;
 
 class ProductsSeeder extends Seeder
 {

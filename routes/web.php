@@ -29,6 +29,7 @@ Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/{id}/edit', 'ProductController@edit')->name('product.edit');
 Route::get('product/{id}/edit/bundle', 'ProductController@edit_bundle')->name('product.edit.bundle');
 Route::put('product/{id}/update', 'ProductController@update')->name('product.update');
+Route::put('product/{id}/update/bundle', 'ProductController@update_bundle')->name('product.update.bundle');
 Route::delete('product/{id}/destroy/', 'ProductController@destroy')->name('product.destroy');
 Route::get('product/{id}/show', 'ProductController@show')->name('product.show');
 Route::get('product/index/{id}', 'ProductController@index')->name('product.index');

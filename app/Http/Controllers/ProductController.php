@@ -169,6 +169,44 @@ class ProductController extends Controller
         return redirect()->route('product.index', 0)->with('success', 'Produk berhasil diubah');
     }
 
+    public function update_bundle(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $data = $request->all();
+
+        #Update product table
+        $product_update = [
+            "group_id" => 1,
+            "kode" => $data["kode"],
+            "nama" => $data["nama"],
+            "tipe" => "Bundle",
+            "stok" => $data["stok"],
+            "harga_jual" => $data["harga_jual"]
+        ];
+        $product->update($product_update);
+
+        #Update Product Bundle table
+        $product_id = $request->product_id;
+        $qty = $request->qty;
+        $subprices = $request->price;
+        for ($i = 0; $i < count($product_id); $i++) {
+            if ($product_id[$i] != 0 && $product_id[$i] != null) {
+                $subprice = str_replace('.', '', $subprices[$i]);
+                $products[] = array(
+                    'product_id' => $id,
+                    'product' => $product_id[$i],
+                    'qty' => $qty[$i],
+                    'price' => $subprice
+                );
+            }
+        }
+        // dd($data);
+        ProductBundle::where('product_id', $id)->delete();
+        ProductBundle::insert($products);
+
+        // return redirect()->route('product.index', 0)->with('success', 'Produk berhasil diubah');
+    }
+
     /**
      * Remove the specified resource from storage.
      *

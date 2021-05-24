@@ -8,8 +8,9 @@
             <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Edit Produk Bundel</h5>
         </div>
         <div class="card-body">
-            <form id="form-product">
+            <form id="form-product" method="post" action="{{ route('product.update.bundle', $product->id) }}">
                 @csrf
+                @method('PUT')
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="shadow-sm mb-4 bg-light table-responsive rounded">
@@ -97,13 +98,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+                <button id="btn" type="submit">Tes</button>
             </form>
         </div>
         <div class="card-footer">
             <button class="btn btn-outline-primary" id="btn-simpan">Simpan</button>
-            <button type="submit" class="btn btn-outline-primary" id="btn-simpan-baru">Simpan & Baru</button>
             <div class="spinner-border spinner-border-sm text-primary" role="status" hidden="hidden" id="button-loading">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -119,56 +119,6 @@
     <script src="{{ asset('') }}js/jquery.maskMoney.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#btn-simpan-baru').click(function(event) {
-                event.preventDefault();
-                const form = $('#form-product');
-                form.find('.invalid-feedback').remove();
-                form.find('.form-control').removeClass('is-invalid');
-                $('#alert-product').remove();
-
-                $.ajax({
-                    url: '{{ route('product.store.bundle') }}',
-                    type: 'POST',
-                    data: form.serialize(),
-                    beforeSend: function() {
-                        $('#btn-simpan').attr('disabled', 'disabled');
-                        $('#btn-simpan-baru').attr('disabled', 'disabled');
-                        $('#btn-cancle').addClass('btn-cancle-disable');
-                        $('#button-loading').attr('hidden', false);
-                    },
-                    success: function(response) {
-                        toastr["success"](response);
-                        $('#btn-simpan').attr('disabled', false);
-                        $('#btn-simpan-baru').attr('disabled', false);
-                        $('#btn-cancle').removeClass('btn-cancle-disable');
-                        $('#button-loading').attr('hidden', 'hidden');
-                        dinamis_field(1);
-                        form.trigger('reset');
-                        $('#total-harga').text(0);
-                    },
-                    error: function(xhr) {
-                        var res = xhr.responseJSON;
-                        if ($.isEmptyObject(res) == false) {
-                            $.each(res.errors, function(key, value) {
-                                $('#' + key)
-                                    .addClass('is-invalid')
-                                    .after('<div class="invalid-feedback">' + value +
-                                        '</div>');
-                                if (key == "produk") {
-                                    $('#card-product').prepend(
-                                        '<div class="alert alert-danger mt-0 mb-0" role="alert" id="alert-product">' +
-                                        value + '</div>');
-                                }
-                            });
-                        }
-                        $('#btn-simpan').attr('disabled', false);
-                        $('#btn-simpan-baru').attr('disabled', false);
-                        $('#btn-cancle').removeClass('btn-cancle-disable');
-                        $('#button-loading').attr('hidden', 'hidden');
-                    }
-                });
-            });
-
             $('#btn-simpan').click(function(event) {
                 event.preventDefault();
                 const form = $('#form-product');
@@ -177,12 +127,11 @@
                 $('#alert-product').remove();
 
                 $.ajax({
-                    url: '{{ route('product.store.bundle') }}',
+                    url: "{{ route('product.update.bundle',$product->id) }}",
                     type: 'POST',
                     data: form.serialize(),
                     beforeSend: function() {
                         $('#btn-simpan').attr('disabled', 'disabled');
-                        $('#btn-simpan-baru').attr('disabled', 'disabled');
                         $('#btn-cancle').addClass('btn-cancle-disable');
                         $('#button-loading').attr('hidden', false);
                     },
@@ -206,7 +155,6 @@
                             });
                         }
                         $('#btn-simpan').attr('disabled', false);
-                        $('#btn-simpan-baru').attr('disabled', false);
                         $('#btn-cancle').removeClass('btn-cancle-disable');
                         $('#button-loading').attr('hidden', 'hidden');
                     }
@@ -222,10 +170,12 @@
                 dinamis_field(index, product_id, product_name, qty, price);
             @endforeach
 
+            var count = index;
+
             $('#tambah-baris').click(function(event) {
                 event.preventDefault();
                 count++;
-                dinamis_field(count);
+                dinamis_field(count, null, '', 1, 0);
             });
 
             $(document).on('click', '.remove-row', function(event) {
@@ -286,7 +236,7 @@
         function dinamis_field(count, product_id, product_name, qty, price) {
             var html = '<tr id="row' + count + '" class="td">';
             html += '<td width="40%"><input type="hidden" id="product_id' + count +
-                '" name="product_id[]" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
+                '" name="product_id[]" value="'+ product_id +'" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
                 count + '"><option value="'+ product_id +'" selected>'+ product_name +'</option></select></td>';
             html += '<td width="20%"><input id="qty' + count +
                 '" type="number" class="form-control quantity" value="'+ qty +'" name="qty[]"></td>';
