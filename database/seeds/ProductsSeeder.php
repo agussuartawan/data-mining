@@ -18,7 +18,7 @@ class ProductsSeeder extends Seeder
                 'kode'           => 'JD001',
                 'nama'          => 'Jack Daniel',
                 'group_id'          => '2',
-                'tipe'  => 'single',
+                'tipe'  => 'Single',
                 'harga_beli'       => '300000',
                 'harga_jual'       => '500000'
             ],
@@ -26,7 +26,7 @@ class ProductsSeeder extends Seeder
             	'kode'           => 'AB001',
                 'nama'          => 'Absolut Blue',
                 'group_id'          => '2',
-                'tipe'  => 'single',
+                'tipe'  => 'Single',
                 'harga_beli'       => '200000',
                 'harga_jual'       => '400000'
             ],
@@ -34,7 +34,7 @@ class ProductsSeeder extends Seeder
                 'kode'           => 'CM001',
                 'nama'          => 'Captain Morgan Gold',
                 'group_id'          => '2',
-                'tipe'  => 'single',
+                'tipe'  => 'Single',
                 'harga_beli'       => '150000',
                 'harga_jual'       => '250000'
             ],
@@ -42,7 +42,7 @@ class ProductsSeeder extends Seeder
                 'kode'           => 'CM002',
                 'nama'          => 'Captain Morgan White',
                 'group_id'          => '2',
-                'tipe'  => 'single',
+                'tipe'  => 'Single',
                 'harga_beli'       => '150000',
                 'harga_jual'       => '250000'
             ],
@@ -50,10 +50,10 @@ class ProductsSeeder extends Seeder
                 'kode'           => 'CM003',
                 'nama'          => 'Captain Morgan Orange',
                 'group_id'          => '2',
-                'tipe'  => 'single',
+                'tipe'  => 'Single',
                 'harga_beli'       => '150000',
                 'harga_jual'       => '250000'
-            ]
+            ],
         ];
 
         Product::insert($products);

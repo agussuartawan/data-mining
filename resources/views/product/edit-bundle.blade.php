@@ -238,14 +238,7 @@
 
         function dinamis_field(count, product_id, product_name, qty, price) {
             var html = '<tr id="row' + count + '" class="td">';
-            html += '<td width="40%"><input type="hidden" id="product_id' + count +
-<<<<<<< HEAD
-                '" name="product_id[]" value="'+ product_id +'" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
-                count + '"><option value="'+ product_id +'" selected>'+ product_name +'</option></select></td>';
-=======
-                '" name="product_id[]" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
-                count + '"><option value="' + product_id + '" selected>' + product_name + '</option></select></td>';
->>>>>>> c7912036bb4336732233da19269aa3a375bd1396
+            html += '<td width="40%"><input type="hidden" id="product_id' + count + '" name="product_id[]" value="'+ product_id +'" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' + count + '"><option value="'+ product_id +'" selected>'+ product_name +'</option></select></td>';
             html += '<td width="20%"><input id="qty' + count +
                 '" type="number" class="form-control quantity" value="' + qty + '" name="qty[]"></td>';
             html += '<td><input id="price' + count +
