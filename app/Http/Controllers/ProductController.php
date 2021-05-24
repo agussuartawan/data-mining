@@ -79,7 +79,7 @@ class ProductController extends Controller
         }
 
         DB::transaction(function () use ($request, $new_price) {
-            # insert into table bundles
+            # insert into table product
             if ($request->stok == null) {
                 $stok = 1;
             } else {
@@ -96,7 +96,7 @@ class ProductController extends Controller
             );
             $last_data = Product::create($product);
 
-            # insert into table bundle_product
+            # insert into table product bundle
             $product_id = $request->product_id;
             $qty = $request->qty;
             $subprices = $request->price;
@@ -171,40 +171,50 @@ class ProductController extends Controller
 
     public function update_bundle(Request $request, $id)
     {
-        $product = Product::find($id);
         $data = $request->all();
-
-        #Update product table
-        $product_update = [
-            "group_id" => 1,
-            "kode" => $data["kode"],
-            "nama" => $data["nama"],
-            "tipe" => "Bundle",
-            "stok" => $data["stok"],
-            "harga_jual" => $data["harga_jual"]
-        ];
-        $product->update($product_update);
-
-        #Update Product Bundle table
-        $product_id = $request->product_id;
-        $qty = $request->qty;
-        $subprices = $request->price;
-        for ($i = 0; $i < count($product_id); $i++) {
-            if ($product_id[$i] != 0 && $product_id[$i] != null) {
-                $subprice = str_replace('.', '', $subprices[$i]);
-                $products[] = array(
-                    'product_id' => $id,
-                    'product' => $product_id[$i],
-                    'qty' => $qty[$i],
-                    'price' => $subprice
-                );
+        $new_price = 0;
+        $harga_jual = str_replace('.', '', $request->harga_jual);
+        if ($harga_jual == 0) {
+            $prices = $request->price;
+            foreach ($prices as $price) {
+                $new_price = $new_price + str_replace('.', '', $price);
             }
+        } else {
+            $new_price = $harga_jual;
         }
-        // dd($data);
-        ProductBundle::where('product_id', $id)->delete();
-        ProductBundle::insert($products);
 
-        // return redirect()->route('product.index', 0)->with('success', 'Produk berhasil diubah');
+        DB::transaction(function () use ($request, $id, $data, $new_price) {
+            #Update product table
+            $product_update = [
+                "group_id" => 1,
+                "kode" => $data["kode"],
+                "nama" => $data["nama"],
+                "tipe" => "Bundle",
+                "stok" => $data["stok"],
+                "harga_jual" => $new_price
+            ];
+            Product::find($id)->update($product_update);
+
+            #Update Product Bundle table
+            $product_id = $request->product_id;
+            $qty = $request->qty;
+            $subprices = $request->price;
+            for ($i = 0; $i < count($product_id); $i++) {
+                if ($product_id[$i] != 0 && $product_id[$i] != null) {
+                    $subprice = str_replace('.', '', $subprices[$i]);
+                    $products[] = array(
+                        'product_id' => $id,
+                        'product' => $product_id[$i],
+                        'qty' => $qty[$i],
+                        'price' => $subprice
+                    );
+                }
+            }
+            ProductBundle::where('product_id', $id)->delete();
+            ProductBundle::insert($products);
+        });
+
+        return response()->json('Data produk bundel berhasil diubah');
     }
 
     /**

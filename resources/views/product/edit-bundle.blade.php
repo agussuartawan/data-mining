@@ -12,7 +12,7 @@
             <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Edit Produk Bundel</h5>
         </div>
         <div class="card-body">
-            <form id="form-product" method="post" action="{{ route('product.update.bundle', $product->id) }}">
+            <form id="form-product">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -106,7 +106,6 @@
                         </div>
                     </div>
                 </div>
-                <button id="btn" type="submit">Tes</button>
             </form>
         </div>
         <div class="card-footer">
