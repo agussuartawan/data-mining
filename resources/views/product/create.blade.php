@@ -3,6 +3,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
     </div>
+    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
+        <i class="fas fa-chevron-left"></i>
+        Kembali
+    </a>
     <div class="card mb-4">
         <div class="card-header">
             @if (Session::has('success'))
@@ -88,10 +92,6 @@
             </form>
         </div>
     </div>
-    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
-        <i class="fas fa-chevron-left"></i>
-        Kembali
-    </a>
 @endsection
 
 @push('scripts')

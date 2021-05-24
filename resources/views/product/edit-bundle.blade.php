@@ -3,6 +3,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
     </div>
+    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
+        <i class="fas fa-chevron-left"></i>
+        Kembali
+    </a>
     <div class="card mb-4">
         <div class="card-header">
             <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Edit Produk Bundel</h5>
@@ -23,7 +27,8 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="kode" class="font-weight-bold">*Kode Produk</label>
-                                            <input type="text" class="form-control" id="kode" value="{{ $product->kode }}" name="kode">
+                                            <input type="text" class="form-control" id="kode" value="{{ $product->kode }}"
+                                                name="kode">
                                         </div>
                                     </div>
                                 </div>
@@ -32,7 +37,8 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="nama" class="font-weight-bold">*Nama Produk Bundle</label>
-                                            <input type="text" class="form-control" id="nama" name="nama" value="{{ $product->nama }}">
+                                            <input type="text" class="form-control" id="nama" name="nama"
+                                                value="{{ $product->nama }}">
                                         </div>
                                     </div>
                                 </div>
@@ -41,7 +47,8 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="stok_awal" class="font-weight-bold">Stok awal</label>
-                                            <input type="number" class="form-control" id="stok_awal" name="stok" value="{{ $product->stok }}">
+                                            <input type="number" class="form-control" id="stok_awal" name="stok"
+                                                value="{{ $product->stok }}">
                                         </div>
                                     </div>
                                 </div>
@@ -109,10 +116,6 @@
             </div>
         </div>
     </div>
-    <a href="{{ route('product.index', 0) }}" class="btn btn-danger mb-4" id="btn-cancle">
-        <i class="fas fa-chevron-left"></i>
-        Kembali
-    </a>
 @endsection
 
 @push('scripts')
@@ -161,12 +164,12 @@
                 });
             });
 
-            @foreach( $product->product_bundle as $index => $product_bundle )
-                var index =  {{ $index + 1}};
+            @foreach ($product->product_bundle as $index => $product_bundle)
+                var index = {{ $index + 1 }};
                 var product_id = {{ $product_bundle->product }};
                 var product_name = '{{ $product_bundle->product_nama($product_bundle->product) }}';
-                var qty = {{$product_bundle->qty}};
-                var price = {{$product_bundle->price}};
+                var qty = {{ $product_bundle->qty }};
+                var price = {{ $product_bundle->price }};
                 dinamis_field(index, product_id, product_name, qty, price);
             @endforeach
 
@@ -236,12 +239,17 @@
         function dinamis_field(count, product_id, product_name, qty, price) {
             var html = '<tr id="row' + count + '" class="td">';
             html += '<td width="40%"><input type="hidden" id="product_id' + count +
+<<<<<<< HEAD
                 '" name="product_id[]" value="'+ product_id +'" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
                 count + '"><option value="'+ product_id +'" selected>'+ product_name +'</option></select></td>';
+=======
+                '" name="product_id[]" readonly><select class="form-control select-product-id" name="produk[]" id="select-product' +
+                count + '"><option value="' + product_id + '" selected>' + product_name + '</option></select></td>';
+>>>>>>> c7912036bb4336732233da19269aa3a375bd1396
             html += '<td width="20%"><input id="qty' + count +
-                '" type="number" class="form-control quantity" value="'+ qty +'" name="qty[]"></td>';
+                '" type="number" class="form-control quantity" value="' + qty + '" name="qty[]"></td>';
             html += '<td><input id="price' + count +
-                '" type="text" name="price[]" value="'+ price +'" class="form-control money"></td>';
+                '" type="text" name="price[]" value="' + price + '" class="form-control money"></td>';
 
             if (count > 1) {
                 html += '<td class="hapus" width="1px"><a href="" class="badge badge-danger remove-row" id="' + count +
