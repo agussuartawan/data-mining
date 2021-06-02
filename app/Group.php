@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    protected $fillable = ['nama'];
+    protected $fillable = ['name'];
 
     public function product()
     {
-    	return $this->hasMany('App\Product');
+        return $this->hasMany('App\Product');
     }
 }

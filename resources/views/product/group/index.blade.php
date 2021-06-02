@@ -3,27 +3,35 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
     </div>
+    {{-- @if (Session::has('success')) --}}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ Session('success') }}aaaaa
+    </div>
+    {{-- @endif --}}
     <div class="row mb-1">
         <div class="col-lg-12">
             <div class="card mb-4">
                 <div class="card-header py-3">
-                    @if (Session::has('success'))
-                        <div class="alert alert-info alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            {{ Session('success') }}
-                        </div>
-                    @endif
                     <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Group Baru</h5>
                 </div>
                 <div class="car-body p-3">
-                    <form action="">
+                    <form action="{{ route($route) }}" method="POST">
+                        @csrf
+                        @if ($method) @method("PUT") @endif
                         <div class="form-group">
                             <label for="">Nama Group</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="name"
+                                value="{{ isset($group->name) ? $group->name : '' }}" @error('name') is-invalid @enderror>
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                        <button class="btn btn-primary">Simpan</button>
+                        <button class="btn btn-primary" type="submit">Simpan</button>
                     </form>
                 </div>
             </div>
@@ -57,18 +65,18 @@
                             @foreach ($groups as $index => $group)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $group->nama }}</td>
+                                    <td>{{ $group->name }}</td>
                                     <td>
-                                        @if($group->id != 1)
-                                        <form class="form-inline" method="post"
-                                            action="{{ route('group.destroy', $group->id) }}">
-                                            @csrf
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <a href="{{ route('group.edit', $group->id) }}"
-                                                class="badge badge-info">edit</a>&nbsp;
-                                            <a href="#" class="badge badge-danger btn-delete"
-                                                title="{{ $group->nama }}">hapus</a>
-                                        </form>
+                                        @if ($group->id != 1)
+                                            <form class="form-inline" method="post"
+                                                action="{{ route('group.destroy', $group->id) }}">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <a href="{{ route('group.edit', $group->id) }}"
+                                                    class="badge badge-info">edit</a>&nbsp;
+                                                <a href="#" class="badge badge-danger btn-delete"
+                                                    title="{{ $group->name }}">hapus</a>
+                                            </form>
                                         @endif
                                     </td>
                                 </tr>

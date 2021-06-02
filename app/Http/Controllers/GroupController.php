@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Http\Requests\StoreGroupRequest;
 use Illuminate\Http\Request;
 
 
@@ -16,8 +17,10 @@ class GroupController extends Controller
     public function index()
     {
         $title = "Group Produk";
+        $method = FALSE;
+        $route = "group.store";
         $groups = Group::all();
-        return view('product.group.index', compact('title', 'groups'));
+        return view('product.group.index', compact('title', 'groups', 'method', 'route'));
     }
 
     /**
@@ -26,9 +29,10 @@ class GroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGroupRequest $request)
     {
-        //
+        Group::create($request->validated());
+        return redirect()->route('group.index')->with('succes', 'Grup Berhasil Ditambahkan');
     }
 
     /**
