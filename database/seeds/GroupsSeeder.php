@@ -13,19 +13,19 @@ class GroupsSeeder extends Seeder
     {
         $groups = [
             [
-                'nama'           => 'Paket',
+                'name'           => 'Paket',
             ],
             [
-                'nama'           => 'Spirit',
+                'name'           => 'Spirit',
             ],
             [
-            	'nama'           => 'Wine',
+                'name'           => 'Wine',
             ],
             [
-                'nama'           => 'Campagne',
+                'name'           => 'Campagne',
             ],
             [
-                'nama'           => 'Beer',
+                'name'           => 'Beer',
             ]
         ];
 

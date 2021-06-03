@@ -17,10 +17,11 @@ class GroupController extends Controller
     public function index()
     {
         $title = "Group Produk";
+        $subtitle = "Group Baru";
         $method = FALSE;
         $route = "group.store";
         $groups = Group::all();
-        return view('product.group.index', compact('title', 'groups', 'method', 'route'));
+        return view('product.group.index', compact('title', 'groups', 'method', 'route', 'subtitle'));
     }
 
     /**
@@ -32,7 +33,7 @@ class GroupController extends Controller
     public function store(StoreGroupRequest $request)
     {
         Group::create($request->validated());
-        return redirect()->route('group.index')->with('succes', 'Grup Berhasil Ditambahkan');
+        return redirect()->route('group.index')->with('success', 'Grup Berhasil Ditambahkan');
     }
 
     /**
@@ -52,9 +53,14 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Group $group)
     {
-        //
+        $title = "Group Produk";
+        $subtitle = "Edit Grup";
+        $method = TRUE;
+        $route = "group.update";
+        $groups = Group::all();
+        return view('product.group.index', compact('title', 'groups', 'method', 'route', 'group', 'subtitle'));
     }
 
     /**
@@ -75,8 +81,9 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Group $group)
     {
-        //
+        $group->delete();
+        return redirect()->route('group.index')->with('success', 'Data grup berhasil dihapus');
     }
 }

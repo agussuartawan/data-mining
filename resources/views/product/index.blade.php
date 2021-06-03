@@ -86,7 +86,8 @@
                                                 <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id) : route('product.edit.bundle', $product->id) }}"
                                                     class="badge badge-info">edit</a>&nbsp;
                                                 <a href="#" class="badge badge-danger btn-delete"
-                                                    title="{{ $product->nama }}">hapus</a>
+                                                    title="{{ $product->nama }}" data-toggle="modal"
+                                                    data-target="#modal-alert">hapus</a>
                                             </form>
                                         </td>
                                     </tr>
@@ -98,6 +99,8 @@
             </div>
         </div>
     </div>
+    {{-- Modal Alert --}}
+    @include('partials.modal-alert')
 @endsection
 
 @push('scripts')
@@ -114,11 +117,12 @@
 
             $('body').on('click', '.btn-delete', function(event) {
                 event.preventDefault();
+                var me = $(this);
                 var title = $(this).attr('title');
-                var choice = confirm('Yakin menghapus produk ' + title + '?');
-                if (choice) {
-                    $(this).closest('form').submit();
-                }
+                $(".modal-alert-body").html("Yakin akan menghapus produk <b>" + title + "</b> ?")
+                $("#btn-confirm").click(function() {
+                    me.closest("form").submit();
+                });
             });
         });
 

@@ -40,7 +40,7 @@
                             <label for="jenis" class="font-weight-bold">Group Produk</label>
                             <select class="form-control custom-select mb-3" id="jenis" name="group_id">
                                 @foreach ($group as $j)
-                                    <option value="{{ $j->id }}">{{ $j->nama }}</option>
+                                    <option value="{{ $j->id }}">{{ $j->name }}</option>
                                 @endforeach
                             </select>
                         </div>

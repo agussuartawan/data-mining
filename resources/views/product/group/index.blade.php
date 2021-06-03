@@ -3,32 +3,38 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
     </div>
-    {{-- @if (Session::has('success')) --}}
-    <div class="alert alert-info alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ Session('success') }}aaaaa
-    </div>
-    {{-- @endif --}}
+    @if (Session::has('success'))
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ Session('success') }}
+        </div>
+    @endif
     <div class="row mb-1">
         <div class="col-lg-12">
             <div class="card mb-4">
-                <div class="card-header py-3">
-                    <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square"></i> &nbsp; Group Baru</h5>
+                <div class="card-header">
+                    <h5 class="m-0 font-weight-bold text-primary">
+                        @if ($subtitle == 'Group Baru')
+                            <i class="fas fa-plus-square"></i>
+                        @elseif($subtitle == 'Edit Grup')
+                            <i class="fas fa-edit"></i>
+                        @endif
+                        &nbsp;
+                        {{ $subtitle }}
+                    </h5>
                 </div>
                 <div class="car-body p-3">
-                    <form action="{{ route($route) }}" method="POST">
+                    <form action="{{ route($route, isset($group->id)) }}" method="POST">
                         @csrf
                         @if ($method) @method("PUT") @endif
                         <div class="form-group">
                             <label for="">Nama Group</label>
-                            <input type="text" class="form-control" name="name"
-                                value="{{ isset($group->name) ? $group->name : '' }}" @error('name') is-invalid @enderror>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                                value="{{ isset($group->name) ? $group->name : old('name') }}">
                             @error('name')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <strong class="text-danger">{{ $message }}</strong>
                             @enderror
                         </div>
                         <button class="btn btn-primary" type="submit">Simpan</button>
@@ -42,14 +48,6 @@
         <div class="col-lg-12">
             <div class="card mb-4">
                 <div class="card-header py-3">
-                    @if (Session::has('success'))
-                        <div class="alert alert-info alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            {{ Session('success') }}
-                        </div>
-                    @endif
                     <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-layer-group"></i> &nbsp; Data Group</h5>
                 </div>
                 <div class="table-responsive p-3">
@@ -75,7 +73,8 @@
                                                 <a href="{{ route('group.edit', $group->id) }}"
                                                     class="badge badge-info">edit</a>&nbsp;
                                                 <a href="#" class="badge badge-danger btn-delete"
-                                                    title="{{ $group->name }}">hapus</a>
+                                                    title="{{ $group->name }}" data-toggle="modal"
+                                                    data-target="#modal-alert">hapus</a>
                                             </form>
                                         @endif
                                     </td>
@@ -87,6 +86,7 @@
             </div>
         </div>
     </div>
+    @include('partials.modal-alert')
 @endsection
 
 @push('scripts')
@@ -103,11 +103,12 @@
 
             $('body').on('click', '.btn-delete', function(event) {
                 event.preventDefault();
+                var me = $(this);
                 var title = $(this).attr('title');
-                var choice = confirm('Yakin menghapus produk ' + title + '?');
-                if (choice) {
-                    $(this).closest('form').submit();
-                }
+                $(".modal-alert-body").html("Yakin akan menghapus grup <b>" + title + "</b> ?")
+                $("#btn-confirm").click(function() {
+                    me.closest("form").submit();
+                });
             });
         });
 

@@ -16,7 +16,8 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <a href="{{ $product->tipe == 'Single' ? route('product.edit', $product->id) : route('product.edit.bundle', $product->id) }}"
                     class="btn btn-info"> <i class="fas fa-edit"></i> Edit</a> &nbsp;
-                <a href="#" class="btn btn-danger btn-delete" title="{{ $product->nama }}"> <i class="fas fa-trash"></i>
+                <a href="#" class="btn btn-danger btn-delete" title="{{ $product->nama }}" data-toggle="modal"
+                    data-target="#modal-alert"> <i class="fas fa-trash"></i>
                     Hapus</a>
             </form>
         </div>
@@ -84,6 +85,8 @@
             @endif
         </div>
     </div>
+    {{-- Modal Alert --}}
+    @include('partials.modal-alert')
 @endsection
 
 @push('scripts')
@@ -91,11 +94,12 @@
         $(document).ready(function() {
             $('body').on('click', '.btn-delete', function(event) {
                 event.preventDefault();
+                var me = $(this);
                 var title = $(this).attr('title');
-                var choice = confirm('Yakin menghapus produk ' + title + '?');
-                if (choice) {
-                    $(this).closest('form').submit();
-                }
+                $(".modal-alert-body").html("Yakin akan menghapus produk <b>" + title + "</b> ?")
+                $("#btn-confirm").click(function() {
+                    me.closest("form").submit();
+                });
             });
         });
 
