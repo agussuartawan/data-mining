@@ -16,7 +16,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="m-0 font-weight-bold text-primary">
-                        @if ($data['subtitle'] == 'Group Baru')
+                        @if ($data['subtitle'] == 'Grup Baru')
                             <i class="fas fa-plus-square"></i>
                         @elseif($data['subtitle'] == 'Edit Grup')
                             <i class="fas fa-edit"></i>
