@@ -16,12 +16,14 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $title = "Group Produk";
-        $subtitle = "Group Baru";
-        $method = FALSE;
-        $route = "group.store";
+        $title = "Grup Produk";
+        $data = [
+            'subtitle' => 'Grup Baru',
+            'method' => FALSE,
+            'route' => 'product/group',
+        ];
         $groups = Group::all();
-        return view('product.group.index', compact('title', 'groups', 'method', 'route', 'subtitle'));
+        return view('product.group.index', compact('title', 'groups', 'data'));
     }
 
     /**
@@ -55,12 +57,16 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        $title = "Group Produk";
-        $subtitle = "Edit Grup";
-        $method = TRUE;
-        $route = "group.update";
+        $title = "Grup Produk";
+        $data = [
+            'subtitle' => 'Edit Grup',
+            'method' => TRUE,
+            'route' => 'product/group/' . $group->id,
+            'group_id' => $group->id,
+            'group_name' => $group->name,
+        ];
         $groups = Group::all();
-        return view('product.group.index', compact('title', 'groups', 'method', 'route', 'group', 'subtitle'));
+        return view('product.group.index', compact('data', 'groups', 'title'));
     }
 
     /**
@@ -70,9 +76,10 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Group $group)
     {
-        //
+        $group->update($request->all());
+        return redirect()->route('group.index')->with('success', 'Grup berhasil diubah');
     }
 
     /**

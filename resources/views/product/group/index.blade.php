@@ -16,23 +16,23 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="m-0 font-weight-bold text-primary">
-                        @if ($subtitle == 'Group Baru')
+                        @if ($data['subtitle'] == 'Group Baru')
                             <i class="fas fa-plus-square"></i>
-                        @elseif($subtitle == 'Edit Grup')
+                        @elseif($data['subtitle'] == 'Edit Grup')
                             <i class="fas fa-edit"></i>
                         @endif
                         &nbsp;
-                        {{ $subtitle }}
+                        {{ $data['subtitle'] }}
                     </h5>
                 </div>
                 <div class="car-body p-3">
-                    <form action="{{ route($route, isset($group->id)) }}" method="POST">
+                    <form action="{{ url($data['route']) }}" method="POST">
                         @csrf
-                        @if ($method) @method("PUT") @endif
+                        @if ($data['method']) @method("PUT") @endif
                         <div class="form-group">
                             <label for="">Nama Group</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                value="{{ isset($group->name) ? $group->name : old('name') }}">
+                                value="{{ isset($data['group_name']) ? $data['group_name'] : old('name') }}">
                             @error('name')
                                 <strong class="text-danger">{{ $message }}</strong>
                             @enderror
