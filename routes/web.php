@@ -54,3 +54,6 @@ Route::get('product/find/price/{id}', 'ProductBundleController@find_price');
 
 # Group Product
 Route::resource('product/group', 'GroupController');
+
+# Customer
+Route::resource('customer', 'CustomerController');

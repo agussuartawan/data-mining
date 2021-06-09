@@ -15,13 +15,13 @@
     <div class="sidebar-heading">
         Data Master
     </div>
-    <li class="nav-item {{ request()->is('product/*') ? 'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
-            aria-expanded="true" aria-controls="collapseBootstrap">
+    <li class="nav-item{{ request()->is('product/*') ? ' active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#product-menu" aria-expanded="true"
+            aria-controls="collapseBootstrap">
             <i class="fas fa-fw fa-glass-martini-alt"></i>
             <span>Produk</span>
         </a>
-        <div id="collapseBootstrap" class="collapse {{ request()->is('product/*') ? 'show' : '' }}"
+        <div id="product-menu" class="collapse {{ request()->is('product/*') ? 'show' : '' }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('product/group') ? 'active' : '' }}"
@@ -35,11 +35,22 @@
             </div>
         </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+    <li class="nav-item{{ request()->is('customer/*') || request()->is('customer') ? ' active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer-menu" aria-expanded="true"
+            aria-controls="collapseBootstrap">
             <i class="fas fa-fw fa-users"></i>
             <span>Pelanggan</span>
         </a>
+        <div id="customer-menu"
+            class="collapse{{ request()->is('customer/*') || request()->is('customer') ? ' show' : '' }}"
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item{{ request()->is('customer/create') ? ' active' : '' }}"
+                    href="{{ route('customer.create') }}">Pelanggan baru</a>
+                <a class="collapse-item{{ request()->is('customer') ? ' active' : '' }}"
+                    href="{{ route('customer.index') }}">Data pelanggan</a>
+            </div>
+        </div>
     </li>
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
