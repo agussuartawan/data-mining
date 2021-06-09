@@ -35,19 +35,37 @@
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-2"><span>Alamat</span></div>
-                            <div class="col-10">:&nbsp;&nbsp;{{ $customer->address }}</div>
+                            <div class="col-10">:&nbsp;&nbsp;
+                                @if (!$customer->address)
+                                    <small class="font-italic text-danger">(Belum diset)</small>
+                                @else
+                                    {{ $customer->address }}
+                                @endif
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-2"><span>E-mail</span></div>
-                            <div class="col-10">:&nbsp;&nbsp;{{ $customer->email }}</div>
+                            <div class="col-10">:&nbsp;&nbsp;
+                                @if (!$customer->email)
+                                    <small class="font-italic text-danger">(Belum diset)</small>
+                                @else
+                                    {{ $customer->email }}
+                                @endif
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-2"><span>Telp</span></div>
-                            <div class="col-10">:&nbsp;&nbsp;{{ $customer->phone }}</div>
+                            <div class="col-10">:&nbsp;&nbsp;
+                                @if (!$customer->phone)
+                                    <small class="font-italic text-danger">(Belum diset)</small>
+                                @else
+                                    {{ $customer->phone }}
+                                @endif
+                            </div>
                         </div>
                     </li>
                 </ul>

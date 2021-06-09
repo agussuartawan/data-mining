@@ -62,12 +62,6 @@
             <span>Penjualan</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-cart-arrow-down"></i>
-            <span>Pembelian</span>
-        </a>
-    </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item">
         <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">

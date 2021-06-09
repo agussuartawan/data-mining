@@ -26,7 +26,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="name" class="font-weight-bold">*Nama Pelanggan</label>
-                            <input type="text" class="form-control @error('kode') is-invalid @enderror" id="name"
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                                 name="name" value="{{ old('name') }}">
                             @error('name')
                                 <div class="invalid-feedback">

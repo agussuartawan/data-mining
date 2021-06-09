@@ -45,8 +45,20 @@
                                         <td><a class="card-link"
                                                 href="{{ route('customer.show', $customer->id) }}">{{ $customer->name }}</a>
                                         </td>
-                                        <td>{{ $customer->address }}</td>
-                                        <td>{{ $customer->phone }}</td>
+                                        <td>
+                                            @if (!$customer->address)
+                                                <small class="font-italic text-danger">(Belum diset)</small>
+                                            @else
+                                                {{ $customer->address }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (!$customer->phone)
+                                                <small class="font-italic text-danger">(Belum diset)</small>
+                                            @else
+                                                {{ $customer->phone }}
+                                            @endif
+                                        </td>
                                         </td>
                                         <td>
                                             <form class="form-inline" method="post"
