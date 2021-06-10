@@ -57,3 +57,9 @@ Route::resource('product/group', 'GroupController');
 
 # Customer
 Route::resource('customer', 'CustomerController');
+
+# Sales
+Route::resource('sales', 'SaleController');
+
+# Recomendation Product Bundle
+Route::resource('recommendation', 'RecommendationController');
