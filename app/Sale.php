@@ -12,4 +12,9 @@ class Sale extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('qty', 'price', 'discount', 'subtotal');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

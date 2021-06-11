@@ -56,7 +56,7 @@
     <div class="sidebar-heading">
         Transaksi
     </div>
-    <li class="nav-item{{ request()->is('customer/*') || request()->is('customer') ? ' active' : '' }}">
+    <li class="nav-item{{ request()->is('sales/*') || request()->is('sales') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sales-menu" aria-expanded="true"
             aria-controls="collapseBootstrap">
             <i class="fas fa-fw fa-shopping-cart"></i>

@@ -68,6 +68,22 @@
                             </div>
                         </div>
                     </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-2"><span>Ditambahkan pada</span></div>
+                            <div class="col-10">:&nbsp;&nbsp;
+                                {{ isset($customer->created_at) ? $customer->created_at->isoFormat('dddd, D MMMM Y') : 'Tidak Diketahui' }}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-2"><span>Terakhir diubah</span></div>
+                            <div class="col-10">:&nbsp;&nbsp;
+                                {{ isset($customer->updated_at) ? $customer->updated_at->isoFormat('dddd, D MMMM Y') : 'Tidak Diketahui' }}
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

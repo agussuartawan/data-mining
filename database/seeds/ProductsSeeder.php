@@ -23,7 +23,7 @@ class ProductsSeeder extends Seeder
                 'harga_jual'       => '500000'
             ],
             [
-            	'kode'           => 'AB001',
+                'kode'           => 'AB001',
                 'nama'          => 'Absolut Blue',
                 'group_id'          => '2',
                 'tipe'  => 'Single',

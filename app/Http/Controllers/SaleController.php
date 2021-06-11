@@ -14,9 +14,10 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::with('product')->get();
-        // dd($sales);
-        return view('sales.index', compact('sales'));
+        $title = 'Penjualan';
+        $sales = Sale::with('customer')->get();
+        $month = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        return view('sales.index', compact('sales', 'month', 'title'));
     }
 
     /**

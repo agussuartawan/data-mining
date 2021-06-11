@@ -16,6 +16,7 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained();
+            $table->string('no_invoice');
             $table->date('date');
             $table->double('global_discount');
             $table->double('grand_total');
