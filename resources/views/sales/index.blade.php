@@ -18,15 +18,19 @@
                     <div class="form-inline">
                         <label class="label">Bulan </label>&nbsp;
                         <select class="custom-select custom-select-sm form-control form-control-sm" id="jenis">
-                            <option value="0" {{ $selected == 0 ? 'selected' : '' }}>Semua</option>
+                            <option value="0">Semua</option>
                             @for ($i = 0; $i < count($month); $i++)
-                                <option value="{{ $i+1 }}" {{ $selected == $j->id ? 'selected' : '' }}>
-                                    {{ $j->nama }}</option>
+                                <option value="{{ $i+1 }}" >
+                                    {{ $month[$i] }}</option>
                             @endfor
                         </select>
                     </div>
                 </div> --}}
-                <div class="col-lg-6">
+                <div class="col-lg-12">
+                    <a class="btn btn-warning btn-filter" href="#" data-toggle="modal" data-target="#modal-filter">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </a>
                     <a class="btn btn-primary" href="{{ route('sales.create') }}">
                         <i class="fas fa-plus"></i>
                         Tambah
@@ -43,10 +47,10 @@
                         <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>#</th>
+                                    <th width="1%">#</th>
                                     <th width="15%">No Transaksi</th>
                                     <th>Nama Pelanggan</th>
-                                    <th width="10%">Tanggal</th>
+                                    <th width="20%">Tanggal</th>
                                     <th width="10%">Total</th>
                                     <th width="15%">###</th>
                                 </tr>
@@ -87,6 +91,42 @@
     </div>
     {{-- Modal Alert --}}
     @include('partials.modal-alert')
+    <!-- Modal -->
+    <div class="modal fade" id="modal-filter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-fw fa-filter"></i>Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-alert-body">
+                    <div class="form-group">
+                        <label>Bulan</label>
+                        <select class="form-control">
+                            @for($i = 0; $i < count($month); $i++)
+                                <option value="{{ $i + 1 }}">{{ $month[$i] }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun</label>
+                        <select class="form-control">
+                            @for($i = 0; $i < count($years); $i++)
+                                <option value="{{ $years[$i] }}">{{ $years[$i] }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-post">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -105,7 +145,7 @@
                 event.preventDefault();
                 var me = $(this);
                 var title = $(this).attr('title');
-                $(".modal-alert-body").html("Yakin akan menghapus produk <b>" + title + "</b> ?")
+                $(".modal-alert-body").html("Yakin akan menghapus transaksi <b>" + title + "</b> ?")
                 $("#btn-confirm").click(function() {
                     me.closest("form").submit();
                 });

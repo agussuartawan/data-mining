@@ -18,6 +18,7 @@ class CreateSalesTable extends Migration
             $table->foreignId('customer_id')->constrained();
             $table->string('no_invoice');
             $table->date('date');
+            $table->string('year');
             $table->double('global_discount');
             $table->double('grand_total');
             $table->timestamps();
