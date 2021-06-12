@@ -36,7 +36,8 @@ class SaleController extends Controller
     {
         $title = 'Penjualan';
         $customers = Customer::all();
-        return view('sales.create', compact('title', 'customers'));
+        $no_invoice = Sale::select('no_invoice')->latest()->first();
+        return view('sales.create', compact('title', 'customers', 'no_invoice'));
     }
 
     /**
@@ -93,5 +94,16 @@ class SaleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function get_customer($id)
+    {
+        if ($id > 0) {
+            $data = Customer::select('email', 'address')->where('id', '=', $id)->get();
+        } else {
+            $data = [];
+        }
+
+        return response()->json($data);
     }
 }

@@ -33,14 +33,14 @@
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label for="email" class="font-weight-bold">E-mail</label>
-                                            <input type="email" class="form-control" id="email" disabled="">
+                                            <input type="email" class="form-control" id="email" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-2"></div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label for="no_invoice" class="font-weight-bold">No Penjualan</label>
-                                            <input type="text" class="form-control" id="no_invoice" name="no_invoice">
+                                            <input type="text" class="form-control" id="no_invoice" value="{{ ++$no_invoice->no_invoice }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label for="address" class="font-weight-bold">Alamat</label>
-                                            <textarea class="form-control" id="address" disabled=""></textarea>
+                                            <textarea class="form-control" id="address" disabled></textarea>
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
@@ -132,13 +132,30 @@
     <script src="{{ asset('') }}js/jquery.maskMoney.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            // For Customer
             // Select2 for customer
             $('.select-customer').select2({
                 placeholder: "Cari Pelanggan",
                 allowClear: true,
                 theme: "classic",
-                minimumInputLength: 1,
+                minimumInputLength: 1
+            }).on('change', function(){
+                var customer_id = $(this).val();
+                if(customer_id == null){
+                    $('#email').val('');
+                    $('#address').text('');
+                }
+                $.ajax({
+                    url: '{{ url('customer/find/') }}/' + customer_id,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#email').val(data[0].email);
+                        $('#address').text(data[0].address);
+                    }
+                });
             });
+
 
             $('#btn-simpan-baru').click(function(event) {
                 event.preventDefault();

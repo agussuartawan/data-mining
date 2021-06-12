@@ -16,9 +16,9 @@ class SalesSeeder extends Seeder
     {
         DB::transaction(function () {
             $data = [
-                'no_invoice' => 'INV0001',
                 'customer_id' => 1,
                 'date' => Carbon::parse('2021-06-11'),
+                'year' => '2021',
                 'global_discount' => 0,
                 'grand_total' => 500000,
             ];

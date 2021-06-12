@@ -60,6 +60,7 @@ Route::resource('customer', 'CustomerController');
 
 # Sales
 Route::resource('sales', 'SaleController');
+Route::get('customer/find/{id}', 'SaleController@get_customer');
 
 # Recomendation Product Bundle
 Route::resource('recommendation', 'RecommendationController');
