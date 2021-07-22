@@ -21,11 +21,11 @@
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>Penjualan</span>
         </a>
-        <div id="sales-menu" class="collapse{{ request()->is('transaction/*') || request()->is('sales') ? ' show' : '' }}"
+        <div id="sales-menu" class="collapse{{ request()->is('transaction/*') || request()->is('transaction') ? ' show' : '' }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item{{ request()->is('sales') ? ' active' : '' }}"
-                    href="{{ route('transaction.index') }}">Data penjualan</a>
+                <a class="collapse-item{{ request()->is('transaction') ? ' active' : '' }}"
+                    href="{{ route('transaction.data', 'latest') }}">Data penjualan</a>
                 <a class="collapse-item{{ request()->is('transaction/create') ? ' active' : '' }}"
                     href="{{ route('transaction.create') }}">Import Penjualan</a>
             </div>

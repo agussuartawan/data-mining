@@ -15,7 +15,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('file_lists_id');
+            $table->foreignId('file_list_id')->constrained();
             $table->string('no_invoice');
             $table->date('date');
             $table->double('grand_total');

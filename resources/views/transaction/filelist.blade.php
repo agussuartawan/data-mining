@@ -19,32 +19,31 @@
                         <i class="fas fa-plus"></i>
                         Import
                     </a>
-                    <a href="{{ route('transaction.filelist') }}">Lihat data file yang telah di-import</a>
                 </div>
             </div>
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-glass-martini-alt"></i> &nbsp; Data
-                        Penjualan</h5>
+                        File</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th width="15%">No Transaksi</th>
-                                    <th width="20%">Tanggal</th>
-                                    <th width="10%">Total</th>
-                                    <th width="15%">Aksi</th></th>
+                                    <th width="10%">#</th>
+                                    <th>Nama File</th>
+                                    <th>Di upload pada</th>
+                                    <th>Aksi</th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($transaction as $transaction)
+                                @foreach ($filelist as $index => $filelist)
                                     <tr>
-                                        <td>{{ $transaction->no_invoice }}</td>
-                                        <td>{{ $transaction->date }}</td>
-                                        <td>{{ currency($transaction->grand_total) }}</td>
-                                        <td><a href="#" class="badge badge-info">detail</a></td>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $filelist->file_name }}</td>
+                                        <td>{{ $filelist->created_at->isoFormat('dddd, D MMMM Y') }}</td>
+                                        <td><a href="{{ route('transaction.data', $filelist->id) }}" class="badge badge-info">lihat transaksi</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
