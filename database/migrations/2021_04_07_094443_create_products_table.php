@@ -15,13 +15,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->integer('group_id');
-            $table->string('kode')->nullable();
-            $table->string('nama');
-            $table->enum('tipe',['Single', 'Bundle']);
-            $table->integer('stok')->default(0);
-            $table->double('harga_beli')->nullable();
-            $table->double('harga_jual')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }

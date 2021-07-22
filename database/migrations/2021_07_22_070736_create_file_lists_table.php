@@ -15,6 +15,7 @@ class CreateFileListsTable extends Migration
     {
         Schema::create('file_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('file_name');
             $table->timestamps();
         });
     }

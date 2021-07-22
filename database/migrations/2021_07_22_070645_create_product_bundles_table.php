@@ -15,6 +15,11 @@ class CreateProductBundlesTable extends Migration
     {
         Schema::create('product_bundles', function (Blueprint $table) {
             $table->id();
+            $table->string('bundle_name');
+            $table->date('date');
+            $table->double('support');
+            $table->double('confidence');
+            $table->double('final_role');
             $table->timestamps();
         });
     }
