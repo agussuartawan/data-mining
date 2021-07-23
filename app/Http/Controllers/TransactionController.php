@@ -12,7 +12,7 @@ class TransactionController extends Controller
 {
     public function index($id)
     {
-    	if($id >= 0) {    	
+    	if($id >= 0 && $id != 'latest') {    	
     		$transaction = Transaction::where('file_list_id', $id)->get();
     	} elseif($id == 'latest') {
     		$filelist_latest = FileList::select('id')->latest()->first()->id;

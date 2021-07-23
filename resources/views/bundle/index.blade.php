@@ -15,37 +15,29 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary" href="{{ route('transaction.create') }}">
-                        <i class="fas fa-cloud-download-alt"></i>
-                        Import
+                    <a class="btn btn-primary" href="{{ route('bundle.create') }}">
+                        <i class="fas fa-spinner"></i>
+                        Proses Produk Bundel
                     </a>
-                    <a href="{{ route('transaction.filelist') }}">Lihat data file yang telah di-import</a>
                 </div>
             </div>
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="m-0 font-weight-bold text-primary">Data Penjualan</h5>
+                    <h5 class="m-0 font-weight-bold text-primary">Data Produk Bundel</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th width="15%">No Transaksi</th>
-                                    <th width="20%">Tanggal</th>
-                                    <th width="10%">Total</th>
+                                    <th width="5%">#</th>
+                                    <th>Nama Bundel</th>
+                                    <th width="10%">Tanggal</th>
                                     <th width="15%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($transaction as $transaction)
-                                    <tr>
-                                        <td>{{ $transaction->no_invoice }}</td>
-                                        <td>{{ $transaction->date }}</td>
-                                        <td>{{ currency($transaction->grand_total) }}</td>
-                                        <td><a href="#" class="badge badge-info">detail</a></td>
-                                    </tr>
-                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -53,8 +45,6 @@
             </div>
         </div>
     </div>
-    {{-- Modal Alert --}}
-    @include('partials.modal-alert')
 
 @endsection
 

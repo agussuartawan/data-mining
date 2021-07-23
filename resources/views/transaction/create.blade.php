@@ -15,7 +15,7 @@
             @endif
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-glass-martini-alt"></i> &nbsp; Import Penjualan</h5>
+                    <h5 class="m-0 font-weight-bold text-primary">Import Penjualan</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('transaction.import') }}" enctype="multipart/form-data">
@@ -23,7 +23,10 @@
                         <div class="form-group">
                             <input type="file" name="file" class="form-control" required="required">
                         </div>
-                        <button class="btn btn-primary" type="submit">Import</button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-cloud-download-alt"></i>
+                            Import
+                        </button>
                     </form>
                 </div>
             </div>
