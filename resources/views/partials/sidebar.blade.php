@@ -8,17 +8,14 @@
     <hr class="sidebar-divider my-0">
     <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
         <a class="nav-link" href="{{ url('/') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-fw fa-tachometer-alt fa-fw"></i>
             <span>Dashboard</span></a>
     </li>
-    <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Transaksi
-    </div>
+    <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('transaction/*') || request()->is('transaction') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sales-menu" aria-expanded="true"
             aria-controls="collapseBootstrap">
-            <i class="fas fa-fw fa-shopping-cart"></i>
+            <i class="fas fa-fw fa-shopping-cart fa-fw"></i>
             <span>Penjualan</span>
         </a>
         <div id="sales-menu" class="collapse{{ request()->is('transaction/*') || request()->is('transaction') ? ' show' : '' }}"
@@ -31,14 +28,11 @@
             </div>
         </div>
     </li>
-    <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Pendukung Keputusan
-    </div>
+    <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('bundle/*') || request()->is('bundle') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bundle-menu"
             aria-expanded="true" aria-controls="collapseBootstrap">
-            <i class="fas fa-glass-martini-alt"></i>
+            <i class="fas fa-glass-martini-alt fa-fw"></i>
             <span>Produk Bundel</span>
         </a>
         <div id="bundle-menu"
@@ -52,14 +46,11 @@
             </div>
         </div>
     </li>
-    <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Manajemen User
-    </div>
+    <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('bundle/*') || request()->is('bundle') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#user-menu"
             aria-expanded="true" aria-controls="collapseBootstrap">
-            <i class="fas fa-users" aria-hidden="true"></i>
+            <i class="fas fa-users fa-fw"></i>
             <span>User</span>
         </a>
         <div id="user-menu"
@@ -76,13 +67,13 @@
     <hr class="sidebar-divider mb-0">
     <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
         <a class="nav-link" href="{{ url('/') }}">
-            <i class="fas fa-file-download"></i>
+            <i class="fas fa-file-download fa-fw"></i>
             <span>Laporan</span></a>
     </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item">
         <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
-            <i class="fas fa-sign-out-alt"></i>
+            <i class="fas fa-sign-out-alt fa-fw"></i>
             <span>Logout</span>
         </a>
     </li>
