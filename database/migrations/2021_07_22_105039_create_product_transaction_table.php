@@ -16,9 +16,9 @@ class CreateProductTransactionTable extends Migration
         Schema::create('product_transaction', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained();
             $table->foreignId('transaction_id')->constrained();
-            $table->integer('qty');
-            $table->double('price');
-            $table->double('subtotal');
+            $table->integer('qty')->default(0);
+            $table->double('price')->default(0);
+            $table->double('subtotal')->default(0);
         });
     }
 
