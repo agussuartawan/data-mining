@@ -27,3 +27,6 @@ Route::get('bundle/index', 'BundleController@index')
 
 Route::get('bundle/create', 'BundleController@create')
     ->name('bundle.create');
+
+Route::post('bundle/create', 'BundleController@store')
+    ->name('bundle.store');
