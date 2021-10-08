@@ -15,7 +15,7 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary" href="{{ route('bundle.create') }}">
+                    <a class="btn btn-sm btn-primary" href="{{ route('bundle.create') }}">
                         <i class="fas fa-spinner"></i>
                         Proses Produk Bundel
                     </a>

@@ -50,4 +50,11 @@ class TransactionController extends Controller
 
 		return redirect()->route('transaction.data', 'latest')->with('success', 'Import Berhasil');
 	}
+
+	public function show(Transaction $transaction)
+	{
+		// dd($transaction->product);
+		$title = "Transaksi Penjualan";
+		return view('transaction.show', compact('transaction', 'title'));
+	}
 }
