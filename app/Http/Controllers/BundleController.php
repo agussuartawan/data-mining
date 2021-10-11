@@ -49,7 +49,27 @@ class BundleController extends Controller
                 ];
             }
         }
+        // dd($itemset1);
         //Proses 1 berakhir. Data hasil disimpan di $itemset1
-        dd($itemset1);
+
+        //Proses 2. Membuat kombinasi 2-itemset
+        $itemset2 = [];
+        for ($a=0; $a <  count($itemset1); $a++) {
+            for ($b=0; $b < count($itemset1); $b++) { 
+                if($itemset1[$a] != $itemset1[$b]){
+                    $kandidat1 = $itemset1[$a]['name'];
+                    $kandidat2 = $itemset1[$b]['name'];
+                    $itemset2 = [$kandidat1, $kandidat2];
+                }
+            }
+        }
+        // dd($itemset2[0], $itemset2[2]);
+
+        // if (array_diff($itemset2[4], $itemset2[7])) {
+        //     echo "Beda <br>";
+        // } else {
+        //     echo "Sama <br>";
+        // }
+        dd($itemset2fix);
     }
 }
