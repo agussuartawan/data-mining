@@ -18,7 +18,8 @@
             <i class="fas fa-fw fa-shopping-cart fa-fw"></i>
             <span>Penjualan</span>
         </a>
-        <div id="sales-menu" class="collapse{{ request()->is('transaction/*') || request()->is('transaction') ? ' show' : '' }}"
+        <div id="sales-menu"
+            class="collapse{{ request()->is('transaction/*') || request()->is('transaction') ? ' show' : '' }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item{{ request()->is('transaction/data/*') || request()->is('transaction/filelist') ? ' active' : '' }}"
@@ -30,8 +31,8 @@
     </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('bundle/*') || request()->is('bundle') ? ' active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bundle-menu"
-            aria-expanded="true" aria-controls="collapseBootstrap">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bundle-menu" aria-expanded="true"
+            aria-controls="collapseBootstrap">
             <i class="fas fa-glass-martini-alt fa-fw"></i>
             <span>Produk Bundel</span>
         </a>
@@ -41,20 +42,19 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item{{ request()->is('bundle/index') ? ' active' : '' }}"
                     href="{{ route('bundle.index') }}">Hasil Produk Bundel</a>
-                <a class="collapse-item{{ request()->is('bundle') ? ' active' : '' }}"
+                <a class="collapse-item{{ request()->is('bundle/create') ? ' active' : '' }}"
                     href="{{ route('bundle.create') }}">Proses Produk Bundel</a>
             </div>
         </div>
     </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('bundle/*') || request()->is('bundle') ? ' active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#user-menu"
-            aria-expanded="true" aria-controls="collapseBootstrap">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#user-menu" aria-expanded="true"
+            aria-controls="collapseBootstrap">
             <i class="fas fa-users fa-fw"></i>
             <span>User</span>
         </a>
-        <div id="user-menu"
-            class="collapse{{ request()->is('bundle/*') || request()->is('bundle') ? ' show' : '' }}"
+        <div id="user-menu" class="collapse{{ request()->is('bundle/*') || request()->is('bundle') ? ' show' : '' }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item{{ request()->is('bundle/index') ? ' active' : '' }}"
