@@ -48,6 +48,13 @@ class TransactionController extends Controller
 
 		Excel::import(new TransactionsImport, public_path('/DataTransaction/' . $fileName));
 
-		return view('transaction.create', compact('title'));
+		return redirect()->route('transaction.data', 'latest')->with('success', 'Import Berhasil');
+	}
+
+	public function show(Transaction $transaction)
+	{
+		// dd($transaction->product);
+		$title = "Transaksi Penjualan";
+		return view('transaction.show', compact('transaction', 'title'));
 	}
 }

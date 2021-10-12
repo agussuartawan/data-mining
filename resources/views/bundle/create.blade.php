@@ -10,7 +10,7 @@
                     <h5 class="m-0 font-weight-bold text-primary">Input Kriteria</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('bundle.create') }}">
+                    <form method="POST" action="{{ route('bundle.store') }}">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">
@@ -26,9 +26,10 @@
                             <div class="col-lg-6">
                                 <label class="label">Pilih data transaksi</label>
                                 <div class="input-group input-group-sm mb-3">
-                                  <input type="text" class="form-control" placeholder="Cari data transaksi">
+                                  <input type="text" class="form-control" id="file_list_name" placeholder="Cari data transaksi">
+                                  <input type="text" name="filelist" id="file_list_id" readonly="" hidden="">
                                   <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal" type="button"><i class="fas fa-search"></i></button>
                                   </div>
                                 </div>
                             </div>
@@ -69,6 +70,42 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="search-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Data File List</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table align-items-center table-flush table-bordered table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="10%">#</th>
+                        <th>Nama File</th>
+                        <th>Di upload pada</th>
+                        <th>Aksi</th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($filelist as $index => $filelist)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td class="file-list-name">{{ $filelist->file_name }}</td>
+                            <td>{{ $filelist->created_at->isoFormat('dddd, D MMMM Y') }}</td>
+                            <td><a href="#" class="badge badge-info select-button" title="{{ $filelist->id }}">pilih</a></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -78,5 +115,18 @@
             paging: false, 
             info: false
         });
+
+       $(document).ready(function($) {
+           $('.select-button').click(function(event) {
+               event.preventDefault();
+
+               var fileName = $(this).parents('tr').find('.file-list-name').text();
+               var fileId = $(this).attr('title');
+
+               $('#file_list_name').val(fileName);
+               $('#file_list_id').val(fileId);
+               $('#search-modal').modal('hide');
+           });
+       });
     </script>
 @endpush

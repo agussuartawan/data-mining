@@ -15,7 +15,7 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary" href="{{ route('transaction.create') }}">
+                    <a class="btn btn-sm btn-primary" href="{{ route('transaction.create') }}">
                         <i class="fas fa-cloud-download-alt"></i>
                         Import
                     </a>
@@ -43,7 +43,7 @@
                                         <td>{{ $transaction->no_invoice }}</td>
                                         <td>{{ $transaction->date }}</td>
                                         <td>{{ currency($transaction->grand_total) }}</td>
-                                        <td><a href="#" class="badge badge-info">detail</a></td>
+                                        <td><a href="{{ route('transaction.show', $transaction->id) }}" class="badge badge-info">detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

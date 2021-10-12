@@ -20,6 +20,9 @@ Route::get('transaction/filelist', 'TransactionController@filelist')
 Route::post('transaction/create', 'TransactionController@import')
     ->name('transaction.import');
 
+Route::get('transaction/{transaction}/show', 'TransactionController@show')
+    ->name('transaction.show');
+
 
 #bundle
 Route::get('bundle/index', 'BundleController@index')
@@ -27,3 +30,6 @@ Route::get('bundle/index', 'BundleController@index')
 
 Route::get('bundle/create', 'BundleController@create')
     ->name('bundle.create');
+
+Route::post('bundle/create', 'BundleController@store')
+    ->name('bundle.store');

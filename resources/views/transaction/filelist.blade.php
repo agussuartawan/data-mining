@@ -15,7 +15,7 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary" href="{{ route('transaction.create') }}">
+                    <a class="btn btn-sm btn-primary" href="{{ route('transaction.create') }}">
                         <i class="fas fa-plus"></i>
                         Import
                     </a>
