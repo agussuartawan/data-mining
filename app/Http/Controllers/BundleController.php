@@ -27,7 +27,10 @@ class BundleController extends Controller
     {
         //Proses 1. mengubah data transaksi menjadi bentuk tabular dan menghitung support tiap 1-itemset
         //sekaligus mengeliminasi itemset dengan nilai dibawah minimum support
+
         DB::table('itemset1')->truncate();
+        DB::table('kandidat_itemset2')->truncate();
+        DB::table('item2')->truncate();
 
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
@@ -56,38 +59,34 @@ class BundleController extends Controller
 
         // Proses 2. Membuat kombinasi 2-itemset
         $itemset1 = DB::table('itemset1')->get();
-        // dd($itemset1[0]->product_name);
-        $itemset2 = [];
-        for ($a = 0; $a <  count($itemset1); $a++) {
-            for ($b = 0; $b < count($itemset1); $b++) {
-                if ($itemset1[$a]->product_id != $itemset1[$b]->product_id) {
-                    $kandidat1 = $itemset1[$a]->product_id;
-                    $kandidat2 = $itemset1[$b]->product_id;
-                    $itemset2 = [
-                        'product_id_a' => $kandidat1,
-                        'product_id_b' => $kandidat2
-                    ];
+
+        foreach($itemset1 as $a => $item_a) {
+            $k_itemset_a = $item_a->product_name;
+            $item2 = DB::table('item2')->select('item1', 'item2')->get();
+
+            if ($item2) {
+                DB::table('kandidat_itemset2')->insert([
+                    'item1' => $item_a->product_name,
+                    'item2' => $item_b->product_name
+                ]);
+            } else {
+                foreach($item2 as $b => $item_b) {
+                    $k_itemset_b = $item_b->product_name;
+                    if ($item_a->product_id != $item_b->product_id) {
+
+                        DB::table('kandidat_itemset2')->insert([
+                            'item1' => $item_a->product_name,
+                            'item2' => $item_b->product_name
+                        ]);
+                    }
                 }
             }
-
-            // if (array_diff($itemset2[$a], $itemset2[$b])) {
-            //     DB::table('itemset2')->insertOrIgnore([
-            //         'product_id_a' => $itemset1[$a]['product_id_a'],
-            //         'product_id_b' => $itemset1[$b]['product_id_b'],
-            //         'product_name' => $itemset1[$a]->product_name . ',' . $itemset1[$b]->product_name,
-            //         'jumlah' => 0,
-            //         'support' => 0,
-            //         'status' => 'L'
-            //     ]);
-            // }
-
-            echo $itemset2['product_id_a'] . ',' . $itemset2['product_id_b'] . '<br>';
         }
+    }
 
-        // if (array_diff($itemset2[4], $itemset2[7])) {
-        //     echo "Beda <br>";
-        // } else {
-        //     echo "Sama <br>";
-        // }
+    function if_exist_itemset2($count_item2, $a, $b){
+        for ($i=0; $i < $count_item2; $i++) { 
+            
+        }
     }
 }
