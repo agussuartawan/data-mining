@@ -61,32 +61,32 @@ class BundleController extends Controller
         $itemset1 = DB::table('itemset1')->get();
 
         foreach($itemset1 as $a => $item_a) {
-            $k_itemset_a = $item_a->product_name;
-            $item2 = DB::table('item2')->select('item1', 'item2')->get();
-
-            if ($item2) {
-                DB::table('kandidat_itemset2')->insert([
-                    'item1' => $item_a->product_name,
-                    'item2' => $item_b->product_name
-                ]);
-            } else {
-                foreach($item2 as $b => $item_b) {
-                    $k_itemset_b = $item_b->product_name;
-                    if ($item_a->product_id != $item_b->product_id) {
-
-                        DB::table('kandidat_itemset2')->insert([
-                            'item1' => $item_a->product_name,
-                            'item2' => $item_b->product_name
-                        ]);
-                    }
+            foreach($itemset1 as $b => $item_b) {
+                if ($item_a->product_id != $item_b->product_id) {
+                    DB::table('kandidat_itemset2')->insert([
+                        'item1' => $item_a->product_name,
+                        'item2' => $item_b->product_name
+                    ]);
                 }
             }
         }
-    }
 
-    function if_exist_itemset2($count_item2, $a, $b){
-        for ($i=0; $i < $count_item2; $i++) { 
-            
-        }
+        $i = 0;
+        do {
+            $k_item2 = DB::table('kandidat_itemset2')->get();
+            if($k_item2[$i]->item1 != NULL && $k_item2[$i]->item2 != NULL){
+                DB::table('kandidat_itemset2')
+                    ->where('item1', $k_item2[$i]->item2)
+                    ->where('item2', $k_item2[$i]->item1)
+                    ->update(['item1' => NULL, 'item2' => NULL]);
+            }
+            $count = DB::table('kandidat_itemset2')->count();
+            $i++;
+        } while($i < $count);
+        DB::table('kandidat_itemset2')
+            ->where('item1', NULL)
+            ->where('item2', NULL)
+            ->delete();
+        // Proses 2 Selesai
     }
 }
