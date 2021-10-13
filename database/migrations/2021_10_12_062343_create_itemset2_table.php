@@ -15,9 +15,9 @@ class CreateItemset2Table extends Migration
     {
         Schema::create('itemset2', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id_a');
-            $table->integer('product_id_b');
-            $table->string('product_name');
+            $table->integer('product_id_a')->nullable();
+            $table->integer('product_id_b')->nullable();
+            $table->string('product_name')->nullable();
             $table->integer('jumlah');
             $table->double('support');
             $table->enum('status', ['L', 'T']);

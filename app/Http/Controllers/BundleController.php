@@ -29,8 +29,7 @@ class BundleController extends Controller
         //sekaligus mengeliminasi itemset dengan nilai dibawah minimum support
 
         DB::table('itemset1')->truncate();
-        DB::table('kandidat_itemset2')->truncate();
-        DB::table('item2')->truncate();
+        DB::table('itemset2')->truncate();
 
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
@@ -41,7 +40,8 @@ class BundleController extends Controller
                 $pid2 = array_unique($pid);
             }
         }
-        $products = Product::whereIn('id', $pid2)->get();
+
+        $products = Product::whereIn('id', $pid2)->get(); //mengambil data produk yang termasuk dalam transaksi
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
@@ -63,9 +63,13 @@ class BundleController extends Controller
         foreach($itemset1 as $a => $item_a) {
             foreach($itemset1 as $b => $item_b) {
                 if ($item_a->product_id != $item_b->product_id) {
-                    DB::table('kandidat_itemset2')->insert([
-                        'item1' => $item_a->product_name,
-                        'item2' => $item_b->product_name
+                    DB::table('itemset2')->insert([
+                        'product_id_a' => $item_a->product_id,
+                        'product_id_b' => $item_b->product_id,
+                        'product_name' => $item_a->product_name . ',' . $item_b->product_name,
+                        'jumlah' => 0,
+                        'support' => 0,
+                        'status' => 'T'
                     ]);
                 }
             }
@@ -73,20 +77,68 @@ class BundleController extends Controller
 
         $i = 0;
         do {
-            $k_item2 = DB::table('kandidat_itemset2')->get();
-            if($k_item2[$i]->item1 != NULL && $k_item2[$i]->item2 != NULL){
-                DB::table('kandidat_itemset2')
-                    ->where('item1', $k_item2[$i]->item2)
-                    ->where('item2', $k_item2[$i]->item1)
-                    ->update(['item1' => NULL, 'item2' => NULL]);
+            $k_item2 = DB::table('itemset2')->get();
+            if($k_item2[$i]->product_id_a != NULL && $k_item2[$i]->product_id_b != NULL){
+                DB::table('itemset2')
+                    ->where('product_id_a', $k_item2[$i]->product_id_b)
+                    ->where('product_id_b', $k_item2[$i]->product_id_a)
+                    ->update([
+                        'product_id_a' => NULL,
+                        'product_id_b' => NULL,
+                        'product_name' => NULL
+                    ]);
             }
-            $count = DB::table('kandidat_itemset2')->count();
+            $count = DB::table('itemset2')->count();
             $i++;
         } while($i < $count);
-        DB::table('kandidat_itemset2')
-            ->where('item1', NULL)
-            ->where('item2', NULL)
+        DB::table('itemset2')
+            ->where('product_id_a', NULL)
+            ->where('product_id_b', NULL)
             ->delete();
+
+
+        $itemset2_fix = DB::table('itemset2')->select('id','product_id_a','product_id_b')->get();
+        $cek = array();
+        foreach ($itemset2_fix as $product_itemset2) {
+            foreach ($transactions as $t) {
+                foreach ($t->product as $product_detail) {
+                    if ($product_itemset2->product_id_a == $product_detail->pivot->product_id) {
+                        $cek[$t->no_invoice][0] = 1;
+                        break;
+                    } else {
+                        $cek[$t->no_invoice][0] = 0;
+                    }
+                }
+
+                foreach ($t->product as $product_detail) {
+                    if ($product_itemset2->product_id_b == $product_detail->pivot->product_id) {
+                        $cek[$t->no_invoice][1] = 1;
+                        break;
+                    } else {
+                        $cek[$t->no_invoice][1] = 0;
+                    }
+                }
+            }
+            $jum = 0;
+            foreach ($cek as $value) {
+                if ($value[0] != 0 && $value[1] != 0) {
+                    if ($value[0] == $value[1]) {
+                        $jum++;
+                    }
+                }
+            }
+            $support = $jum / $count_transaction;
+            if ($support > 0.3) {
+                $status = 'L';
+            } else {
+                $status = 'T';
+            }
+            DB::table('itemset2')->where('id', $product_itemset2->id)->update([
+                'jumlah' => $jum,
+                'support' => $support,
+                'status' =>$status
+            ]);
+        }
         // Proses 2 Selesai
     }
 }
