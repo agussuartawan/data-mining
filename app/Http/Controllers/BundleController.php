@@ -30,6 +30,7 @@ class BundleController extends Controller
 
         DB::table('itemset1')->truncate();
         DB::table('itemset2')->truncate();
+        DB::table('itemset3')->truncate();
 
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
@@ -139,6 +140,48 @@ class BundleController extends Controller
                 'status' =>$status
             ]);
         }
+        DB::table('itemset2')->where('status', 'T')->delete();
         // Proses 2 Selesai
+
+        //Prosess 3. Membuat kombinasi 3-itemset
+        $itemset2_lolos = DB::table('itemset2')->get();
+        foreach ($itemset2_lolos as $value) {
+            $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
+            if (count($item2_kembar) > 1) {
+                $kandidat_item3[] = $item2_kembar;
+            }
+        }
+        $kandidat_item3_lolos = array_unique($kandidat_item3);
+        // dd($kandidat_item3_lolos[0]);
+
+        foreach($kandidat_item3_lolos[0] as $a => $item3_a) {
+            foreach($kandidat_item3_lolos[0] as $b => $item3_b) {
+                if ($item3_a->product_id_b != $item3_b->product_id_b) {
+                    //mengambil data nama produk berdasarkan id itemset yang terpilih
+                    $pname_a = DB::table('products')
+                                ->select('name')
+                                ->where('id', $item3_a->product_id_a)
+                                ->first();
+                    $pname_b = DB::table('products')
+                                ->select('name')
+                                ->where('id', $item3_a->product_id_b)
+                                ->first();
+                    $pname_c = DB::table('products')
+                                ->select('name')
+                                ->where('id', $item3_b->product_id_b)
+                                ->first();
+                    //hasilnya berupa objek name->value
+                    DB::table('itemset3')->insert([
+                        'product_id_a' => $item3_a->product_id_a,
+                        'product_id_b' => $item3_a->product_id_b,
+                        'product_id_c' => $item3_b->product_id_b,
+                        'product_name' => $pname_a->name. ',' .$pname_b->name. ',' .$pname_c->name,
+                        'jumlah' => 0,
+                        'support' => 0,
+                        'status' => 'T'
+                    ]);
+                }
+            }
+        }
     }
 }
