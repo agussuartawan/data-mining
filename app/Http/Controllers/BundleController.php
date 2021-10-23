@@ -46,7 +46,7 @@ class BundleController extends Controller
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
-            if ($support > 0.3) {
+            if ($support > 0.1) {
                 DB::table('itemset1')->insert([
                     'product_id' => $p->id,
                     'product_name' => $p->name,
@@ -129,7 +129,7 @@ class BundleController extends Controller
                 }
             }
             $support = $jum / $count_transaction;
-            if ($support > 0.3) {
+            if ($support > 0.1) {
                 $status = 'L';
             } else {
                 $status = 'T';
@@ -144,6 +144,7 @@ class BundleController extends Controller
         // Proses 2 Selesai
 
         //Prosess 3. Membuat kombinasi 3-itemset
+        // 1. Proses mengambil data 2 itemset yang item pertamanya sama
         $itemset2_lolos = DB::table('itemset2')->get();
         foreach ($itemset2_lolos as $value) {
             $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
@@ -151,30 +152,30 @@ class BundleController extends Controller
                 $kandidat_item3[] = $item2_kembar;
             }
         }
-        $kandidat_item3_lolos = array_unique($kandidat_item3);
-        // dd($kandidat_item3_lolos[0]);
-
-        foreach($kandidat_item3_lolos[0] as $a => $item3_a) {
-            foreach($kandidat_item3_lolos[0] as $b => $item3_b) {
-                if ($item3_a->product_id_b != $item3_b->product_id_b) {
+        $kandidat_item3_lolos = array_values(array_unique($kandidat_item3));
+        // 2. Setelah didapat data 2 itemset yang item satunya kembar
+        // selanjutnya mulai membuat kombinasi 3 itemset 
+        foreach($kandidat_item3_lolos as $a => $item3_a) {
+            foreach($kandidat_item3_lolos as $b => $item3_b) {
+                if ($item3_a[$a]->product_id_b != $item3_b[$b]->product_id_b) {
                     //mengambil data nama produk berdasarkan id itemset yang terpilih
                     $pname_a = DB::table('products')
                                 ->select('name')
-                                ->where('id', $item3_a->product_id_a)
-                                ->first();
+                                ->where('id', $item3_a[$a]->product_id_a)
+                                ->first(); //hasilnya berupa objek $pname_a->name
                     $pname_b = DB::table('products')
                                 ->select('name')
-                                ->where('id', $item3_a->product_id_b)
-                                ->first();
+                                ->where('id', $item3_a[$a]->product_id_b)
+                                ->first(); //hasilnya berupa objek $pname_b->name
                     $pname_c = DB::table('products')
                                 ->select('name')
-                                ->where('id', $item3_b->product_id_b)
-                                ->first();
-                    //hasilnya berupa objek name->value
+                                ->where('id', $item3_b[$b]->product_id_b)
+                                ->first(); //hasilnya berupa objek $pname_c->name
+                    
                     DB::table('itemset3')->insert([
-                        'product_id_a' => $item3_a->product_id_a,
-                        'product_id_b' => $item3_a->product_id_b,
-                        'product_id_c' => $item3_b->product_id_b,
+                        'product_id_a' => $item3_a[$a]->product_id_a,
+                        'product_id_b' => $item3_a[$a]->product_id_b,
+                        'product_id_c' => $item3_b[$b]->product_id_b,
                         'product_name' => $pname_a->name. ',' .$pname_b->name. ',' .$pname_c->name,
                         'jumlah' => 0,
                         'support' => 0,
@@ -183,5 +184,28 @@ class BundleController extends Controller
                 }
             }
         }
+
+        // $z = 0;
+        // do {
+        //     $k_item3 = DB::table('itemset3')->get();
+        //     if($k_item3[$z]->product_id_b != NULL && $k_item3[$z]->product_id_c != NULL){
+        //         DB::table('itemset3')
+        //             ->where('product_id_b', $k_item3[$z]->product_id_c)
+        //             ->where('product_id_c', $k_item3[$z]->product_id_b)
+        //             ->update([
+        //                 'product_id_a' => NULL,
+        //                 'product_id_b' => NULL,
+        //                 'product_id_c' => NULL,
+        //                 'product_name' => NULL
+        //             ]);
+        //     }
+        //     $count_item3 = DB::table('itemset3')->count();
+        //     $z++;
+        // } while($z < $count_item3);
+        // DB::table('itemset3')
+        //     ->where('product_id_a', NULL)
+        //     ->where('product_id_b', NULL)
+        //     ->where('product_id_c', NULL)
+        //     ->delete();
     }
 }
