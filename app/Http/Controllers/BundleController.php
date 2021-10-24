@@ -94,7 +94,7 @@ class BundleController extends Controller
         } while($i < $count);
         DB::table('itemset2')
             ->where('product_id_a', NULL)
-            ->where('product_id_b', NULL)
+            ->orWhere('product_id_b', NULL)
             ->delete();
 
 
@@ -152,56 +152,92 @@ class BundleController extends Controller
                 $kandidat_item3[] = $item2_kembar;
             }
         }
-        $kandidat_item3_lolos = array_values(array_unique($kandidat_item3));
+        $kandidat_item3_lolos = array_values(array_unique($kandidat_item3));//mengurutkan index array dan menghapus duplicate data
+        foreach ($kandidat_item3_lolos as $val) {
+            foreach ($val as $v) {
+                $item3_temporary[] = $v; // menyederhanakan array menjadi satu index
+            }
+        }
+
         // 2. Setelah didapat data 2 itemset yang item satunya kembar
         // selanjutnya mulai membuat kombinasi 3 itemset 
-        foreach($kandidat_item3_lolos as $a => $item3_a) {
-            foreach($kandidat_item3_lolos as $b => $item3_b) {
-                if ($item3_a[$a]->product_id_b != $item3_b[$b]->product_id_b) {
-                    //mengambil data nama produk berdasarkan id itemset yang terpilih
-                    $pname_a = DB::table('products')
-                                ->select('name')
-                                ->where('id', $item3_a[$a]->product_id_a)
-                                ->first(); //hasilnya berupa objek $pname_a->name
-                    $pname_b = DB::table('products')
-                                ->select('name')
-                                ->where('id', $item3_a[$a]->product_id_b)
-                                ->first(); //hasilnya berupa objek $pname_b->name
-                    $pname_c = DB::table('products')
-                                ->select('name')
-                                ->where('id', $item3_b[$b]->product_id_b)
-                                ->first(); //hasilnya berupa objek $pname_c->name
-                    
-                    DB::table('itemset3')->insert([
-                        'product_id_a' => $item3_a[$a]->product_id_a,
-                        'product_id_b' => $item3_a[$a]->product_id_b,
-                        'product_id_c' => $item3_b[$b]->product_id_b,
-                        'product_name' => $pname_a->name. ',' .$pname_b->name. ',' .$pname_c->name,
-                        'jumlah' => 0,
-                        'support' => 0,
-                        'status' => 'T'
-                    ]);
+        foreach($item3_temporary as $a => $item3_a) {
+            foreach($item3_temporary as $b => $item3_b) {
+                if ($item3_a->product_id_b != $item3_b->product_id_b) {
+                    if ($item3_a->product_id_a == $item3_b->product_id_b) {
+                        //mengambil data nama produk berdasarkan id itemset yang terpilih
+                        $pname_a = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_a->product_id_a)
+                                    ->first(); //hasilnya berupa objek $pname_a->name
+                        $pname_b = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_a->product_id_b)
+                                    ->first(); //hasilnya berupa objek $pname_b->name
+                        $pname_c = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_b->product_id_a)
+                                    ->first(); //hasilnya berupa objek $pname_c->name
+                        DB::table('itemset3')->updateOrInsert([
+                            'product_id_a' => $item3_a->product_id_a,
+                            'product_id_b' => $item3_a->product_id_b,
+                            'product_id_c' => $item3_b->product_id_a,
+                            'product_name' => $pname_a->name. ',' .$pname_b->name. ',' .$pname_c->name,
+                            'jumlah' => 0,
+                            'support' => 0,
+                            'status' => 'T'
+                        ]);
+                    } else {
+                        //mengambil data nama produk berdasarkan id itemset yang terpilih
+                        $pname_a = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_a->product_id_a)
+                                    ->first(); //hasilnya berupa objek $pname_a->name
+                        $pname_b = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_a->product_id_b)
+                                    ->first(); //hasilnya berupa objek $pname_b->name
+                        $pname_c = DB::table('products')
+                                    ->select('name')
+                                    ->where('id', $item3_b->product_id_b)
+                                    ->first(); //hasilnya berupa objek $pname_c->name
+                        DB::table('itemset3')->updateOrInsert([
+                            'product_id_a' => $item3_a->product_id_a,
+                            'product_id_b' => $item3_a->product_id_b,
+                            'product_id_c' => $item3_b->product_id_b,
+                            'product_name' => $pname_a->name. ',' .$pname_b->name. ',' .$pname_c->name,
+                            'jumlah' => 0,
+                            'support' => 0,
+                            'status' => 'T'
+                        ]);
+                    }
                 }
             }
         }
 
-        // $z = 0;
-        // do {
-        //     $k_item3 = DB::table('itemset3')->get();
-        //     if($k_item3[$z]->product_id_b != NULL && $k_item3[$z]->product_id_c != NULL){
-        //         DB::table('itemset3')
-        //             ->where('product_id_b', $k_item3[$z]->product_id_c)
-        //             ->where('product_id_c', $k_item3[$z]->product_id_b)
-        //             ->update([
-        //                 'product_id_a' => NULL,
-        //                 'product_id_b' => NULL,
-        //                 'product_id_c' => NULL,
-        //                 'product_name' => NULL
-        //             ]);
-        //     }
-        //     $count_item3 = DB::table('itemset3')->count();
-        //     $z++;
-        // } while($z < $count_item3);
+        $z = 0;
+        do {
+            $k_item3 = DB::table('itemset3')->get();
+            if($k_item3[$z]->product_id_b != NULL && $k_item3[$z]->product_id_c != NULL){
+                DB::table('itemset3')
+                    ->where('product_id_a', $k_item3[$z]->product_id_b)
+                    ->orWhere('product_id_a', $k_item3[$z]->product_id_c)
+                    ->orWhere('product_id_b', $k_item3[$z]->product_id_a)
+                    ->orWhere('product_id_b', $k_item3[$z]->product_id_b)
+                    ->orWhere('product_id_b', $k_item3[$z]->product_id_c)
+                    ->orWhere('product_id_c', $k_item3[$z]->product_id_a)
+                    ->orWhere('product_id_c', $k_item3[$z]->product_id_b)
+                    ->orWhere('product_id_c', $k_item3[$z]->product_id_c)
+                    ->update([
+                        'product_id_a' => NULL,
+                        'product_id_b' => NULL,
+                        'product_id_c' => NULL,
+                        'product_name' => NULL
+                    ]);
+            }
+            $count_item3 = DB::table('itemset3')->count();
+            $z++;
+        } while($z < $count_item3);
         // DB::table('itemset3')
         //     ->where('product_id_a', NULL)
         //     ->where('product_id_b', NULL)
