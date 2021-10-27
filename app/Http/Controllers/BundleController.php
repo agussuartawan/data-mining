@@ -320,5 +320,55 @@ class BundleController extends Controller
             ]);
         }
         // Proses 3 selesai
+
+        //Proses 4. Membuat association rule dan menghitung nilai confidence
+        $this->association_rule();
+    }
+
+    public function association_rule()
+    {
+        $itemset2 = DB::table('itemset2')->get();
+        $itemset3 = DB::table('itemset3')->get();
+
+        // Membuat aturan asosasi dari kombinasi 2 itemset
+        foreach ($itemset2 as $item2) {
+            // mengambil data nama produk berdasarkan id itemset yang terpilih
+            $pname_a = DB::table('products')
+                ->select('name')
+                ->where('id', $item2->product_id_a)
+                ->first(); //hasilnya berupa objek $pname_a->name
+            $pname_b = DB::table('products')
+                ->select('name')
+                ->where('id', $item2->product_id_b)
+                ->first(); //hasilnya berupa objek $pname_a->name
+
+            // mengambil data jumlah kemunculan tiap itemset pada transaksi
+            $data_jumlah = DB::table('itemset1')
+                            ->select('jumlah')
+                            ->whereIn('id', [$item2->product_id_a, $item2->product_id_b])
+                            ->get();
+            $jumlah_a = $data_jumlah[0]->jumlah;
+            $jumlah_b = $data_jumlah[1]->jumlah;
+            DB::table('association_rule')->insert([
+                [
+                    'product_id_a' => $item2->product_id_a,
+                    'product_id_b' => $item2->product_id_b,
+                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
+                    'jumlah_a_b' => $item2->jumlah,
+                    'jumlah_a' => $jumlah_a,
+                    'confidence' => 0,
+                    'status' => 'T'
+                ],
+                [
+                    'product_id_a' => $item2->product_id_b,
+                    'product_id_b' => $item2->product_id_a,
+                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
+                    'jumlah_a_b' => $item2->jumlah,
+                    'jumlah_a' => $jumlah_b,
+                    'confidence' => 0,
+                    'status' => 'T'
+                ]
+            ]);
+        }
     }
 }
