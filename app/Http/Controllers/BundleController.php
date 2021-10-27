@@ -43,7 +43,7 @@ class BundleController extends Controller
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
-            if ($support > 0.1) {
+            if ($support > 0.3) {
                 DB::table('itemset1')->insert([
                     'product_id' => $p->id,
                     'product_name' => $p->name,
@@ -72,6 +72,7 @@ class BundleController extends Controller
             }
         }
 
+        // Selanjutnya mengiliminasi kombinasi itemset-2 yang nilainya kembar
         $i = 0;
         do {
             $k_item2 = DB::table('itemset2')->get();
@@ -90,9 +91,10 @@ class BundleController extends Controller
         } while ($i < $count);
         DB::table('itemset2')
             ->where('product_id_a', NULL)
-            ->orWhere('product_id_b', NULL)
+            ->where('product_id_b', NULL)
             ->delete();
 
+        // Selanjutnya menghitung support dari tiap kombinasi 2-itemset
         $itemset2_fix = DB::table('itemset2')->select('id', 'product_id_a', 'product_id_b')->get();
         $cek = array();
         foreach ($itemset2_fix as $product_itemset2) {
@@ -115,16 +117,15 @@ class BundleController extends Controller
                     }
                 }
             }
+            
             $jum = 0;
             foreach ($cek as $value) {
-                if ($value[0] != 0 && $value[1] != 0) {
-                    if ($value[0] == $value[1]) {
-                        $jum++;
-                    }
+                if ($value[0] == 1 && $value[1] == 1) {
+                    $jum++;
                 }
             }
             $support = $jum / $count_transaction;
-            if ($support > 0.1) {
+            if ($support > 0.3) {
                 $status = 'L';
             } else {
                 $status = 'T';
@@ -268,6 +269,56 @@ class BundleController extends Controller
             ->where('product_id_b', NULL)
             ->where('product_id_c', NULL)
             ->delete();
+
+        // 4. Selanjutnya menghitung support dari tiap kombinasi 3-itemset
+        $itemset3_fix = DB::table('itemset3')->select('id', 'product_id_a', 'product_id_b', 'product_id_c')->get();
+        $cek3 = array();
+        foreach ($itemset3_fix as $product_itemset3) {
+            foreach ($transactions as $t) {
+                foreach ($t->product as $product_detail) {
+                    if ($product_itemset3->product_id_a == $product_detail->pivot->product_id) {
+                        $cek3[$t->no_invoice][0] = 1;
+                        break;
+                    } else {
+                        $cek3[$t->no_invoice][0] = 0;
+                    }
+                }
+
+                foreach ($t->product as $product_detail) {
+                    if ($product_itemset3->product_id_b == $product_detail->pivot->product_id) {
+                        $cek3[$t->no_invoice][1] = 1;
+                        break;
+                    } else {
+                        $cek3[$t->no_invoice][1] = 0;
+                    }
+                }
+                foreach ($t->product as $product_detail) {
+                    if ($product_itemset3->product_id_c == $product_detail->pivot->product_id) {
+                        $cek3[$t->no_invoice][2] = 1;
+                        break;
+                    } else {
+                        $cek3[$t->no_invoice][2] = 0;
+                    }
+                }
+            }
+            $jum3 = 0;
+            foreach ($cek3 as $value) {
+                if (($value[0] == 1) && ($value[1] == 1) && ($value[2] == 1)) {
+                    $jum3++;
+                }
+            }
+            $support3 = $jum3 / $count_transaction;
+            if ($support3 > 0.3) {
+                $status3 = 'L';
+            } else {
+                $status3 = 'T';
+            }
+            DB::table('itemset3')->where('id', $product_itemset3->id)->update([
+                'jumlah' => $jum3,
+                'support' => $support3,
+                'status' => $status3
+            ]);
+        }
         // Proses 3 selesai
     }
 }
