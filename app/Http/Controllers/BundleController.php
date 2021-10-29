@@ -28,6 +28,7 @@ class BundleController extends Controller
         DB::table('itemset1')->truncate();
         DB::table('itemset2')->truncate();
         DB::table('itemset3')->truncate();
+        DB::table('association_rule')->truncate();
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
 
@@ -117,7 +118,7 @@ class BundleController extends Controller
                     }
                 }
             }
-            
+
             $jum = 0;
             foreach ($cek as $value) {
                 if ($value[0] == 1 && $value[1] == 1) {
@@ -254,7 +255,7 @@ class BundleController extends Controller
                                     'product_id_b' => NULL,
                                     'product_id_c' => NULL,
                                     'product_name' => NULL
-                                ]);           
+                                ]);
                         }
                     }
                 }
@@ -263,7 +264,7 @@ class BundleController extends Controller
             } while ($m < $count_item3_b);
             $count_item3_a = DB::table('itemset3')->count();
             $n++;
-        } while ($n < $count_item3_a);        
+        } while ($n < $count_item3_a);
         DB::table('itemset3')
             ->where('product_id_a', NULL)
             ->where('product_id_b', NULL)
@@ -344,12 +345,14 @@ class BundleController extends Controller
 
             // mengambil data jumlah kemunculan tiap itemset pada transaksi
             $data_jumlah = DB::table('itemset1')
-                            ->select('jumlah')
-                            ->whereIn('id', [$item2->product_id_a, $item2->product_id_b])
-                            ->get();
+                ->select('jumlah')
+                ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
+                ->get();
             $jumlah_a = $data_jumlah[0]->jumlah;
             $jumlah_b = $data_jumlah[1]->jumlah;
-            DB::table('association_rule')->insert([
+
+            // memasukan data aturan asosiasi ke tabel association_rule
+            DB::table('association_rule')->insertOrIgnore([
                 [
                     'product_id_a' => $item2->product_id_a,
                     'product_id_b' => $item2->product_id_b,
@@ -367,7 +370,55 @@ class BundleController extends Controller
                     'jumlah_a' => $jumlah_b,
                     'confidence' => 0,
                     'status' => 'T'
-                ]
+                ],
+            ]);
+        }
+
+
+        // Membuat aturan asosasi dari kombinasi 2 itemset
+        foreach ($itemset3 as $item3) {
+            // mengambil data nama produk berdasarkan id itemset yang terpilih
+            $pname_a = DB::table('products')
+                ->select('name')
+                ->where('id', $item3->product_id_a)
+                ->first(); //hasilnya berupa objek $pname_a->name
+            $pname_b = DB::table('products')
+                ->select('name')
+                ->where('id', $item3->product_id_b)
+                ->first(); //hasilnya berupa objek $pname_a->name
+            $pname_c = DB::table('products')
+                ->select('name')
+                ->where('id', $item3->product_id_c)
+                ->first(); //hasilnya berupa objek $pname_a->name
+
+            // mengambil data jumlah kemunculan tiap itemset pada transaksi
+            $data_jumlah = DB::table('itemset2')
+                ->select('jumlah')
+                ->whereIn('product_id_a', [$item3->product_id_a, $item3->product_id_b])
+                ->get();
+            $jumlah_a = $data_jumlah[0]->jumlah;
+            $jumlah_b = $data_jumlah[1]->jumlah;
+
+            // memasukan data aturan asosiasi ke tabel association_rule
+            DB::table('association_rule')->insertOrIgnore([
+                [
+                    'product_id_a' => $item3->product_id_a,
+                    'product_id_b' => $item3->product_id_b,
+                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
+                    'jumlah_a_b' => $item3->jumlah,
+                    'jumlah_a' => $jumlah_a,
+                    'confidence' => 0,
+                    'status' => 'T'
+                ],
+                [
+                    'product_id_a' => $item3->product_id_b,
+                    'product_id_b' => $item3->product_id_a,
+                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
+                    'jumlah_a_b' => $item3->jumlah,
+                    'jumlah_a' => $jumlah_b,
+                    'confidence' => 0,
+                    'status' => 'T'
+                ],
             ]);
         }
     }
