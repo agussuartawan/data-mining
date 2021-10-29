@@ -33,3 +33,6 @@ Route::get('bundle/create', 'BundleController@create')
 
 Route::post('bundle/create', 'BundleController@store')
     ->name('bundle.store');
+
+Route::get('bundle/result', 'BundleController@result')
+    ->name('bundle.result');

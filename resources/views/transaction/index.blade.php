@@ -43,7 +43,8 @@
                                         <td>{{ $transaction->no_invoice }}</td>
                                         <td>{{ $transaction->date }}</td>
                                         <td>{{ currency($transaction->grand_total) }}</td>
-                                        <td><a href="{{ route('transaction.show', $transaction->id) }}" class="badge badge-info">detail</a></td>
+                                        <td><a href="{{ route('transaction.show', $transaction->id) }}"
+                                                class="badge badge-info">detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

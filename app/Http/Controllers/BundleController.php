@@ -31,8 +31,8 @@ class BundleController extends Controller
         DB::table('itemset3')->truncate();
         DB::table('association_rule')->truncate();
 
-        $input_support = $request->support;
-        $input_confidence = $request->confidence;
+        $input_support = $request->support / 100;
+        $input_confidence = $request->confidence / 100;
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
 
@@ -328,6 +328,13 @@ class BundleController extends Controller
 
         //Proses 4. Membuat association rule dan menghitung nilai confidence
         $this->association_rule($input_confidence);
+
+        return redirect()->route('bundle.result');
+    }
+
+    public function result()
+    {
+        return redirect()->route('bundle.create')->with('success', 'Data telah diproses.');
     }
 
     public function association_rule($confidence)

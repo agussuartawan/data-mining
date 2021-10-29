@@ -19,7 +19,7 @@ class CreateProductBundlesTable extends Migration
             $table->date('date');
             $table->double('support');
             $table->double('confidence');
-            $table->double('final_role');
+            $table->double('support_x_confidence');
             $table->timestamps();
         });
     }
