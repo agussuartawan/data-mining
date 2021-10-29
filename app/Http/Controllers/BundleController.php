@@ -25,10 +25,14 @@ class BundleController extends Controller
 
     public function store(Request $request)
     {
+        // mengosongkan tabel temporary sebelum perhitungan dimulai
         DB::table('itemset1')->truncate();
         DB::table('itemset2')->truncate();
         DB::table('itemset3')->truncate();
         DB::table('association_rule')->truncate();
+
+        $input_support = $request->support;
+        $input_confidence = $request->confidence;
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
 
@@ -44,7 +48,7 @@ class BundleController extends Controller
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
-            if ($support > 0.3) {
+            if ($support > $input_support) {
                 DB::table('itemset1')->insert([
                     'product_id' => $p->id,
                     'product_name' => $p->name,
@@ -126,7 +130,7 @@ class BundleController extends Controller
                 }
             }
             $support = $jum / $count_transaction;
-            if ($support > 0.3) {
+            if ($support > $input_support) {
                 $status = 'L';
             } else {
                 $status = 'T';
@@ -309,7 +313,7 @@ class BundleController extends Controller
                 }
             }
             $support3 = $jum3 / $count_transaction;
-            if ($support3 > 0.3) {
+            if ($support3 > $input_support) {
                 $status3 = 'L';
             } else {
                 $status3 = 'T';
@@ -323,10 +327,10 @@ class BundleController extends Controller
         // Proses 3 selesai
 
         //Proses 4. Membuat association rule dan menghitung nilai confidence
-        $this->association_rule();
+        $this->association_rule($input_confidence);
     }
 
-    public function association_rule()
+    public function association_rule($confidence)
     {
         $itemset2 = DB::table('itemset2')->get();
         $itemset3 = DB::table('itemset3')->get();
@@ -359,8 +363,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_a,
-                    'confidence' => 0,
-                    'status' => 'T'
+                    'confidence' => $item2->jumlah / $jumlah_a,
+                    'status' => 'T',
+                    'type' => 'Kombinasi 2 item'
                 ],
                 [
                     'product_id_a' => $item2->product_id_b,
@@ -368,14 +373,15 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_b,
-                    'confidence' => 0,
-                    'status' => 'T'
+                    'confidence' => $item2->jumlah / $jumlah_b,
+                    'status' => 'T',
+                    'type' => 'Kombinasi 2 item'
                 ],
             ]);
         }
 
 
-        // Membuat aturan asosasi dari kombinasi 2 itemset
+        // Membuat aturan asosasi dari kombinasi 3 itemset
         foreach ($itemset3 as $item3) {
             // mengambil data nama produk berdasarkan id itemset yang terpilih
             $pname_a = DB::table('products')
@@ -392,32 +398,56 @@ class BundleController extends Controller
                 ->first(); //hasilnya berupa objek $pname_a->name
 
             // mengambil data jumlah kemunculan tiap itemset pada transaksi
-            $data_jumlah = DB::table('itemset2')
+            $jumlah_a = DB::table('itemset2')
                 ->select('jumlah')
-                ->whereIn('product_id_a', [$item3->product_id_a, $item3->product_id_b])
-                ->get();
-            $jumlah_a = $data_jumlah[0]->jumlah;
-            $jumlah_b = $data_jumlah[1]->jumlah;
+                ->where('product_id_a', $item3->product_id_a)
+                ->where('product_id_b', $item3->product_id_b)
+                ->first();
+            $jumlah_b = DB::table('itemset2')
+                ->select('jumlah')
+                ->where('product_id_a', $item3->product_id_a)
+                ->where('product_id_b', $item3->product_id_c)
+                ->first();
+            $jumlah_c = DB::table('itemset2')
+                ->select('jumlah')
+                ->where('product_id_a', $item3->product_id_b)
+                ->where('product_id_b', $item3->product_id_c)
+                ->first();
 
-            // memasukan data aturan asosiasi ke tabel association_rule
+            // // memasukan data aturan asosiasi ke tabel association_rule
             DB::table('association_rule')->insertOrIgnore([
                 [
                     'product_id_a' => $item3->product_id_a,
                     'product_id_b' => $item3->product_id_b,
-                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
+                    'product_id_c' => $item3->product_id_c,
+                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
                     'jumlah_a_b' => $item3->jumlah,
-                    'jumlah_a' => $jumlah_a,
-                    'confidence' => 0,
-                    'status' => 'T'
+                    'jumlah_a' => $jumlah_a->jumlah,
+                    'confidence' => $item3->jumlah / $jumlah_a->jumlah,
+                    'status' => 'T',
+                    'type' => 'Kombinasi 3 item'
+                ],
+                [
+                    'product_id_a' => $item3->product_id_a,
+                    'product_id_b' => $item3->product_id_c,
+                    'product_id_c' => $item3->product_id_b,
+                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
+                    'jumlah_a_b' => $item3->jumlah,
+                    'jumlah_a' => $jumlah_b->jumlah,
+                    'confidence' => $item3->jumlah / $jumlah_b->jumlah,
+                    'status' => 'T',
+                    'type' => 'Kombinasi 3 item'
                 ],
                 [
                     'product_id_a' => $item3->product_id_b,
-                    'product_id_b' => $item3->product_id_a,
-                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
+                    'product_id_b' => $item3->product_id_c,
+                    'product_id_c' => $item3->product_id_a,
+                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item3->jumlah,
-                    'jumlah_a' => $jumlah_b,
-                    'confidence' => 0,
-                    'status' => 'T'
+                    'jumlah_a' => $jumlah_c->jumlah,
+                    'confidence' => $item3->jumlah / $jumlah_c->jumlah,
+                    'status' => 'T',
+                    'type' => 'Kombinasi 3 item'
                 ],
             ]);
         }
