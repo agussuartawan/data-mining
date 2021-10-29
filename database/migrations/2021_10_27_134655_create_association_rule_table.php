@@ -21,7 +21,9 @@ class CreateAssociationRuleTable extends Migration
             $table->string('rule_name')->nullable();
             $table->integer('jumlah_a_b');
             $table->integer('jumlah_a');
+            $table->double('support');
             $table->double('confidence');
+            $table->double('support_x_confidence');
             $table->enum('status', ['L', 'T']);
             $table->enum('type', ['Kombinasi 2 item', 'Kombinasi 3 item']);
         });

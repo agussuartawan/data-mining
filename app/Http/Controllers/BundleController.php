@@ -349,14 +349,22 @@ class BundleController extends Controller
 
             // mengambil data jumlah kemunculan tiap itemset pada transaksi
             $data_jumlah = DB::table('itemset1')
-                ->select('jumlah')
+                ->select('jumlah', 'support')
                 ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
                 ->get();
 
             $jumlah_a = $data_jumlah[0]->jumlah;
             $jumlah_b = $data_jumlah[1]->jumlah;
+
+            $support_a = $data_jumlah[0]->support;
+            $support_b = $data_jumlah[1]->support;
+
             $confidence_a = $item2->jumlah / $jumlah_a;
             $confidence_b = $item2->jumlah / $jumlah_b;
+
+            $support_x_confidence_a = $support_a * $confidence_a;
+            $support_x_confidence_b = $support_b * $confidence_b;
+
             ($confidence_a > $confidence) ? $status_a = 'L' : $status_a = 'T';
             ($confidence_b > $confidence) ? $status_b = 'L' : $status_b = 'T';
 
@@ -368,7 +376,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_a,
+                    'support' => $support_a,
                     'confidence' => $confidence_a,
+                    'support_x_confidence' => $support_x_confidence_a,
                     'status' => $status_a,
                     'type' => 'Kombinasi 2 item'
                 ],
@@ -378,7 +388,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_b,
+                    'support' => $support_b,
                     'confidence' => $confidence_b,
+                    'support_x_confidence' => $support_x_confidence_b,
                     'status' => $status_b,
                     'type' => 'Kombinasi 2 item'
                 ],
@@ -404,17 +416,17 @@ class BundleController extends Controller
 
             // mengambil data jumlah kemunculan tiap itemset pada transaksi
             $jumlah_a = DB::table('itemset2')
-                ->select('jumlah')
+                ->select('jumlah', 'support')
                 ->where('product_id_a', $item3->product_id_a)
                 ->where('product_id_b', $item3->product_id_b)
                 ->first();
             $jumlah_b = DB::table('itemset2')
-                ->select('jumlah')
+                ->select('jumlah', 'support')
                 ->where('product_id_a', $item3->product_id_a)
                 ->where('product_id_b', $item3->product_id_c)
                 ->first();
             $jumlah_c = DB::table('itemset2')
-                ->select('jumlah')
+                ->select('jumlah', 'support')
                 ->where('product_id_a', $item3->product_id_b)
                 ->where('product_id_b', $item3->product_id_c)
                 ->first();
@@ -422,6 +434,15 @@ class BundleController extends Controller
             $confidence3_a = $item3->jumlah / $jumlah_a->jumlah;
             $confidence3_b = $item3->jumlah / $jumlah_b->jumlah;
             $confidence3_c = $item3->jumlah / $jumlah_c->jumlah;
+
+            $support3_a = $jumlah_a->support;
+            $support3_b = $jumlah_b->support;
+            $support3_c = $jumlah_c->support;
+
+            $support3_x_confidence_a = $support3_a * $confidence3_a;
+            $support3_x_confidence_b = $support3_b * $confidence3_b;
+            $support3_x_confidence_c = $support3_c * $confidence3_c;
+
             ($confidence3_a > $confidence) ? $status3_a = 'L' : $status3_a = 'T';
             ($confidence3_b > $confidence) ? $status3_b = 'L' : $status3_b = 'T';
             ($confidence3_c > $confidence) ? $status3_c = 'L' : $status3_c = 'T';
@@ -435,7 +456,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_a->jumlah,
+                    'support' => $support3_a,
                     'confidence' => $confidence3_a,
+                    'support_x_confidence' => $support3_x_confidence_a,
                     'status' => $status3_a,
                     'type' => 'Kombinasi 3 item'
                 ],
@@ -446,7 +469,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_b->jumlah,
+                    'support' => $support3_b,
                     'confidence' => $confidence3_b,
+                    'support_x_confidence' => $support3_x_confidence_b,
                     'status' => $status3_b,
                     'type' => 'Kombinasi 3 item'
                 ],
@@ -457,7 +482,9 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_c->jumlah,
-                    'confidence' => $confidence3_b,
+                    'support' => $support3_c,
+                    'confidence' => $confidence3_c,
+                    'support_x_confidence' => $support3_x_confidence_c,
                     'status' => $status3_c,
                     'type' => 'Kombinasi 3 item'
                 ],
