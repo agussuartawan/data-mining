@@ -352,8 +352,13 @@ class BundleController extends Controller
                 ->select('jumlah')
                 ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
                 ->get();
+
             $jumlah_a = $data_jumlah[0]->jumlah;
             $jumlah_b = $data_jumlah[1]->jumlah;
+            $confidence_a = $item2->jumlah / $jumlah_a;
+            $confidence_b = $item2->jumlah / $jumlah_b;
+            ($confidence_a > $confidence) ? $status_a = 'L' : $status_a = 'T';
+            ($confidence_b > $confidence) ? $status_b = 'L' : $status_b = 'T';
 
             // memasukan data aturan asosiasi ke tabel association_rule
             DB::table('association_rule')->insertOrIgnore([
@@ -363,8 +368,8 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_a,
-                    'confidence' => $item2->jumlah / $jumlah_a,
-                    'status' => 'T',
+                    'confidence' => $confidence_a,
+                    'status' => $status_a,
                     'type' => 'Kombinasi 2 item'
                 ],
                 [
@@ -373,8 +378,8 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item2->jumlah,
                     'jumlah_a' => $jumlah_b,
-                    'confidence' => $item2->jumlah / $jumlah_b,
-                    'status' => 'T',
+                    'confidence' => $confidence_b,
+                    'status' => $status_b,
                     'type' => 'Kombinasi 2 item'
                 ],
             ]);
@@ -414,6 +419,13 @@ class BundleController extends Controller
                 ->where('product_id_b', $item3->product_id_c)
                 ->first();
 
+            $confidence3_a = $item3->jumlah / $jumlah_a->jumlah;
+            $confidence3_b = $item3->jumlah / $jumlah_b->jumlah;
+            $confidence3_c = $item3->jumlah / $jumlah_c->jumlah;
+            ($confidence3_a > $confidence) ? $status3_a = 'L' : $status3_a = 'T';
+            ($confidence3_b > $confidence) ? $status3_b = 'L' : $status3_b = 'T';
+            ($confidence3_c > $confidence) ? $status3_c = 'L' : $status3_c = 'T';
+
             // // memasukan data aturan asosiasi ke tabel association_rule
             DB::table('association_rule')->insertOrIgnore([
                 [
@@ -423,8 +435,8 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_a->jumlah,
-                    'confidence' => $item3->jumlah / $jumlah_a->jumlah,
-                    'status' => 'T',
+                    'confidence' => $confidence3_a,
+                    'status' => $status3_a,
                     'type' => 'Kombinasi 3 item'
                 ],
                 [
@@ -434,8 +446,8 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_b->jumlah,
-                    'confidence' => $item3->jumlah / $jumlah_b->jumlah,
-                    'status' => 'T',
+                    'confidence' => $confidence3_b,
+                    'status' => $status3_b,
                     'type' => 'Kombinasi 3 item'
                 ],
                 [
@@ -445,8 +457,8 @@ class BundleController extends Controller
                     'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
                     'jumlah_a_b' => $item3->jumlah,
                     'jumlah_a' => $jumlah_c->jumlah,
-                    'confidence' => $item3->jumlah / $jumlah_c->jumlah,
-                    'status' => 'T',
+                    'confidence' => $confidence3_b,
+                    'status' => $status3_c,
                     'type' => 'Kombinasi 3 item'
                 ],
             ]);
