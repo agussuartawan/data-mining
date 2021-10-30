@@ -37,11 +37,6 @@ class BundleController extends Controller
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
 
-        // try {
-
-        // } catch (\Exception $e) {
-        //     //throw $th;
-        // }
         //Proses 1. mengubah data transaksi menjadi bentuk tabular dan menghitung support tiap 1-itemset
         //sekaligus mengeliminasi itemset dengan nilai dibawah minimum support
         foreach ($transactions as $t) {
@@ -66,21 +61,25 @@ class BundleController extends Controller
         }
         // Proses 1 berakhir. Data hasil disimpan di tabel itemset1
 
-        // Proses 2. Membuat kombinasi 2-itemset
-        $itemset1 = DB::table('itemset1')->get();
-        foreach ($itemset1 as $a => $item_a) {
-            foreach ($itemset1 as $b => $item_b) {
-                if ($item_a->product_id != $item_b->product_id) {
-                    DB::table('itemset2')->insert([
-                        'product_id_a' => $item_a->product_id,
-                        'product_id_b' => $item_b->product_id,
-                        'product_name' => $item_a->product_name . ',' . $item_b->product_name,
-                        'jumlah' => 0,
-                        'support' => 0,
-                        'status' => 'T'
-                    ]);
+        try {
+            // Proses 2. Membuat kombinasi 2-itemset
+            $itemset1 = DB::table('itemset1')->get();
+            foreach ($itemset1 as $a => $item_a) {
+                foreach ($itemset1 as $b => $item_b) {
+                    if ($item_a->product_id != $item_b->product_id) {
+                        DB::table('itemset2')->insert([
+                            'product_id_a' => $item_a->product_id,
+                            'product_id_b' => $item_b->product_id,
+                            'product_name' => $item_a->product_name . ',' . $item_b->product_name,
+                            'jumlah' => 0,
+                            'support' => 0,
+                            'status' => 'T'
+                        ]);
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            return;
         }
 
         // Selanjutnya mengiliminasi kombinasi itemset-2 yang nilainya kembar
@@ -147,7 +146,7 @@ class BundleController extends Controller
                 'status' => $status
             ]);
         }
-        DB::table('itemset2')->where('status', 'T')->delete();
+        // DB::table('itemset2')->where('status', 'T')->delete();
         // Proses 2 Selesai
 
         //Prosess 3. Membuat kombinasi 3-itemset
