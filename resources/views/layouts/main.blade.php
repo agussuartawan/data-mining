@@ -18,6 +18,9 @@
 </head>
 
 <body id="page-top">
+    <div id="cover-spin">
+        <p class="text text-white text-bold">Mohon tunggu..<br>Data anda sedang diproses</p>
+    </div>
     <div id="wrapper">
         <!-- Sidebar -->
         @include('partials.sidebar')

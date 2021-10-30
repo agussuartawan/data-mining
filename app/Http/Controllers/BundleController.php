@@ -7,6 +7,7 @@ use App\FileList;
 use App\Transaction;
 use App\Product;
 use DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class BundleController extends Controller
 {
@@ -36,6 +37,11 @@ class BundleController extends Controller
         $transactions = Transaction::where('file_list_id', $request->filelist)->get();
         $count_transaction = count($transactions);
 
+        // try {
+
+        // } catch (\Exception $e) {
+        //     //throw $th;
+        // }
         //Proses 1. mengubah data transaksi menjadi bentuk tabular dan menghitung support tiap 1-itemset
         //sekaligus mengeliminasi itemset dengan nilai dibawah minimum support
         foreach ($transactions as $t) {
@@ -58,7 +64,7 @@ class BundleController extends Controller
                 ]);
             }
         }
-        //Proses 1 berakhir. Data hasil disimpan di tabel itemset1
+        // Proses 1 berakhir. Data hasil disimpan di tabel itemset1
 
         // Proses 2. Membuat kombinasi 2-itemset
         $itemset1 = DB::table('itemset1')->get();
