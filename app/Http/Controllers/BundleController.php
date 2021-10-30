@@ -49,7 +49,7 @@ class BundleController extends Controller
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
-            if ($support > $input_support) {
+            if ($support >= $input_support) {
                 DB::table('itemset1')->insert([
                     'product_id' => $p->id,
                     'product_name' => $p->name,
@@ -61,9 +61,9 @@ class BundleController extends Controller
         }
         // Proses 1 berakhir. Data hasil disimpan di tabel itemset1
 
-        try {
+        $itemset1 = DB::table('itemset1')->get();
+        if (count($itemset1) > 0) {
             // Proses 2. Membuat kombinasi 2-itemset
-            $itemset1 = DB::table('itemset1')->get();
             foreach ($itemset1 as $a => $item_a) {
                 foreach ($itemset1 as $b => $item_b) {
                     if ($item_a->product_id != $item_b->product_id) {
@@ -78,8 +78,8 @@ class BundleController extends Controller
                     }
                 }
             }
-        } catch (\Exception $e) {
-            return;
+        } else {
+            return redirect()->back()->with('error', 'Tidak ada itemset yang memenuhi nilai minimum support, coba nilai minimum support yang lebih rendah');
         }
 
         // Selanjutnya mengiliminasi kombinasi itemset-2 yang nilainya kembar
@@ -135,7 +135,7 @@ class BundleController extends Controller
                 }
             }
             $support = $jum / $count_transaction;
-            if ($support > $input_support) {
+            if ($support >= $input_support) {
                 $status = 'L';
             } else {
                 $status = 'T';
@@ -146,23 +146,26 @@ class BundleController extends Controller
                 'status' => $status
             ]);
         }
-        // DB::table('itemset2')->where('status', 'T')->delete();
         // Proses 2 Selesai
 
         //Prosess 3. Membuat kombinasi 3-itemset
         // 1. Proses mengambil data 2 itemset yang item pertamanya sama
-        $itemset2_lolos = DB::table('itemset2')->get();
-        foreach ($itemset2_lolos as $value) {
-            $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
-            if (count($item2_kembar) > 1) {
-                $kandidat_item3[] = $item2_kembar;
+        $itemset2_lolos = DB::table('itemset2')->where('status', 'L')->get();
+        if(count($itemset2_lolos) > 0){
+            foreach ($itemset2_lolos as $value) {
+                $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
+                if (count($item2_kembar) > 1) {
+                    $kandidat_item3[] = $item2_kembar;
+                }
             }
-        }
-        $kandidat_item3_lolos = array_values(array_unique($kandidat_item3)); //mengurutkan index array dan menghapus duplicate data
-        foreach ($kandidat_item3_lolos as $val) {
-            foreach ($val as $v) {
-                $item3_temporary[] = $v; // menyederhanakan array menjadi satu index
+            $kandidat_item3_lolos = array_values(array_unique($kandidat_item3)); //mengurutkan index array dan menghapus duplicate data
+            foreach ($kandidat_item3_lolos as $val) {
+                foreach ($val as $v) {
+                    $item3_temporary[] = $v; // menyederhanakan array menjadi satu index
+                }
             }
+        } else {
+            return redirect()->back()->with('error', 'Tidak ada itemset yang memenuhi nilai minimum support, coba nilai minimum support yang lebih rendah');
         }
 
         // 2. Setelah didapat data 2 itemset yang item-1 nya kembar
@@ -318,7 +321,7 @@ class BundleController extends Controller
                 }
             }
             $support3 = $jum3 / $count_transaction;
-            if ($support3 > $input_support) {
+            if ($support3 >= $input_support) {
                 $status3 = 'L';
             } else {
                 $status3 = 'T';
@@ -344,163 +347,166 @@ class BundleController extends Controller
 
     public function association_rule($confidence)
     {
-        $itemset2 = DB::table('itemset2')->get();
-        $itemset3 = DB::table('itemset3')->get();
+        $itemset2 = DB::table('itemset2')->where('status', 'L')->get();
+        $itemset3 = DB::table('itemset3')->where('status', 'L')->get();
 
-        // Membuat aturan asosasi dari kombinasi 2 itemset
-        foreach ($itemset2 as $item2) {
-            // mengambil data nama produk berdasarkan id itemset yang terpilih
-            $pname_a = DB::table('products')
-                ->select('name')
-                ->where('id', $item2->product_id_a)
-                ->first(); //hasilnya berupa objek $pname_a->name
-            $pname_b = DB::table('products')
-                ->select('name')
-                ->where('id', $item2->product_id_b)
-                ->first(); //hasilnya berupa objek $pname_a->name
-
-            // mengambil data jumlah kemunculan tiap itemset pada transaksi
-            $data_jumlah = DB::table('itemset1')
-                ->select('jumlah', 'support')
-                ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
-                ->get();
-
-            $jumlah_a = $data_jumlah[0]->jumlah;
-            $jumlah_b = $data_jumlah[1]->jumlah;
-
-            $support_a = $data_jumlah[0]->support;
-            $support_b = $data_jumlah[1]->support;
-
-            $confidence_a = $item2->jumlah / $jumlah_a;
-            $confidence_b = $item2->jumlah / $jumlah_b;
-
-            $support_x_confidence_a = $support_a * $confidence_a;
-            $support_x_confidence_b = $support_b * $confidence_b;
-
-            ($confidence_a > $confidence) ? $status_a = 'L' : $status_a = 'T';
-            ($confidence_b > $confidence) ? $status_b = 'L' : $status_b = 'T';
-
-            // memasukan data aturan asosiasi ke tabel association_rule
-            DB::table('association_rule')->insertOrIgnore([
-                [
-                    'product_id_a' => $item2->product_id_a,
-                    'product_id_b' => $item2->product_id_b,
-                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
-                    'jumlah_a_b' => $item2->jumlah,
-                    'jumlah_a' => $jumlah_a,
-                    'support' => $support_a,
-                    'confidence' => $confidence_a,
-                    'support_x_confidence' => $support_x_confidence_a,
-                    'status' => $status_a,
-                    'type' => 'Kombinasi 2 item'
-                ],
-                [
-                    'product_id_a' => $item2->product_id_b,
-                    'product_id_b' => $item2->product_id_a,
-                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
-                    'jumlah_a_b' => $item2->jumlah,
-                    'jumlah_a' => $jumlah_b,
-                    'support' => $support_b,
-                    'confidence' => $confidence_b,
-                    'support_x_confidence' => $support_x_confidence_b,
-                    'status' => $status_b,
-                    'type' => 'Kombinasi 2 item'
-                ],
-            ]);
+        if(count($itemset2) > 0) {
+            // Membuat aturan asosasi dari kombinasi 2 itemset
+            foreach ($itemset2 as $item2) {
+                // mengambil data nama produk berdasarkan id itemset yang terpilih
+                $pname_a = DB::table('products')
+                    ->select('name')
+                    ->where('id', $item2->product_id_a)
+                    ->first(); //hasilnya berupa objek $pname_a->name
+                $pname_b = DB::table('products')
+                    ->select('name')
+                    ->where('id', $item2->product_id_b)
+                    ->first(); //hasilnya berupa objek $pname_a->name
+    
+                // mengambil data jumlah kemunculan tiap itemset pada transaksi
+                $data_jumlah = DB::table('itemset1')
+                    ->select('jumlah', 'support')
+                    ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
+                    ->get();
+    
+                $jumlah_a = $data_jumlah[0]->jumlah;
+                $jumlah_b = $data_jumlah[1]->jumlah;
+    
+                $support_a = $data_jumlah[0]->support;
+                $support_b = $data_jumlah[1]->support;
+    
+                $confidence_a = ($jumlah_a != 0) ? $item2->jumlah / $jumlah_a : 0;
+                $confidence_b = ($jumlah_b != 0) ? $item2->jumlah / $jumlah_b : 0;
+    
+                $support_x_confidence_a = $support_a * $confidence_a;
+                $support_x_confidence_b = $support_b * $confidence_b;
+    
+                ($confidence_a >= $confidence) ? $status_a = 'L' : $status_a = 'T';
+                ($confidence_b >= $confidence) ? $status_b = 'L' : $status_b = 'T';
+    
+                // memasukan data aturan asosiasi ke tabel association_rule
+                DB::table('association_rule')->insertOrIgnore([
+                    [
+                        'product_id_a' => $item2->product_id_a,
+                        'product_id_b' => $item2->product_id_b,
+                        'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
+                        'jumlah_a_b' => $item2->jumlah,
+                        'jumlah_a' => $jumlah_a,
+                        'support' => $support_a,
+                        'confidence' => $confidence_a,
+                        'support_x_confidence' => $support_x_confidence_a,
+                        'status' => $status_a,
+                        'type' => 'Kombinasi 2 item'
+                    ],
+                    [
+                        'product_id_a' => $item2->product_id_b,
+                        'product_id_b' => $item2->product_id_a,
+                        'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
+                        'jumlah_a_b' => $item2->jumlah,
+                        'jumlah_a' => $jumlah_b,
+                        'support' => $support_b,
+                        'confidence' => $confidence_b,
+                        'support_x_confidence' => $support_x_confidence_b,
+                        'status' => $status_b,
+                        'type' => 'Kombinasi 2 item'
+                    ],
+                ]);
+            }
         }
 
-
-        // Membuat aturan asosasi dari kombinasi 3 itemset
-        foreach ($itemset3 as $item3) {
-            // mengambil data nama produk berdasarkan id itemset yang terpilih
-            $pname_a = DB::table('products')
-                ->select('name')
-                ->where('id', $item3->product_id_a)
-                ->first(); //hasilnya berupa objek $pname_a->name
-            $pname_b = DB::table('products')
-                ->select('name')
-                ->where('id', $item3->product_id_b)
-                ->first(); //hasilnya berupa objek $pname_a->name
-            $pname_c = DB::table('products')
-                ->select('name')
-                ->where('id', $item3->product_id_c)
-                ->first(); //hasilnya berupa objek $pname_a->name
-
-            // mengambil data jumlah kemunculan tiap itemset pada transaksi
-            $jumlah_a = DB::table('itemset2')
-                ->select('jumlah', 'support')
-                ->where('product_id_a', $item3->product_id_a)
-                ->where('product_id_b', $item3->product_id_b)
-                ->first();
-            $jumlah_b = DB::table('itemset2')
-                ->select('jumlah', 'support')
-                ->where('product_id_a', $item3->product_id_a)
-                ->where('product_id_b', $item3->product_id_c)
-                ->first();
-            $jumlah_c = DB::table('itemset2')
-                ->select('jumlah', 'support')
-                ->where('product_id_a', $item3->product_id_b)
-                ->where('product_id_b', $item3->product_id_c)
-                ->first();
-
-            $confidence3_a = $item3->jumlah / $jumlah_a->jumlah;
-            $confidence3_b = $item3->jumlah / $jumlah_b->jumlah;
-            $confidence3_c = $item3->jumlah / $jumlah_c->jumlah;
-
-            $support3_a = $jumlah_a->support;
-            $support3_b = $jumlah_b->support;
-            $support3_c = $jumlah_c->support;
-
-            $support3_x_confidence_a = $support3_a * $confidence3_a;
-            $support3_x_confidence_b = $support3_b * $confidence3_b;
-            $support3_x_confidence_c = $support3_c * $confidence3_c;
-
-            ($confidence3_a > $confidence) ? $status3_a = 'L' : $status3_a = 'T';
-            ($confidence3_b > $confidence) ? $status3_b = 'L' : $status3_b = 'T';
-            ($confidence3_c > $confidence) ? $status3_c = 'L' : $status3_c = 'T';
-
-            // // memasukan data aturan asosiasi ke tabel association_rule
-            DB::table('association_rule')->insertOrIgnore([
-                [
-                    'product_id_a' => $item3->product_id_a,
-                    'product_id_b' => $item3->product_id_b,
-                    'product_id_c' => $item3->product_id_c,
-                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
-                    'jumlah_a_b' => $item3->jumlah,
-                    'jumlah_a' => $jumlah_a->jumlah,
-                    'support' => $support3_a,
-                    'confidence' => $confidence3_a,
-                    'support_x_confidence' => $support3_x_confidence_a,
-                    'status' => $status3_a,
-                    'type' => 'Kombinasi 3 item'
-                ],
-                [
-                    'product_id_a' => $item3->product_id_a,
-                    'product_id_b' => $item3->product_id_c,
-                    'product_id_c' => $item3->product_id_b,
-                    'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
-                    'jumlah_a_b' => $item3->jumlah,
-                    'jumlah_a' => $jumlah_b->jumlah,
-                    'support' => $support3_b,
-                    'confidence' => $confidence3_b,
-                    'support_x_confidence' => $support3_x_confidence_b,
-                    'status' => $status3_b,
-                    'type' => 'Kombinasi 3 item'
-                ],
-                [
-                    'product_id_a' => $item3->product_id_b,
-                    'product_id_b' => $item3->product_id_c,
-                    'product_id_c' => $item3->product_id_a,
-                    'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
-                    'jumlah_a_b' => $item3->jumlah,
-                    'jumlah_a' => $jumlah_c->jumlah,
-                    'support' => $support3_c,
-                    'confidence' => $confidence3_c,
-                    'support_x_confidence' => $support3_x_confidence_c,
-                    'status' => $status3_c,
-                    'type' => 'Kombinasi 3 item'
-                ],
-            ]);
+        if (count($itemset3) > 0) {
+            // Membuat aturan asosasi dari kombinasi 3 itemset
+            foreach ($itemset3 as $item3) {
+                // mengambil data nama produk berdasarkan id itemset yang terpilih
+                $pname_a = DB::table('products')
+                    ->select('name')
+                    ->where('id', $item3->product_id_a)
+                    ->first(); //hasilnya berupa objek $pname_a->name
+                $pname_b = DB::table('products')
+                    ->select('name')
+                    ->where('id', $item3->product_id_b)
+                    ->first(); //hasilnya berupa objek $pname_a->name
+                $pname_c = DB::table('products')
+                    ->select('name')
+                    ->where('id', $item3->product_id_c)
+                    ->first(); //hasilnya berupa objek $pname_a->name
+    
+                // mengambil data jumlah kemunculan tiap itemset pada transaksi
+                $jumlah_a = DB::table('itemset2')
+                    ->select('jumlah', 'support')
+                    ->where('product_id_a', $item3->product_id_a)
+                    ->where('product_id_b', $item3->product_id_b)
+                    ->first();
+                $jumlah_b = DB::table('itemset2')
+                    ->select('jumlah', 'support')
+                    ->where('product_id_a', $item3->product_id_a)
+                    ->where('product_id_b', $item3->product_id_c)
+                    ->first();
+                $jumlah_c = DB::table('itemset2')
+                    ->select('jumlah', 'support')
+                    ->where('product_id_a', $item3->product_id_b)
+                    ->where('product_id_b', $item3->product_id_c)
+                    ->first();
+    
+                $confidence3_a = ($jumlah_a->jumlah != 0 ) ? $item3->jumlah / $jumlah_a->jumlah : 0;
+                $confidence3_b = ($jumlah_b->jumlah != 0 ) ? $item3->jumlah / $jumlah_b->jumlah : 0;
+                $confidence3_c = ($jumlah_c->jumlah != 0 ) ? $item3->jumlah / $jumlah_c->jumlah : 0;
+    
+                $support3_a = $jumlah_a->support;
+                $support3_b = $jumlah_b->support;
+                $support3_c = $jumlah_c->support;
+    
+                $support3_x_confidence_a = $support3_a * $confidence3_a;
+                $support3_x_confidence_b = $support3_b * $confidence3_b;
+                $support3_x_confidence_c = $support3_c * $confidence3_c;
+    
+                ($confidence3_a >= $confidence) ? $status3_a = 'L' : $status3_a = 'T';
+                ($confidence3_b >= $confidence) ? $status3_b = 'L' : $status3_b = 'T';
+                ($confidence3_c >= $confidence) ? $status3_c = 'L' : $status3_c = 'T';
+    
+                // // memasukan data aturan asosiasi ke tabel association_rule
+                DB::table('association_rule')->insertOrIgnore([
+                    [
+                        'product_id_a' => $item3->product_id_a,
+                        'product_id_b' => $item3->product_id_b,
+                        'product_id_c' => $item3->product_id_c,
+                        'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
+                        'jumlah_a_b' => $item3->jumlah,
+                        'jumlah_a' => $jumlah_a->jumlah,
+                        'support' => $support3_a,
+                        'confidence' => $confidence3_a,
+                        'support_x_confidence' => $support3_x_confidence_a,
+                        'status' => $status3_a,
+                        'type' => 'Kombinasi 3 item'
+                    ],
+                    [
+                        'product_id_a' => $item3->product_id_a,
+                        'product_id_b' => $item3->product_id_c,
+                        'product_id_c' => $item3->product_id_b,
+                        'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
+                        'jumlah_a_b' => $item3->jumlah,
+                        'jumlah_a' => $jumlah_b->jumlah,
+                        'support' => $support3_b,
+                        'confidence' => $confidence3_b,
+                        'support_x_confidence' => $support3_x_confidence_b,
+                        'status' => $status3_b,
+                        'type' => 'Kombinasi 3 item'
+                    ],
+                    [
+                        'product_id_a' => $item3->product_id_b,
+                        'product_id_b' => $item3->product_id_c,
+                        'product_id_c' => $item3->product_id_a,
+                        'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
+                        'jumlah_a_b' => $item3->jumlah,
+                        'jumlah_a' => $jumlah_c->jumlah,
+                        'support' => $support3_c,
+                        'confidence' => $confidence3_c,
+                        'support_x_confidence' => $support3_x_confidence_c,
+                        'status' => $status3_c,
+                        'type' => 'Kombinasi 3 item'
+                    ],
+                ]);
+            }
         }
     }
 }

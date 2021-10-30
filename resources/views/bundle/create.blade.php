@@ -10,7 +10,7 @@
                     <h5 class="m-0 font-weight-bold text-primary">Input Kriteria</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('bundle.store') }}">
+                    <form method="POST" action="{{ route('bundle.store') }}" id="form">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">
@@ -18,13 +18,13 @@
                                     <label>Masukan nilai support</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="support" class="form-control" required="required">
+                                    <input type="text" name="support" class="form-control" required="required" value="{{ old('support') }}">
                                 </div>
                                 <div class="form-group input-group-sm">
                                     <label>Masukan nilai confidence</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="confidence" class="form-control" required="required">
+                                    <input type="text" name="confidence" class="form-control" required="required" value="{{ old('confidence') }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" onclick="$('#cover-spin').show(0)">
+                        <button class="btn btn-primary" type="submit">
                             Proses
                         </button>
                     </form>
@@ -55,6 +55,14 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             {{ Session('success') }}
+        </div>
+    @endif
+    @if (Session::has('error'))
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ Session('error') }}
         </div>
     @endif
 
@@ -150,65 +158,10 @@
             $("[rel=tooltip]").tooltip({
                 placement: 'right'
             });
+
+            $('#form').on('submit', function(e){
+                $('#cover-spin').show(0);
+            });
         });
     </script>
-@endpush
-
-@push('styles')
-    <style type="text/css">
-        #cover-spin {
-            position: fixed;
-            width: 100%;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.685);
-            z-index: 9999;
-            display: none;
-        }
-
-        @-webkit-keyframes spin {
-            from {
-                -webkit-transform: rotate(0deg);
-            }
-
-            to {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        #cover-spin::after {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 48%;
-            top: 40%;
-            width: 40px;
-            height: 40px;
-            border-style: solid;
-            border-color: rgb(255, 255, 255);
-            border-top-color: transparent;
-            border-width: 4px;
-            border-radius: 50%;
-            -webkit-animation: spin .8s linear infinite;
-            animation: spin .8s linear infinite;
-        }
-
-        .text {
-            text-align: center;
-            margin-top: 430px;
-        }
-
-    </style>
 @endpush
