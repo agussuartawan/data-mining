@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $title = "Dashboard";
-    return view('welcome', compact('title'));
+    $count_transaction = App\Transaction::count();
+    $count_product = App\Product::count();
+    $count_user = App\User::count();
+    $count_bundle = App\ProductBundle::count();
+    return view('welcome', compact('title','count_transaction','count_product','count_user','count_bundle'));
 });
 
 #transaction

@@ -8,7 +8,7 @@
           <div class="row align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-uppercase mb-1">Total User</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">4000</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ currency($count_user) }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-users fa-2x text-info"></i>
@@ -24,7 +24,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-uppercase mb-1">Total Transaksi</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">650</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ currency($count_transaction) }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-shopping-cart fa-2x text-success"></i>
@@ -40,7 +40,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-uppercase mb-1">Total Produk</div>
-              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">366</div>
+              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ currency($count_product) }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-glass-martini-alt fa-2x text-info"></i>
@@ -56,7 +56,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-uppercase mb-1">Total Saran Produk Bundel</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ currency($count_bundle) }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-comments fa-2x text-warning"></i>

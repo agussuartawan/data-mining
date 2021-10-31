@@ -49,19 +49,18 @@ class BundleController extends Controller
         foreach ($products as $p) {
             $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
             $support = $jumlah / $count_transaction;
-            if ($support >= $input_support) {
-                DB::table('itemset1')->insert([
-                    'product_id' => $p->id,
-                    'product_name' => $p->name,
-                    'jumlah' => $jumlah,
-                    'support' => $support,
-                    'status' => 'L'
-                ]);
-            }
+            ($support >= $input_support) ? $status1 = 'L' : $status1 = 'T';
+            DB::table('itemset1')->insert([
+                'product_id' => $p->id,
+                'product_name' => $p->name,
+                'jumlah' => $jumlah,
+                'support' => $support,
+                'status' => $status1
+            ]);
         }
         // Proses 1 berakhir. Data hasil disimpan di tabel itemset1
 
-        $itemset1 = DB::table('itemset1')->get();
+        $itemset1 = DB::table('itemset1')->where('status', 'L')->get();
         if (count($itemset1) > 0) {
             // Proses 2. Membuat kombinasi 2-itemset
             foreach ($itemset1 as $a => $item_a) {
@@ -337,6 +336,8 @@ class BundleController extends Controller
         //Proses 4. Membuat association rule dan menghitung nilai confidence
         $this->association_rule($input_confidence);
 
+        $this->slow_moving_product();
+
         return redirect()->route('bundle.result');
     }
 
@@ -508,5 +509,11 @@ class BundleController extends Controller
                 ]);
             }
         }
+    }
+
+    public function slow_moving_product()
+    {
+        $slow_moving_product = DB::table('itemset1')->min('jumlah');
+        dd($slow_moving_product);
     }
 }

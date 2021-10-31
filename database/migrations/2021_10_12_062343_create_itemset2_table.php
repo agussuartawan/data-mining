@@ -17,7 +17,7 @@ class CreateItemset2Table extends Migration
             $table->id();
             $table->integer('product_id_a')->nullable();
             $table->integer('product_id_b')->nullable();
-            $table->string('product_name')->nullable();
+            $table->text('product_name')->nullable();
             $table->integer('jumlah');
             $table->double('support');
             $table->enum('status', ['L', 'T']);

@@ -18,7 +18,7 @@ class CreateItemset3Table extends Migration
             $table->integer('product_id_a')->nullable();
             $table->integer('product_id_b')->nullable();
             $table->integer('product_id_c')->nullable();
-            $table->string('product_name')->nullable();
+            $table->text('product_name')->nullable();
             $table->integer('jumlah');
             $table->double('support');
             $table->enum('status', ['L', 'T']);

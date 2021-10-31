@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductBundlesTable extends Migration
+class CreateBundlesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProductBundlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_bundles', function (Blueprint $table) {
+        Schema::create('bundles', function (Blueprint $table) {
             $table->id();
             $table->string('bundle_name');
             $table->date('date');
@@ -31,6 +31,6 @@ class CreateProductBundlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_bundles');
+        Schema::dropIfExists('bundles');
     }
 }

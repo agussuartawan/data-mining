@@ -16,7 +16,7 @@ class CreateItemset1Table extends Migration
         Schema::create('itemset1', function (Blueprint $table) {
             $table->id();
             $table->integer('product_id');
-            $table->string('product_name');
+            $table->text('product_name');
             $table->integer('jumlah');
             $table->double('support');
             $table->enum('status', ['L', 'T']);

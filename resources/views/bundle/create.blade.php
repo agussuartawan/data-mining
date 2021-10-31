@@ -111,7 +111,7 @@
                             <tr>
                                 <th width="10%">#</th>
                                 <th>Nama File</th>
-                                <th>Di upload pada</th>
+                                <th>Di upload sejak</th>
                                 <th>Aksi</th>
                                 </th>
                             </tr>
@@ -121,7 +121,7 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td class="file-list-name">{{ $filelist->file_name }}</td>
-                                    <td>{{ $filelist->created_at->isoFormat('dddd, D MMMM Y') }}</td>
+                                    <td>{{ $filelist->created_at->diffForHumans() }}</td>
                                     <td><a href="#" class="badge badge-info select-button"
                                             title="{{ $filelist->id }}">pilih</a></td>
                                 </tr>

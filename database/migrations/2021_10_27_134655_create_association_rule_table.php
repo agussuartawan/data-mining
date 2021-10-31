@@ -18,7 +18,7 @@ class CreateAssociationRuleTable extends Migration
             $table->integer('product_id_a')->nullable();
             $table->integer('product_id_b')->nullable();
             $table->integer('product_id_c')->nullable();
-            $table->string('rule_name')->nullable();
+            $table->text('rule_name')->nullable();
             $table->integer('jumlah_a_b');
             $table->integer('jumlah_a');
             $table->double('support');

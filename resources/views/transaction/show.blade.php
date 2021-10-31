@@ -32,7 +32,7 @@
                             <div class="col-lg-6">
                                 <h6>Transaksi {{ $transaction->no_invoice }}</h6>
                                 <h6>Tanggal {{ $transaction->date }}</h6>
-                                <h6>Ditambahkan pada {{ $transaction->created_at }}</h6>
+                                <h6>Ditambahkan sejak {{ $transaction->created_at->diffForHumans() }}</h6>
                             </div>
                             <div class="col-lg-6 text-right">
                                 <h3 class="font-weight-bold">Rp. {{ currency($transaction->grand_total) }}</h3>
