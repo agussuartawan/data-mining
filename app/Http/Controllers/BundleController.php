@@ -150,7 +150,7 @@ class BundleController extends Controller
         //Prosess 3. Membuat kombinasi 3-itemset
         // 1. Proses mengambil data 2 itemset yang item pertamanya sama
         $itemset2_lolos = DB::table('itemset2')->where('status', 'L')->get();
-        if(count($itemset2_lolos) > 0){
+        if (count($itemset2_lolos) > 0) {
             foreach ($itemset2_lolos as $value) {
                 $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
                 if (count($item2_kembar) > 1) {
@@ -346,12 +346,18 @@ class BundleController extends Controller
         return redirect()->route('bundle.create')->with('success', 'Data telah diproses.');
     }
 
+    public function report_create()
+    {
+        $title = 'Laporan';
+        return view('bundle.report', compact('title'));
+    }
+
     public function association_rule($confidence)
     {
         $itemset2 = DB::table('itemset2')->where('status', 'L')->get();
         $itemset3 = DB::table('itemset3')->where('status', 'L')->get();
 
-        if(count($itemset2) > 0) {
+        if (count($itemset2) > 0) {
             // Membuat aturan asosasi dari kombinasi 2 itemset
             foreach ($itemset2 as $item2) {
                 // mengambil data nama produk berdasarkan id itemset yang terpilih
@@ -363,28 +369,28 @@ class BundleController extends Controller
                     ->select('name')
                     ->where('id', $item2->product_id_b)
                     ->first(); //hasilnya berupa objek $pname_a->name
-    
+
                 // mengambil data jumlah kemunculan tiap itemset pada transaksi
                 $data_jumlah = DB::table('itemset1')
                     ->select('jumlah', 'support')
                     ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
                     ->get();
-    
+
                 $jumlah_a = $data_jumlah[0]->jumlah;
                 $jumlah_b = $data_jumlah[1]->jumlah;
-    
+
                 $support_a = $data_jumlah[0]->support;
                 $support_b = $data_jumlah[1]->support;
-    
+
                 $confidence_a = ($jumlah_a != 0) ? $item2->jumlah / $jumlah_a : 0;
                 $confidence_b = ($jumlah_b != 0) ? $item2->jumlah / $jumlah_b : 0;
-    
+
                 $support_x_confidence_a = $support_a * $confidence_a;
                 $support_x_confidence_b = $support_b * $confidence_b;
-    
+
                 ($confidence_a >= $confidence) ? $status_a = 'L' : $status_a = 'T';
                 ($confidence_b >= $confidence) ? $status_b = 'L' : $status_b = 'T';
-    
+
                 // memasukan data aturan asosiasi ke tabel association_rule
                 DB::table('association_rule')->insertOrIgnore([
                     [
@@ -431,7 +437,7 @@ class BundleController extends Controller
                     ->select('name')
                     ->where('id', $item3->product_id_c)
                     ->first(); //hasilnya berupa objek $pname_a->name
-    
+
                 // mengambil data jumlah kemunculan tiap itemset pada transaksi
                 $jumlah_a = DB::table('itemset2')
                     ->select('jumlah', 'support')
@@ -448,23 +454,23 @@ class BundleController extends Controller
                     ->where('product_id_a', $item3->product_id_b)
                     ->where('product_id_b', $item3->product_id_c)
                     ->first();
-    
-                $confidence3_a = ($jumlah_a->jumlah != 0 ) ? $item3->jumlah / $jumlah_a->jumlah : 0;
-                $confidence3_b = ($jumlah_b->jumlah != 0 ) ? $item3->jumlah / $jumlah_b->jumlah : 0;
-                $confidence3_c = ($jumlah_c->jumlah != 0 ) ? $item3->jumlah / $jumlah_c->jumlah : 0;
-    
+
+                $confidence3_a = ($jumlah_a->jumlah != 0) ? $item3->jumlah / $jumlah_a->jumlah : 0;
+                $confidence3_b = ($jumlah_b->jumlah != 0) ? $item3->jumlah / $jumlah_b->jumlah : 0;
+                $confidence3_c = ($jumlah_c->jumlah != 0) ? $item3->jumlah / $jumlah_c->jumlah : 0;
+
                 $support3_a = $jumlah_a->support;
                 $support3_b = $jumlah_b->support;
                 $support3_c = $jumlah_c->support;
-    
+
                 $support3_x_confidence_a = $support3_a * $confidence3_a;
                 $support3_x_confidence_b = $support3_b * $confidence3_b;
                 $support3_x_confidence_c = $support3_c * $confidence3_c;
-    
+
                 ($confidence3_a >= $confidence) ? $status3_a = 'L' : $status3_a = 'T';
                 ($confidence3_b >= $confidence) ? $status3_b = 'L' : $status3_b = 'T';
                 ($confidence3_c >= $confidence) ? $status3_c = 'L' : $status3_c = 'T';
-    
+
                 // // memasukan data aturan asosiasi ke tabel association_rule
                 DB::table('association_rule')->insertOrIgnore([
                     [

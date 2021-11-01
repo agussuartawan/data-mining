@@ -18,13 +18,15 @@
                                     <label>Masukan nilai support</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="support" class="form-control" required="required" value="{{ old('support') }}">
+                                    <input type="text" name="support" class="form-control" required="required"
+                                        value="{{ old('support') }}">
                                 </div>
                                 <div class="form-group input-group-sm">
                                     <label>Masukan nilai confidence</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="confidence" class="form-control" required="required" value="{{ old('confidence') }}">
+                                    <input type="text" name="confidence" class="form-control" required="required"
+                                        value="{{ old('confidence') }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -85,7 +87,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <tr>
+                                    <td>1</td>
+                                    <td>Produk bundel 1</td>
+                                    <td>01/11/2021</td>
+                                    <td><a href="" class="badge badge-info">detail</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Produk bundel 2</td>
+                                    <td>01/11/2021</td>
+                                    <td><a href="" class="badge badge-info">detail</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Produk bundel 3</td>
+                                    <td>01/11/2021</td>
+                                    <td><a href="" class="badge badge-info">detail</a></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -159,7 +178,7 @@
                 placement: 'right'
             });
 
-            $('#form').on('submit', function(e){
+            $('#form').on('submit', function(e) {
                 $('#cover-spin').show(0);
             });
         });

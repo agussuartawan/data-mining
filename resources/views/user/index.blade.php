@@ -15,7 +15,7 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary" href="#">
+                    <a class="btn btn-primary btn-sm" href="#">
                         <i class="fas fa-plus"></i>
                         Tambah
                     </a>
@@ -32,12 +32,22 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Nama Pengguna</th>
-                                    <th width="10%">E-mail</th>
+                                    <th width="20%">E-mail</th>
+                                    <th width="20%">Bergabung sejak</th>
                                     <th width="15%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach ($users as $key => $user)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->created_at->diffForHumans() }}</td>
+                                        <td><a href="{{ route('user.show', $user->id) }}"
+                                                class="badge badge-info">detail</a></td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

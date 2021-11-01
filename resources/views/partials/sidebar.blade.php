@@ -6,8 +6,8 @@
         <div class="sidebar-brand-text mx-3">Trisno App</div>
     </a>
     <hr class="sidebar-divider my-0">
-    <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('/') }}">
+    <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt fa-fw"></i>
             <span>Dashboard</span></a>
     </li>
@@ -48,25 +48,25 @@
         </div>
     </li>
     <hr class="sidebar-divider mb-0">
-    <li class="nav-item{{ request()->is('bundle/*') || request()->is('bundle') ? ' active' : '' }}">
+    <li class="nav-item{{ request()->is('user/*') || request()->is('user') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#user-menu" aria-expanded="true"
             aria-controls="collapseBootstrap">
             <i class="fas fa-users fa-fw"></i>
             <span>User</span>
         </a>
-        <div id="user-menu" class="collapse{{ request()->is('bundle/*') || request()->is('bundle') ? ' show' : '' }}"
+        <div id="user-menu" class="collapse{{ request()->is('user/*') || request()->is('user') ? ' show' : '' }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item{{ request()->is('bundle/index') ? ' active' : '' }}"
-                    href="{{ route('bundle.index') }}">Data User</a>
-                <a class="collapse-item{{ request()->is('bundle') ? ' active' : '' }}"
-                    href="{{ route('bundle.create') }}">Tambah User</a>
+                <a class="collapse-item{{ request()->is('user/index') ? ' active' : '' }}"
+                    href="{{ route('user.index') }}">Data User</a>
+                <a class="collapse-item{{ request()->is('user') ? ' active' : '' }}"
+                    href="{{ route('user.create') }}">Tambah User</a>
             </div>
         </div>
     </li>
     <hr class="sidebar-divider mb-0">
-    <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('/') }}">
+    <li class="nav-item {{ request()->is('report') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('report') }}">
             <i class="fas fa-file-download fa-fw"></i>
             <span>Laporan</span></a>
     </li>
