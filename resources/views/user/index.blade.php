@@ -15,7 +15,7 @@
             @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <a class="btn btn-primary btn-sm" href="#">
+                    <a class="btn btn-primary btn-sm" href="{{ route('user.create') }}">
                         <i class="fas fa-plus"></i>
                         Tambah
                     </a>

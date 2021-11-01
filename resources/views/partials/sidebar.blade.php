@@ -59,7 +59,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item{{ request()->is('user/index') ? ' active' : '' }}"
                     href="{{ route('user.index') }}">Data User</a>
-                <a class="collapse-item{{ request()->is('user') ? ' active' : '' }}"
+                <a class="collapse-item{{ request()->is('user/create') ? ' active' : '' }}"
                     href="{{ route('user.create') }}">Tambah User</a>
             </div>
         </div>
