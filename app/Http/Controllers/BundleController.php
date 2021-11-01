@@ -336,7 +336,7 @@ class BundleController extends Controller
         //Proses 4. Membuat association rule dan menghitung nilai confidence
         $this->association_rule($input_confidence);
 
-        $this->slow_moving_product();
+        // $this->slow_moving_product();
 
         return redirect()->route('bundle.result');
     }
