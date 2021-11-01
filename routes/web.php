@@ -12,7 +12,7 @@ Route::get('dashboard', function () {
     $count_transaction = App\Transaction::count();
     $count_product = App\Product::count();
     $count_user = App\User::count();
-    $count_bundle = App\ProductBundle::count();
+    $count_bundle = App\Bundles::count();
     return view('welcome', compact('title', 'count_transaction', 'count_product', 'count_user', 'count_bundle'));
 })->name('dashboard');
 

@@ -7,7 +7,6 @@ use App\FileList;
 use App\Transaction;
 use App\Product;
 use DB;
-use PhpParser\Node\Stmt\TryCatch;
 
 class BundleController extends Controller
 {
