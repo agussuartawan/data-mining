@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('user.login');
-})->name('login');
+})->name('login.user');
 
 # dashboard
 Route::get('dashboard', function () {

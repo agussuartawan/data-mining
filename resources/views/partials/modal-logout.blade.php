@@ -13,7 +13,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                <a href="{{ route('login') }}" class="btn btn-primary">Logout</a>
+                <a href="{{ route('login.user') }}" class="btn btn-primary">Logout</a>
             </div>
         </div>
     </div>
