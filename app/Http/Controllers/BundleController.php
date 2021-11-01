@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\FileList;
 use App\Transaction;
 use App\Product;
+use App\Bundle;
 use DB;
 
 class BundleController extends Controller
@@ -19,7 +21,7 @@ class BundleController extends Controller
     public function create()
     {
         $title = "Produk Bundel";
-        $filelist = FileList::all();
+        $filelist = FileList::orderBy('created_at', 'desc')->get();
         return view('bundle.create', compact('title', 'filelist'));
     }
 
@@ -46,7 +48,10 @@ class BundleController extends Controller
         }
         $products = Product::whereIn('id', $pid2)->get(); //mengambil data produk yang termasuk dalam transaksi
         foreach ($products as $p) {
-            $jumlah = DB::table('product_transaction')->where('product_id', $p->id)->count();
+            $jumlah = DB::table('product_transaction')
+                ->where('product_id', $p->id)
+                ->where('file_list_id', $request->filelist)
+                ->count();
             $support = $jumlah / $count_transaction;
             ($support >= $input_support) ? $status1 = 'L' : $status1 = 'T';
             DB::table('itemset1')->insert([
@@ -149,6 +154,8 @@ class BundleController extends Controller
         //Prosess 3. Membuat kombinasi 3-itemset
         // 1. Proses mengambil data 2 itemset yang item pertamanya sama
         $itemset2_lolos = DB::table('itemset2')->where('status', 'L')->get();
+        $item3_temporary = [];
+        $kandidat_item3 = [];
         if (count($itemset2_lolos) > 0) {
             foreach ($itemset2_lolos as $value) {
                 $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
@@ -185,7 +192,7 @@ class BundleController extends Controller
                             ->select('name')
                             ->where('id', $item3_b->product_id_a)
                             ->first(); //hasilnya berupa objek $pname_c->name
-                        DB::table('itemset3')->updateOrInsert([
+                        DB::table('itemset3')->insertOrIgnore([
                             'product_id_a' => $item3_a->product_id_a,
                             'product_id_b' => $item3_a->product_id_b,
                             'product_id_c' => $item3_b->product_id_a,
@@ -208,7 +215,7 @@ class BundleController extends Controller
                             ->select('name')
                             ->where('id', $item3_b->product_id_b)
                             ->first(); //hasilnya berupa objek $pname_c->name
-                        DB::table('itemset3')->updateOrInsert([
+                        DB::table('itemset3')->insertOrIgnore([
                             'product_id_a' => $item3_a->product_id_a,
                             'product_id_b' => $item3_a->product_id_b,
                             'product_id_c' => $item3_b->product_id_b,
@@ -227,51 +234,53 @@ class BundleController extends Controller
         $n = 0;
         do {
             $k_item3_a = DB::table('itemset3')->get();
-            $m = 0;
-            do {
-                $k_item3_b = DB::table('itemset3')->get();
-                if ($k_item3_a[$n] != $k_item3_b[$m]) {
-                    if ($k_item3_a[$n]->product_id_b != NULL && $k_item3_b[$m]->product_id_c != NULL) {
-                        $twin_value_count = 0;
-                        if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_a) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_b) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_c) {
-                            $twin_value_count++;
-                        }
-
-                        if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_a) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_b) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_c) {
-                            $twin_value_count++;
-                        }
-
-                        if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_a) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_b) {
-                            $twin_value_count++;
-                        } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_c) {
-                            $twin_value_count++;
-                        }
-
-                        if ($twin_value_count > 1) {
-                            DB::table('itemset3')
-                                ->where('id', $k_item3_b[$m]->id)
-                                ->update([
-                                    'product_id_a' => NULL,
-                                    'product_id_b' => NULL,
-                                    'product_id_c' => NULL,
-                                    'product_name' => NULL
-                                ]);
+            if (count($k_item3_a) > 0) {
+                $m = 0;
+                do {
+                    $k_item3_b = DB::table('itemset3')->get();
+                    if ($k_item3_a[$n] != $k_item3_b[$m]) {
+                        if ($k_item3_a[$n]->product_id_b != NULL && $k_item3_b[$m]->product_id_c != NULL) {
+                            $twin_value_count = 0;
+                            if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_a) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_b) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_c) {
+                                $twin_value_count++;
+                            }
+    
+                            if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_a) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_b) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_c) {
+                                $twin_value_count++;
+                            }
+    
+                            if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_a) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_b) {
+                                $twin_value_count++;
+                            } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_c) {
+                                $twin_value_count++;
+                            }
+    
+                            if ($twin_value_count > 1) {
+                                DB::table('itemset3')
+                                    ->where('id', $k_item3_b[$m]->id)
+                                    ->update([
+                                        'product_id_a' => NULL,
+                                        'product_id_b' => NULL,
+                                        'product_id_c' => NULL,
+                                        'product_name' => NULL
+                                    ]);
+                            }
                         }
                     }
-                }
-                $count_item3_b = DB::table('itemset3')->count();
-                $m++;
-            } while ($m < $count_item3_b);
+                    $count_item3_b = DB::table('itemset3')->count();
+                    $m++;
+                } while ($m < $count_item3_b);
+            }
             $count_item3_a = DB::table('itemset3')->count();
             $n++;
         } while ($n < $count_item3_a);
@@ -335,13 +344,16 @@ class BundleController extends Controller
         //Proses 4. Membuat association rule dan menghitung nilai confidence
         $this->association_rule($input_confidence);
 
-        // $this->slow_moving_product();
+        // memasukan data itemset yang telah diseleksi kedalam tabel bundle
+        $this->insert_into_bundle();
 
         return redirect()->route('bundle.result');
     }
 
     public function result()
     {
+        $bundles = Bundle::latest()->get();
+        dd($bundles);
         return redirect()->route('bundle.create')->with('success', 'Data telah diproses.');
     }
 
@@ -371,21 +383,17 @@ class BundleController extends Controller
 
                 // mengambil data jumlah kemunculan tiap itemset pada transaksi
                 $data_jumlah = DB::table('itemset1')
-                    ->select('jumlah', 'support')
+                    ->select('jumlah')
                     ->whereIn('product_id', [$item2->product_id_a, $item2->product_id_b])
                     ->get();
-
                 $jumlah_a = $data_jumlah[0]->jumlah;
                 $jumlah_b = $data_jumlah[1]->jumlah;
-
-                $support_a = $data_jumlah[0]->support;
-                $support_b = $data_jumlah[1]->support;
 
                 $confidence_a = ($jumlah_a != 0) ? $item2->jumlah / $jumlah_a : 0;
                 $confidence_b = ($jumlah_b != 0) ? $item2->jumlah / $jumlah_b : 0;
 
-                $support_x_confidence_a = $support_a * $confidence_a;
-                $support_x_confidence_b = $support_b * $confidence_b;
+                $support_x_confidence_a = $item2->support * $confidence_a;
+                $support_x_confidence_b = $item2->support * $confidence_b;
 
                 ($confidence_a >= $confidence) ? $status_a = 'L' : $status_a = 'T';
                 ($confidence_b >= $confidence) ? $status_b = 'L' : $status_b = 'T';
@@ -398,7 +406,7 @@ class BundleController extends Controller
                         'rule_name' => 'Jika membeli ' . $pname_a->name . ' maka membeli ' . $pname_b->name,
                         'jumlah_a_b' => $item2->jumlah,
                         'jumlah_a' => $jumlah_a,
-                        'support' => $support_a,
+                        'support' => $item2->support,
                         'confidence' => $confidence_a,
                         'support_x_confidence' => $support_x_confidence_a,
                         'status' => $status_a,
@@ -410,7 +418,7 @@ class BundleController extends Controller
                         'rule_name' => 'Jika membeli ' . $pname_b->name . ' maka membeli ' . $pname_a->name,
                         'jumlah_a_b' => $item2->jumlah,
                         'jumlah_a' => $jumlah_b,
-                        'support' => $support_b,
+                        'support' => $item2->support,
                         'confidence' => $confidence_b,
                         'support_x_confidence' => $support_x_confidence_b,
                         'status' => $status_b,
@@ -439,17 +447,17 @@ class BundleController extends Controller
 
                 // mengambil data jumlah kemunculan tiap itemset pada transaksi
                 $jumlah_a = DB::table('itemset2')
-                    ->select('jumlah', 'support')
+                    ->select('jumlah')
                     ->where('product_id_a', $item3->product_id_a)
                     ->where('product_id_b', $item3->product_id_b)
                     ->first();
                 $jumlah_b = DB::table('itemset2')
-                    ->select('jumlah', 'support')
+                    ->select('jumlah')
                     ->where('product_id_a', $item3->product_id_a)
                     ->where('product_id_b', $item3->product_id_c)
                     ->first();
                 $jumlah_c = DB::table('itemset2')
-                    ->select('jumlah', 'support')
+                    ->select('jumlah')
                     ->where('product_id_a', $item3->product_id_b)
                     ->where('product_id_b', $item3->product_id_c)
                     ->first();
@@ -458,13 +466,9 @@ class BundleController extends Controller
                 $confidence3_b = ($jumlah_b->jumlah != 0) ? $item3->jumlah / $jumlah_b->jumlah : 0;
                 $confidence3_c = ($jumlah_c->jumlah != 0) ? $item3->jumlah / $jumlah_c->jumlah : 0;
 
-                $support3_a = $jumlah_a->support;
-                $support3_b = $jumlah_b->support;
-                $support3_c = $jumlah_c->support;
-
-                $support3_x_confidence_a = $support3_a * $confidence3_a;
-                $support3_x_confidence_b = $support3_b * $confidence3_b;
-                $support3_x_confidence_c = $support3_c * $confidence3_c;
+                $support3_x_confidence_a = $item3->support * $confidence3_a;
+                $support3_x_confidence_b = $item3->support * $confidence3_b;
+                $support3_x_confidence_c = $item3->support * $confidence3_c;
 
                 ($confidence3_a >= $confidence) ? $status3_a = 'L' : $status3_a = 'T';
                 ($confidence3_b >= $confidence) ? $status3_b = 'L' : $status3_b = 'T';
@@ -479,7 +483,7 @@ class BundleController extends Controller
                         'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_b->name . ' maka membeli ' . $pname_c->name,
                         'jumlah_a_b' => $item3->jumlah,
                         'jumlah_a' => $jumlah_a->jumlah,
-                        'support' => $support3_a,
+                        'support' => $item3->support,
                         'confidence' => $confidence3_a,
                         'support_x_confidence' => $support3_x_confidence_a,
                         'status' => $status3_a,
@@ -492,7 +496,7 @@ class BundleController extends Controller
                         'rule_name' => 'Jika membeli ' . $pname_a->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_b->name,
                         'jumlah_a_b' => $item3->jumlah,
                         'jumlah_a' => $jumlah_b->jumlah,
-                        'support' => $support3_b,
+                        'support' => $item3->support,
                         'confidence' => $confidence3_b,
                         'support_x_confidence' => $support3_x_confidence_b,
                         'status' => $status3_b,
@@ -505,7 +509,7 @@ class BundleController extends Controller
                         'rule_name' => 'Jika membeli ' . $pname_b->name . ' dan ' . $pname_c->name . ' maka membeli ' . $pname_a->name,
                         'jumlah_a_b' => $item3->jumlah,
                         'jumlah_a' => $jumlah_c->jumlah,
-                        'support' => $support3_c,
+                        'support' => $item3->support,
                         'confidence' => $confidence3_c,
                         'support_x_confidence' => $support3_x_confidence_c,
                         'status' => $status3_c,
@@ -518,7 +522,44 @@ class BundleController extends Controller
 
     public function slow_moving_product()
     {
-        $slow_moving_product = DB::table('itemset1')->min('jumlah');
-        dd($slow_moving_product);
+        $jumlah_terendah = DB::table('itemset1')->min('jumlah');
+        return $slow_moving_product = DB::table('itemset1')->where('jumlah', $jumlah_terendah)->get();
+    }
+
+    public function fast_moving_product()
+    {
+        $support_x_confidence_tertinggi = DB::table('association_rule')->max('support_x_confidence');
+        return $fast_moving_product = DB::table('association_rule')->where('support_x_confidence', $support_x_confidence_tertinggi)->get();
+    }
+
+    public function insert_into_bundle()
+    {
+        $produk_laku = $this->fast_moving_product();
+        $produk_tidak_laku = $this->slow_moving_product();
+
+        foreach($produk_laku as $laku){
+            foreach($produk_tidak_laku as $tidak_laku){
+                $product_id['a'] = $laku->product_id_a;
+                $product_id['b'] = $laku->product_id_b;
+                $product_id['c'] = $laku->product_id_c;
+                $product_id['d'] = $tidak_laku->product_id;
+                
+                DB::transaction(function () use ($laku, $product_id){
+                    $bundle = Bundle::create([
+                        'bundle_name' => 'Produk Bundel ' . Carbon::now(),
+                        'date' => Carbon::today(),
+                        'support' => $laku->support,
+                        'confidence' => $laku->confidence,
+                        'support_x_confidence' => $laku->support_x_confidence
+                    ]);
+                    $bundle->product()->attach($product_id['a'], ['keterangan' => 'Fast Moving']);
+                    $bundle->product()->attach($product_id['b'], ['keterangan' => 'Fast Moving']);
+                    if($product_id['c'] != NULL){
+                        $bundle->product()->attach($product_id['c'], ['keterangan' => 'Fast Moving']);
+                    }
+                    $bundle->product()->attach($product_id['d'], ['keterangan' => 'Slow Moving']);
+                });
+            }
+        }
     }
 }

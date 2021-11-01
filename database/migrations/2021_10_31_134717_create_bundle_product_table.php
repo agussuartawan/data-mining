@@ -16,6 +16,7 @@ class CreateBundleProductTable extends Migration
         Schema::create('bundle_product', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained();
             $table->foreignId('bundle_id')->constrained();
+            $table->enum('keterangan', ['Fast Moving', 'Slow Moving']);
         });
     }
 

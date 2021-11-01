@@ -14,11 +14,11 @@ class TransactionController extends Controller
 	{
 		$transaction = [];
 		if ($id >= 0 && $id != 'latest') {
-			$transaction = Transaction::where('file_list_id', $id)->get();
+			$transaction = Transaction::where('file_list_id', $id)->orderBy('no_invoice', 'desc')->get();
 		} elseif ($id == 'latest') {
 			$filelist_latest = FileList::select('id')->latest()->first();
 			if ($filelist_latest) {
-				$transaction = Transaction::where('file_list_id', $filelist_latest->id)->get();
+				$transaction = Transaction::where('file_list_id', $filelist_latest->id)->orderBy('no_invoice', 'desc')->get();
 			}
 		}
 		$title = "Transaksi Penjualan";
@@ -35,7 +35,7 @@ class TransactionController extends Controller
 	public function filelist()
 	{
 		$title = "Transaksi Penjualan";
-		$filelist = FileList::all();
+		$filelist = FileList::orderBy('created_at', 'desc')->get();
 		return view('transaction.filelist', compact('title', 'filelist'));
 	}
 

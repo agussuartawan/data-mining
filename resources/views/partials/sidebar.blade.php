@@ -8,14 +8,14 @@
     <hr class="sidebar-divider my-0">
     <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ url('dashboard') }}">
-            <i class="fas fa-fw fa-tachometer-alt fa-fw"></i>
+            <i class="fas fa-tachometer-alt fa-fw"></i>
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider mb-0">
     <li class="nav-item{{ request()->is('transaction/*') || request()->is('transaction') ? ' active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sales-menu" aria-expanded="true"
             aria-controls="collapseBootstrap">
-            <i class="fas fa-fw fa-shopping-cart fa-fw"></i>
+            <i class="fas fa-shopping-cart fa-fw"></i>
             <span>Penjualan</span>
         </a>
         <div id="sales-menu"

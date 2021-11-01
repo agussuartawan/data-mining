@@ -48,6 +48,7 @@ class TransactionsImport implements ToCollection
 				]);
 
 				$transaction->product()->attach($product->id, [
+					'file_list_id' => $fileList->id,
 					'qty' => $row[3],
 					'price' => $row[4],
 					'subtotal' => $row[5],

@@ -62,7 +62,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#dataTableHover').DataTable();
+            $('#dataTableHover').DataTable({
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 100]
+            });
         });
     </script>
 @endpush

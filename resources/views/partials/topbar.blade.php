@@ -3,6 +3,19 @@
         <i class="fa fa-bars"></i>
     </button>
     <ul class="navbar-nav ml-auto">
+        <li class="nav-item">            
+            <a class="nav-link" href="{{ route('transaction.create') }}" role="button"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cloud-download-alt fa-2x" rel="tooltip" title="Import Transaksi"></i>
+              </a>
+        </li>
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link" href="{{ route('bundle.create') }}" role="button"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-spinner fa-2x" rel="tooltip" title="Proses Produk Bundel"></i>
+              </a>
+        </li>
+        <div class="topbar-divider d-none d-sm-block"></div>
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">

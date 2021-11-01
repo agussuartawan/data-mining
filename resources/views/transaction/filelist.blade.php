@@ -33,7 +33,7 @@
                                 <tr>
                                     <th width="10%">#</th>
                                     <th>Nama File</th>
-                                    <th>Di upload pada</th>
+                                    <th>Diupload sejak</th>
                                     <th>Aksi</th></th>
                                 </tr>
                             </thead>
@@ -42,7 +42,7 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $filelist->file_name }}</td>
-                                        <td>{{ $filelist->created_at->isoFormat('dddd, D MMMM Y') }}</td>
+                                        <td>{{ $filelist->created_at->diffForHumans() }}</td>
                                         <td><a href="{{ route('transaction.data', $filelist->id) }}" class="badge badge-info">lihat transaksi</a></td>
                                     </tr>
                                 @endforeach
@@ -61,7 +61,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#dataTableHover').DataTable();
+            $('#dataTableHover').DataTable({
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 100]
+            });
         });
     </script>
 @endpush

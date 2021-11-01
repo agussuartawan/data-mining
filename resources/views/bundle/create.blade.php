@@ -130,8 +130,8 @@
                             <tr>
                                 <th width="10%">#</th>
                                 <th>Nama File</th>
-                                <th>Di upload sejak</th>
-                                <th>Aksi</th>
+                                <th>Diupload sejak</th>
+                                <th width="10%">Aksi</th>
                                 </th>
                             </tr>
                         </thead>
@@ -158,7 +158,8 @@
     <script>
         $('#dataTableHover').DataTable({
             searching: false,
-            paging: false,
+            pageLength: 5,
+            lengthChange: false,
             info: false
         });
 
