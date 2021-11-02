@@ -23,7 +23,7 @@
             </div>
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-glass-martini-alt"></i> &nbsp; Data
+                    <h5 class="m-0 font-weight-bold text-primary">Data
                         File</h5>
                 </div>
                 <div class="card-body">
@@ -34,7 +34,8 @@
                                     <th width="10%">#</th>
                                     <th>Nama File</th>
                                     <th>Diupload sejak</th>
-                                    <th>Aksi</th></th>
+                                    <th>Aksi</th>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +44,8 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $filelist->file_name }}</td>
                                         <td>{{ $filelist->created_at->diffForHumans() }}</td>
-                                        <td><a href="{{ route('transaction.data', $filelist->id) }}" class="badge badge-info">lihat transaksi</a></td>
+                                        <td><a href="{{ route('transaction.data', $filelist->id) }}"
+                                                class="badge badge-info">lihat transaksi</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
