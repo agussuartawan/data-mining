@@ -63,9 +63,6 @@ Route::get('user/index', 'UserController@index')
 Route::get('user/create', 'UserController@create')
     ->name('user.create');
 
-Route::get('user/{user}/show', 'UserController@show')
-    ->name('user.show');
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

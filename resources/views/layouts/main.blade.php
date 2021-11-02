@@ -66,7 +66,7 @@
 
         .text {
             text-align: center;
-            margin-top: 22%;
+            margin-top: 25%;
         }
 
     </style>

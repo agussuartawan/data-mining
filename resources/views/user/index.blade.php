@@ -34,7 +34,6 @@
                                     <th>Nama Pengguna</th>
                                     <th width="20%">E-mail</th>
                                     <th width="20%">Bergabung sejak</th>
-                                    <th width="15%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,8 +43,6 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->created_at->diffForHumans() }}</td>
-                                        <td><a href="{{ route('user.show', $user->id) }}"
-                                                class="badge badge-info">detail</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
