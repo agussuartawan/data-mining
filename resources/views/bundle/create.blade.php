@@ -86,30 +86,25 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Nama Bundel</th>
-                                    <th width="10%">Tanggal</th>
-                                    <th width="15%">Aksi</th>
+                                    <th>Tanggal</th>
+                                    <th>Support & Confidence</th>
+                                    <th>Aksi</th>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
+                            @php $bundles = Session::get('bundles'); @endphp
+                            @if($bundles)
+                                @foreach ($bundles as $key => $bundle)
                                 <tr>
-                                    <td>1</td>
-                                    <td>Produk bundel 1</td>
-                                    <td>01/11/2021</td>
-                                    <td><a href="" class="badge badge-info">detail</a></td>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $bundle->bundle_name }}</td>
+                                    <td>{{ $bundle->date }}</td>
+                                    <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
+                                    <td><a href="{{ route('bundle.modal-detail', $bundle->id) }}" class="btn-detail badge badge-info" title="{{ $bundle->bundle_name }}">detail</a></td>
                                 </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Produk bundel 2</td>
-                                    <td>01/11/2021</td>
-                                    <td><a href="" class="badge badge-info">detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Produk bundel 3</td>
-                                    <td>01/11/2021</td>
-                                    <td><a href="" class="badge badge-info">detail</a></td>
-                                </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>
@@ -157,6 +152,8 @@
         </div>
     </div>
 
+    @include('partials.modal')
+
 @endsection
 
 @push('scripts')
@@ -186,6 +183,28 @@
 
             $('#form').on('submit', function(e) {
                 $('#cover-spin').show(0);
+            });
+
+            $('body').on('click', '.btn-detail', function(event) {
+                event.preventDefault();
+
+                var me = $(this),
+                    url = me.attr('href'),
+                    title = me.attr('title');
+
+                $('.modal-detail-title').text(title);
+                $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    beforeSend: function(){
+                        $('#cover-spin').show(0);
+                    },
+                    success: function(response){
+                        $('.modal-detail-body').html(response);
+                        $('#cover-spin').hide(0);
+                    }
+                });
+                $('#modal-detail').modal('show');
             });
         });
     </script>

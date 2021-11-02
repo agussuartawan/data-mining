@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserSeeder::class);
         App\User::create([
-            'name' => 'Owner',
+            'name' => 'Pak Trisno',
             'email' => 'owner@mail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),

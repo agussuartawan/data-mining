@@ -5,14 +5,6 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg-12">
-            @if (Session::has('success'))
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    {{ Session('success') }}
-                </div>
-            @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <a class="btn btn-sm btn-primary" href="{{ route('bundle.create') }}">
@@ -32,12 +24,25 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Nama Bundel</th>
-                                    <th width="10%">Tanggal</th>
-                                    <th width="15%">Aksi</th>
+                                    <th>Support</th>
+                                    <th>Confidence</th>
+                                    <th>Support & Confidence</th>
+                                    <th>Tanggal</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach ($bundles as $key => $bundle)
+                                    <tr>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $bundle->bundle_name }}</td>
+                                        <td>{{ round($bundle->support * 100, 1) }}%</td>
+                                        <td>{{ round($bundle->confidence * 100, 1) }}%</td>
+                                        <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
+                                        <td>{{ $bundle->date }}</td>
+                                        <td><a href="{{ route('bundle.show', $bundle->id) }}" class="badge badge-info">detail</a></td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

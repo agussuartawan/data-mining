@@ -5,14 +5,6 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg-12">
-            @if (Session::has('success'))
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    {{ Session('success') }}
-                </div>
-            @endif
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <a class="btn btn-sm btn-primary" href="{{ route('transaction.create') }}">
@@ -55,8 +47,6 @@
             </div>
         </div>
     </div>
-    {{-- Modal Alert --}}
-    @include('partials.modal-alert')
 
 @endsection
 

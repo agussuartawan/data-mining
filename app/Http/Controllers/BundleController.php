@@ -15,14 +15,26 @@ class BundleController extends Controller
     public function index()
     {
         $title = "Produk Bundel";
-        return view('bundle.index', compact('title'));
+        $bundles = Bundle::latest()->get();
+        return view('bundle.index', compact('title', 'bundles'));
     }
 
     public function create()
     {
         $title = "Produk Bundel";
-        $filelist = FileList::orderBy('created_at', 'desc')->get();
+        $filelist = FileList::latest()->get();
         return view('bundle.create', compact('title', 'filelist'));
+    }
+
+    public function show(Bundle $bundle)
+    {
+        $title = "Produk Bundel";
+        return view('bundle.show', compact('title', 'bundle'));
+    }
+
+    public function modal_detail(Bundle $bundle)
+    {
+        return view('bundle.table-detail', compact('bundle'));
     }
 
     public function store(Request $request)
@@ -352,9 +364,10 @@ class BundleController extends Controller
 
     public function result()
     {
-        $bundles = Bundle::latest()->get();
-        dd($bundles);
-        return redirect()->route('bundle.create')->with('success', 'Data telah diproses.');
+        $latest_created = Bundle::max('created_at');
+        $latest_bundles = Bundle::where('created_at', $latest_created)->get();
+
+        return redirect()->route('bundle.create')->with(['bundles' => $latest_bundles, 'success' => 'Data telah diproses.']);
     }
 
     public function report_create()
@@ -528,23 +541,21 @@ class BundleController extends Controller
 
     public function fast_moving_product()
     {
-        $support_x_confidence_tertinggi = DB::table('association_rule')->max('support_x_confidence');
-        return $fast_moving_product = DB::table('association_rule')->where('support_x_confidence', $support_x_confidence_tertinggi)->get();
+        return $final_rule = DB::table('association_rule')->where('status', 'L')->get();
     }
 
     public function insert_into_bundle()
     {
         $produk_laku = $this->fast_moving_product();
         $produk_tidak_laku = $this->slow_moving_product();
-
         foreach($produk_laku as $laku){
             foreach($produk_tidak_laku as $tidak_laku){
                 $product_id['a'] = $laku->product_id_a;
                 $product_id['b'] = $laku->product_id_b;
                 $product_id['c'] = $laku->product_id_c;
                 $product_id['d'] = $tidak_laku->product_id;
-                
-                DB::transaction(function () use ($laku, $product_id){
+
+                $db_transaction = DB::transaction(function () use ($laku, $product_id){
                     $bundle = Bundle::create([
                         'bundle_name' => 'Produk Bundel ' . Carbon::now(),
                         'date' => Carbon::today(),

@@ -53,7 +53,6 @@ class TransactionController extends Controller
 
 	public function show(Transaction $transaction)
 	{
-		// dd($transaction->product);
 		$title = "Transaksi Penjualan";
 		return view('transaction.show', compact('transaction', 'title'));
 	}

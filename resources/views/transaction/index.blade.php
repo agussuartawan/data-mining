@@ -54,8 +54,6 @@
             </div>
         </div>
     </div>
-    {{-- Modal Alert --}}
-    @include('partials.modal-alert')
 
 @endsection
 

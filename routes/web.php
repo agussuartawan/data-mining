@@ -46,6 +46,12 @@ Route::post('bundle/create', 'BundleController@store')
 Route::get('bundle/result', 'BundleController@result')
     ->name('bundle.result');
 
+Route::get('bundle/{bundle}/show', 'BundleController@show')
+    ->name('bundle.show');
+
+Route::get('bundle/{bundle}/modal-detail', 'BundleController@modal_detail')
+    ->name('bundle.modal-detail');
+
 # Report
 Route::get('report', 'BundleController@report_create')
     ->name('report');

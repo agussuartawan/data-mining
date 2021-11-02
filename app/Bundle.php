@@ -10,6 +10,6 @@ class Bundle extends Model
 
     public function product()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class)->withPivot('keterangan');
     }
 }
