@@ -28,6 +28,10 @@
                             <label for="name">Ulangi Password</label>
                             <input type="password" name="password_confirmation" class="form-control" required="required">
                         </div>
+                        <a class="btn btn-danger" href="{{ url()->previous() }}">
+                            <i class="fas fa-times"></i>
+                            Batal
+                        </a>
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-plus"></i>
                             Simpan

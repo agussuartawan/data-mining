@@ -42,7 +42,12 @@
                                 </div>
                             </div>
                         </div>
+                        <a class="btn btn-danger" href="{{ url()->previous() }}">
+                            <i class="fas fa-times"></i>
+                            Batal
+                        </a>
                         <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-spinner"></i>
                             Proses
                         </button>
                     </form>

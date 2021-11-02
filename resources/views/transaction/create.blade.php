@@ -10,11 +10,16 @@
                     <h5 class="m-0 font-weight-bold text-primary">Import Penjualan</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('transaction.import') }}" enctype="multipart/form-data" id="form">
+                    <form method="POST" action="{{ route('transaction.import') }}" enctype="multipart/form-data"
+                        id="form">
                         @csrf
                         <div class="form-group">
                             <input type="file" name="file" class="form-control" required="required">
                         </div>
+                        <a class="btn btn-danger" href="{{ url()->previous() }}">
+                            <i class="fas fa-times"></i>
+                            Batal
+                        </a>
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-cloud-download-alt"></i>
                             Import
@@ -29,9 +34,9 @@
 
 @push('scripts')
     <script>
-           $('#form').on('submit', function(e){
-                $('.text').html('Mohon tunggu..<br>File anda sedang diupload');
-                $('#cover-spin').show(0);
-           });
+        $('#form').on('submit', function(e) {
+            $('.text').html('Mohon tunggu..<br>File anda sedang diupload');
+            $('#cover-spin').show(0);
+        });
     </script>
 @endpush

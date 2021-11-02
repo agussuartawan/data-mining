@@ -50,13 +50,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($transaction->product as $product)
+                                    @foreach ($transaction->product as $product)
                                         <tr>
                                             <td>{{ $product->id }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->pivot->qty }}</td>
-                                            <td>{{ currency($product->pivot->price) }}</td>
-                                            <td>{{ currency($product->pivot->subtotal) }}</td>
+                                            <td>Rp. {{ currency($product->pivot->price) }}</td>
+                                            <td>Rp. {{ currency($product->pivot->subtotal) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -72,21 +72,24 @@
 
 @push('scripts')
     <script>
-       
+
     </script>
 @endpush
 
 @push('styles')
     <style type="text/css">
-        table.rs-table-bordered{
-            border:1px solid #000000;
-            margin-top:20px;
+        table.rs-table-bordered {
+            border: 1px solid #000000;
+            margin-top: 20px;
         }
-        table.rs-table-bordered > thead > tr > th{
-               border:1px solid #000000;
+
+        table.rs-table-bordered>thead>tr>th {
+            border: 1px solid #000000;
         }
-        table.rs-table-bordered > tbody > tr > td{
-            border:1px solid #000000;
+
+        table.rs-table-bordered>tbody>tr>td {
+            border: 1px solid #000000;
         }
+
     </style>
 @endpush
