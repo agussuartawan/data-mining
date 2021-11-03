@@ -43,9 +43,6 @@ Route::get('bundle/create', 'BundleController@create')
 Route::post('bundle/create', 'BundleController@store')
     ->name('bundle.store');
 
-Route::get('bundle/result', 'BundleController@result')
-    ->name('bundle.result');
-
 Route::get('bundle/{bundle}/show', 'BundleController@show')
     ->name('bundle.show');
 
@@ -55,6 +52,9 @@ Route::get('bundle/{bundle}/modal-detail', 'BundleController@modal_detail')
 # Report
 Route::get('report', 'BundleController@report_create')
     ->name('report');
+
+Route::post('report', 'BundleController@report_pdf')
+    ->name('report.pdf');
 
 # User
 Route::get('user/index', 'UserController@index')

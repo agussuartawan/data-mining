@@ -9,6 +9,7 @@ use App\Transaction;
 use App\Product;
 use App\Bundle;
 use DB;
+use PDF;
 
 class BundleController extends Controller
 {
@@ -357,23 +358,26 @@ class BundleController extends Controller
         $this->association_rule($input_confidence);
 
         // memasukan data itemset yang telah diseleksi kedalam tabel bundle
-        $this->insert_into_bundle();
+        $bundles = $this->insert_into_bundle(); // data produk bundel yang baru diproses
 
-        return redirect()->route('bundle.result');
-    }
-
-    public function result()
-    {
-        $latest_created = Bundle::max('created_at');
-        $latest_bundles = Bundle::where('created_at', $latest_created)->get();
-
-        return redirect()->route('bundle.create')->with(['bundles' => $latest_bundles, 'success' => 'Data telah diproses.']);
+        return redirect()->route('bundle.create')->with(['bundles' => $bundles, 'success' => 'Data telah diproses.']);
     }
 
     public function report_create()
     {
         $title = 'Laporan';
         return view('bundle.report', compact('title'));
+    }
+
+    public function report_pdf(Request $request)
+    {
+        $date['from'] = $request->from;
+        $date['to'] = $request->to;
+        $bundles = Bundle::whereBetween('date', $date)->orderBy('date', 'asc')->get();
+
+        return view('bundle.report_pdf', compact('date', 'bundles'));
+        // $pdf = PDF::loadview('bundle.report_pdf',['bundles' => $bundles, 'date' => $date]);
+    	// return $pdf->download('laporan-produk-bundle.pdf');
     }
 
     public function association_rule($confidence)
@@ -555,22 +559,23 @@ class BundleController extends Controller
                 $product_id['c'] = $laku->product_id_c;
                 $product_id['d'] = $tidak_laku->product_id;
 
-                $db_transaction = DB::transaction(function () use ($laku, $product_id){
-                    $bundle = Bundle::create([
-                        'bundle_name' => 'Produk Bundel ' . Carbon::now(),
-                        'date' => Carbon::today(),
-                        'support' => $laku->support,
-                        'confidence' => $laku->confidence,
-                        'support_x_confidence' => $laku->support_x_confidence
-                    ]);
-                    $bundle->product()->attach($product_id['a'], ['keterangan' => 'Fast Moving']);
-                    $bundle->product()->attach($product_id['b'], ['keterangan' => 'Fast Moving']);
-                    if($product_id['c'] != NULL){
-                        $bundle->product()->attach($product_id['c'], ['keterangan' => 'Fast Moving']);
-                    }
-                    $bundle->product()->attach($product_id['d'], ['keterangan' => 'Slow Moving']);
-                });
+                $bundle = Bundle::create([
+                    'bundle_name' => 'Produk Bundel ' . Carbon::now(),
+                    'date' => Carbon::today(),
+                    'support' => $laku->support,
+                    'confidence' => $laku->confidence,
+                    'support_x_confidence' => $laku->support_x_confidence
+                ]);
+                $bundle->product()->attach($product_id['a'], ['keterangan' => 'Fast Moving']);
+                $bundle->product()->attach($product_id['b'], ['keterangan' => 'Fast Moving']);
+                if($product_id['c'] != NULL){
+                    $bundle->product()->attach($product_id['c'], ['keterangan' => 'Fast Moving']);
+                }
+                $bundle->product()->attach($product_id['d'], ['keterangan' => 'Slow Moving']);
+                $latest_bundles[] = $bundle;
             }
         }
+
+        return $latest_bundles;
     }
 }

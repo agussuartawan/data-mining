@@ -10,20 +10,19 @@
                     <h5 class="m-0 font-weight-bold text-primary">Laporan Produk Bundel</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('transaction.import') }}" enctype="multipart/form-data"
-                        id="form">
+                    <form method="POST" action="{{ route('report.pdf') }}" id="form">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="form">Dari :</label>
-                                    <input type="date" name="form" class="form-control" required="required">
+                                    <input type="date" name="from" class="form-control" required="required">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="until">Sampai :</label>
-                                    <input type="date" name="until" class="form-control" required="required">
+                                    <input type="date" name="to" class="form-control" required="required">
                                 </div>
                             </div>
                         </div>
