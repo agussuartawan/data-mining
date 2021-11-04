@@ -12,8 +12,11 @@
                 <p>Anda yakin ingin logout?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                <a href="{{ route('login.user') }}" class="btn btn-primary">Logout</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Logout</button>
+                </form>
             </div>
         </div>
     </div>

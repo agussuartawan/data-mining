@@ -93,18 +93,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @php $bundles = Session::get('bundles'); @endphp
-                            @if($bundles)
-                                @foreach ($bundles as $key => $bundle)
-                                <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $bundle->bundle_name }}</td>
-                                    <td>{{ $bundle->date }}</td>
-                                    <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
-                                    <td><a href="{{ route('bundle.modal-detail', $bundle->id) }}" class="btn-detail badge badge-info" title="{{ $bundle->bundle_name }}">detail</a></td>
-                                </tr>
-                                @endforeach
-                            @endif
+                                @php $bundles = Session::get('bundles'); @endphp
+                                @if ($bundles)
+                                    @foreach ($bundles as $key => $bundle)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $bundle->bundle_name }}</td>
+                                            <td>{{ $bundle->date }}</td>
+                                            <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
+                                            <td><a href="{{ route('bundle.modal-detail', $bundle->id) }}"
+                                                    class="btn-detail badge badge-info"
+                                                    title="{{ $bundle->bundle_name }}">detail</a></td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -158,14 +160,14 @@
 
 @push('scripts')
     <script>
-        $('#dataTableHover').DataTable({
-            searching: false,
-            pageLength: 5,
-            lengthChange: false,
-            info: false
-        });
-
         $(document).ready(function($) {
+            $('#dataTableHover').DataTable({
+                searching: false,
+                pageLength: 5,
+                lengthChange: false,
+                info: false
+            });
+
             $('.select-button').click(function(event) {
                 event.preventDefault();
 
@@ -196,10 +198,10 @@
                 $.ajax({
                     url: url,
                     dataType: 'html',
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('#cover-spin').show(0);
                     },
-                    success: function(response){
+                    success: function(response) {
                         $('.modal-detail-body').html(response);
                         $('#cover-spin').hide(0);
                     }
