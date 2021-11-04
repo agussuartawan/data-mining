@@ -261,7 +261,7 @@ class BundleController extends Controller
                             } else if ($k_item3_a[$n]->product_id_a ==  $k_item3_b[$m]->product_id_c) {
                                 $twin_value_count++;
                             }
-    
+
                             if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_a) {
                                 $twin_value_count++;
                             } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_b) {
@@ -269,7 +269,7 @@ class BundleController extends Controller
                             } else if ($k_item3_a[$n]->product_id_b ==  $k_item3_b[$m]->product_id_c) {
                                 $twin_value_count++;
                             }
-    
+
                             if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_a) {
                                 $twin_value_count++;
                             } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_b) {
@@ -277,7 +277,7 @@ class BundleController extends Controller
                             } else if ($k_item3_a[$n]->product_id_c ==  $k_item3_b[$m]->product_id_c) {
                                 $twin_value_count++;
                             }
-    
+
                             if ($twin_value_count > 1) {
                                 DB::table('itemset3')
                                     ->where('id', $k_item3_b[$m]->id)
@@ -375,9 +375,9 @@ class BundleController extends Controller
         $date['to'] = $request->to;
         $bundles = Bundle::whereBetween('date', $date)->orderBy('date', 'asc')->get();
 
-        return view('bundle.report_pdf', compact('date', 'bundles'));
-        // $pdf = PDF::loadview('bundle.report_pdf',['bundles' => $bundles, 'date' => $date]);
-    	// return $pdf->download('laporan-produk-bundle.pdf');
+        $pdf = PDF::loadview('bundle.report_pdf', ['bundles' => $bundles, 'date' => $date])->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-produk-bundle.pdf');
     }
 
     public function association_rule($confidence)
@@ -552,8 +552,8 @@ class BundleController extends Controller
     {
         $produk_laku = $this->fast_moving_product();
         $produk_tidak_laku = $this->slow_moving_product();
-        foreach($produk_laku as $laku){
-            foreach($produk_tidak_laku as $tidak_laku){
+        foreach ($produk_laku as $laku) {
+            foreach ($produk_tidak_laku as $tidak_laku) {
                 $product_id['a'] = $laku->product_id_a;
                 $product_id['b'] = $laku->product_id_b;
                 $product_id['c'] = $laku->product_id_c;
@@ -568,7 +568,7 @@ class BundleController extends Controller
                 ]);
                 $bundle->product()->attach($product_id['a'], ['keterangan' => 'Fast Moving']);
                 $bundle->product()->attach($product_id['b'], ['keterangan' => 'Fast Moving']);
-                if($product_id['c'] != NULL){
+                if ($product_id['c'] != NULL) {
                     $bundle->product()->attach($product_id['c'], ['keterangan' => 'Fast Moving']);
                 }
                 $bundle->product()->attach($product_id['d'], ['keterangan' => 'Slow Moving']);
