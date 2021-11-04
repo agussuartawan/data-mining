@@ -5,7 +5,7 @@
     <title>Laporan Produk Bundel</title>
 </head>
 
-<body class="A4">
+<body>
     <style type="text/css">
         * {
             font-family: sans-serif;

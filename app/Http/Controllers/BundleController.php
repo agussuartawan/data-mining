@@ -375,9 +375,9 @@ class BundleController extends Controller
         $date['to'] = $request->to;
         $bundles = Bundle::whereBetween('date', $date)->orderBy('date', 'asc')->get();
 
-        $pdf = PDF::loadview('bundle.report_pdf', ['bundles' => $bundles, 'date' => $date])->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('bundle.report_pdf', ['bundles' => $bundles, 'date' => $date])->setPaper('a4', 'landscape');
 
-        return $pdf->download('laporan-produk-bundle.pdf');
+        return $pdf->stream('laporan-produk-bundel.pdf');
     }
 
     public function association_rule($confidence)

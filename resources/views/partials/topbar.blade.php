@@ -8,7 +8,7 @@
                 aria-haspopup="true" aria-expanded="false">
                 <img class="img-profile rounded-circle" src="{{ asset('') }}img/logo-tmb.jpg"
                     style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">{{ Auth::user()->namegit }}</span>
+                <span class="ml-2 d-none d-lg-inline text-white small">{{ Auth::user()->name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
