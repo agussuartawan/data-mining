@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use \App\Http\Requests\StoreUserRequest;
+use \App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -35,7 +36,7 @@ class UserController extends Controller
         return view('user.edit', compact('user', 'title'));
     }
 
-    public function update(User $user, StoreUserRequest $request)
+    public function update(User $user, UpdateUserRequest $request)
     {
         $user->update($request->validated());
 
