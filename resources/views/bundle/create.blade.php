@@ -199,6 +199,7 @@
                     url: url,
                     dataType: 'html',
                     beforeSend: function() {
+                        $('.text').html('Mohon tunggu..<br>Data anda sedang diproses');
                         $('#cover-spin').show(0);
                     },
                     success: function(response) {

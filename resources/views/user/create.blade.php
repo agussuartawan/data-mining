@@ -70,7 +70,6 @@
 @push('scripts')
     <script>
         $('#form').on('submit', function(e) {
-            $('.text').html('Mohon tunggu..<br>File anda sedang diupload');
             $('#cover-spin').show(0);
         });
     </script>
