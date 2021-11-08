@@ -35,7 +35,7 @@
                                 </span>
                             @enderror
                         </div>
-                        <a class="btn btn-danger" href="{{ url()->previous() }}">
+                        <a class="btn btn-danger" href="{{ route('user.index') }}">
                             <i class="fas fa-times"></i>
                             Batal
                         </a>

@@ -51,7 +51,7 @@
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation"
                                 required autocomplete="new-password">
                         </div>
-                        <a class="btn btn-danger" href="{{ url()->previous() }}">
+                        <a class="btn btn-danger" href="{{ route('user.index') }}">
                             <i class="fas fa-times"></i>
                             Batal
                         </a>
