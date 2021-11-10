@@ -7,7 +7,7 @@
         <div class="col-lg-12 notif">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="m-0 font-weight-bold text-primary">Tambah User</h5>
+                    <h5 class="m-0 font-weight-bold text-primary">Edit User</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('user.update', $user->id) }}" id="form">

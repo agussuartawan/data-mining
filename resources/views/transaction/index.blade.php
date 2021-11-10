@@ -41,7 +41,7 @@
                                 @foreach ($transaction as $transaction)
                                     <tr>
                                         <td>{{ $transaction->no_invoice }}</td>
-                                        <td>{{ $transaction->date }}</td>
+                                        <td>{{ Carbon\Carbon::parse($transaction->date)->isoFormat('DD MMMM Y') }}</td>
                                         <td>Rp. {{ currency($transaction->grand_total) }}</td>
                                         <td><a href="{{ route('transaction.show', $transaction->id) }}"
                                                 class="badge badge-info">detail</a></td>

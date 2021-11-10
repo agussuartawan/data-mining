@@ -39,7 +39,7 @@
                                         <td>{{ round($bundle->support * 100, 1) }}%</td>
                                         <td>{{ round($bundle->confidence * 100, 1) }}%</td>
                                         <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
-                                        <td>{{ $bundle->date }}</td>
+                                        <td>{{ Carbon\Carbon::parse($bundle->date)->isoFormat('DD MMMM Y') }}</td>
                                         <td><a href="{{ route('bundle.show', $bundle->id) }}" class="badge badge-info">detail</a></td>
                                     </tr>
                                 @endforeach

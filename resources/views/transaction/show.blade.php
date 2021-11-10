@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <h6>Transaksi {{ $transaction->no_invoice }}</h6>
-                                <h6>Tanggal {{ $transaction->date }}</h6>
+                                <h6>Tanggal {{ Carbon\Carbon::parse($transaction->date)->isoFormat('DD MMMM Y') }}</h6>
                                 <h6>Ditambahkan sejak {{ $transaction->created_at->diffForHumans() }}</h6>
                             </div>
                             <div class="col-lg-6 text-right">

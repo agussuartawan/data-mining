@@ -28,7 +28,7 @@
                                 <h6>Support <strong>{{ round($bundle->support* 100, 1) }}%</strong></h6>
                                 <h6>Confidence <strong>{{ round($bundle->confidence* 100, 1) }}%</strong></h6>
                                 <h6>Support & Confidence <strong>{{ round($bundle->support_x_confidence * 100, 1) }}%</strong></h6>
-                                <h6>Tanggal <strong>{{ $bundle->date }}</strong></h6>
+                                <h6>Tanggal <strong>{{ Carbon\Carbon::parse($bundle->date)->isoFormat('DD MMMM Y') }}</strong></h6>
                                 <h6>Diproses sejak <strong>{{ $bundle->created_at->diffForHumans() }}</strong></h6>
                             </div>
                         </div>
