@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('report', 'BundleController@report_create')
         ->name('report');
 
-    Route::post('report', 'BundleController@report_pdf')
+    Route::get('report/bundle-report', 'BundleController@report_pdf')
         ->name('report.pdf');
 
     # User

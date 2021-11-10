@@ -30,17 +30,25 @@
                                             class="img-thumbnail rounded-circle" style="max-width:40%;">
                                         <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                     </div>
-                                    <form class="user" method="POST" action="{{ route('login') }}">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            Login gagal.
+                                        </div>
+                                    @endif
+                                    <form class="user" method="POST" action="{{ route('login') }}" novalidate>
                                         @csrf
                                         <div class="form-group">
                                             <input id="email" type="email"
-                                                class="form-control @error('email') is-invalid @enderror" name="email"
+                                                class="form-control" name="email"
                                                 value="{{ old('email') }}" required autocomplete="email" autofocus
                                                 placeholder="Enter Email Address">
                                         </div>
                                         <div class="form-group">
                                             <input id="password" type="password"
-                                                class="form-control @error('password') is-invalid @enderror"
+                                                class="form-control"
                                                 name="password" required autocomplete="current-password"
                                                 placeholder="Password">
                                         </div>

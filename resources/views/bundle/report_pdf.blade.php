@@ -55,7 +55,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($bundles as $i => $bundle)
+            @forelse ($bundles as $i => $bundle)
                 <tr>
                     <td class="text-center">
                         <p>{{ $i + 1 }}</p>
@@ -81,7 +81,11 @@
                         @endforeach
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center"><p>Tidak ada data.</p></td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </body>

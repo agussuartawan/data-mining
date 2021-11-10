@@ -25,8 +25,22 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:50',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'email' => 'required|email:rfc,dns|unique:users',
             'password' => 'required|confirmed',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama tidak boleh kosong.',
+            'name.min' => 'Nama harus terdiri dari minimal 3 huruf.',
+            'name.max' => 'Nama harus terdiri dari maximal 50 huruf.',
+            'email.required' => 'Email tidak boleh kosong.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'password.confirmed' => 'Mohon input ulang password'
         ];
     }
 }

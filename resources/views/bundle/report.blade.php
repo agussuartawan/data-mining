@@ -10,7 +10,7 @@
                     <h5 class="m-0 font-weight-bold text-primary">Laporan Produk Bundel</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('report.pdf') }}" target="_blank">
+                    <form action="{{ route('report.pdf') }}" target="_blank">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">

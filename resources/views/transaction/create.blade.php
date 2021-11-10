@@ -14,7 +14,12 @@
                         id="form">
                         @csrf
                         <div class="form-group">
-                            <input type="file" name="file" class="form-control" required="required">
+                            <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" required="required">
+                            @error('file')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <a class="btn btn-danger" href="{{ url()->previous() }}">
                             <i class="fas fa-times"></i>

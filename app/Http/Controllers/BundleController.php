@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \App\Http\Requests\StoreBundleRequest;
 use Carbon\Carbon;
 use App\FileList;
 use App\Transaction;
@@ -38,8 +39,9 @@ class BundleController extends Controller
         return view('bundle.table-detail', compact('bundle'));
     }
 
-    public function store(Request $request)
+    public function store(StoreBundleRequest $request)
     {
+        $request->validated();
         // mengosongkan tabel temporary sebelum perhitungan dimulai
         DB::table('itemset1')->truncate();
         DB::table('itemset2')->truncate();

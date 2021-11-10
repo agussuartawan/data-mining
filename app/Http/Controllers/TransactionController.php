@@ -41,7 +41,16 @@ class TransactionController extends Controller
 
 	public function import(Request $request)
 	{
-		$title = "Transaksi Penjualan";
+		$request->validate(
+			[
+				'file' => 'required|in:xlsx,xls'
+			],
+			[
+				'file.required' => 'Pilih file terlebih dahulu.',
+				'file.in' => 'File harus berupa excel.'
+			]
+		);
+
 		$file = $request->file('file');
 		$fileName = $file->getClientOriginalName();
 		$file->move('DataTransaction', $fileName);
