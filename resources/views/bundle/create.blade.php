@@ -109,7 +109,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $bundle->bundle_name }}</td>
-                                            <td>{{ $bundle->date }}</td>
+                                            <td>{{ Carbon/Carbon::parse($bundle->date)->isoFormat('DD MMMM Y') }}</td>
                                             <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
                                             <td><a href="{{ route('bundle.modal-detail', $bundle->id) }}"
                                                     class="btn-detail badge badge-info"

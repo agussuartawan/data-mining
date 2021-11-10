@@ -80,10 +80,10 @@ class BundleController extends Controller
         // Proses 1 berakhir. Data hasil disimpan di tabel itemset1
 
         $itemset1 = DB::table('itemset1')->where('status', 'L')->get();
-        if (count($itemset1) > 0) {
+        if (count($itemset1) > 1) {
             // Proses 2. Membuat kombinasi 2-itemset
-            foreach ($itemset1 as $a => $item_a) {
-                foreach ($itemset1 as $b => $item_b) {
+            foreach ($itemset1 as $item_a) {
+                foreach ($itemset1 as $item_b) {
                     if ($item_a->product_id != $item_b->product_id) {
                         DB::table('itemset2')->insert([
                             'product_id_a' => $item_a->product_id,
@@ -171,7 +171,7 @@ class BundleController extends Controller
         $itemset2_lolos = DB::table('itemset2')->where('status', 'L')->get();
         $item3_temporary = [];
         $kandidat_item3 = [];
-        if (count($itemset2_lolos) > 0) {
+        if (count($itemset2_lolos) > 1) {
             foreach ($itemset2_lolos as $value) {
                 $item2_kembar = DB::table('itemset2')->where('product_id_a', $value->product_id_a)->get();
                 if (count($item2_kembar) > 1) {
@@ -190,8 +190,8 @@ class BundleController extends Controller
 
         // 2. Setelah didapat data 2 itemset yang item-1 nya kembar
         // selanjutnya mulai membuat kombinasi 3 itemset 
-        foreach ($item3_temporary as $a => $item3_a) {
-            foreach ($item3_temporary as $b => $item3_b) {
+        foreach ($item3_temporary as $item3_a) {
+            foreach ($item3_temporary as $item3_b) {
                 if ($item3_a->product_id_b != $item3_b->product_id_b) {
                     if ($item3_a->product_id_a == $item3_b->product_id_b) {
                         //mengambil data nama produk berdasarkan id itemset yang terpilih
@@ -249,7 +249,7 @@ class BundleController extends Controller
         $n = 0;
         do {
             $k_item3_a = DB::table('itemset3')->get();
-            if (count($k_item3_a) > 0) {
+            if (count($k_item3_a) > 1) {
                 $m = 0;
                 do {
                     $k_item3_b = DB::table('itemset3')->get();
@@ -361,6 +361,9 @@ class BundleController extends Controller
 
         // memasukan data itemset yang telah diseleksi kedalam tabel bundle
         $bundles = $this->insert_into_bundle(); // data produk bundel yang baru diproses
+        if(!$bundles){
+            return redirect()->back()->with('error', 'Tidak ada aturan asosiasi yang memenuhi nilai minimum confidence, coba nilai minimum confidence yang lebih rendah');
+        }
 
         return redirect()->route('bundle.create')->with(['bundles' => $bundles, 'success' => 'Data telah diproses.']);
     }
@@ -542,16 +545,17 @@ class BundleController extends Controller
     public function slow_moving_product()
     {
         $jumlah_terendah = DB::table('itemset1')->min('jumlah');
-        return $slow_moving_product = DB::table('itemset1')->where('jumlah', $jumlah_terendah)->get();
+        return DB::table('itemset1')->where('jumlah', $jumlah_terendah)->get();
     }
 
     public function fast_moving_product()
     {
-        return $final_rule = DB::table('association_rule')->where('status', 'L')->get();
+        return DB::table('association_rule')->where('status', 'L')->get();
     }
 
     public function insert_into_bundle()
     {
+        $latest_bundles = [];
         $produk_laku = $this->fast_moving_product();
         $produk_tidak_laku = $this->slow_moving_product();
         foreach ($produk_laku as $laku) {

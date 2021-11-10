@@ -43,11 +43,11 @@ class TransactionController extends Controller
 	{
 		$request->validate(
 			[
-				'file' => 'required|in:xlsx,xls'
+				'file' => 'required|mimes:xlsx,xls'
 			],
 			[
 				'file.required' => 'Pilih file terlebih dahulu.',
-				'file.in' => 'File harus berupa excel.'
+				'file.mimes' => 'File harus berupa excel.'
 			]
 		);
 
