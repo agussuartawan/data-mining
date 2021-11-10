@@ -38,7 +38,7 @@
                                             Login gagal.
                                         </div>
                                     @endif
-                                    <form class="user" method="POST" action="{{ route('login') }}" novalidate>
+                                    <form class="user" method="POST" action="{{ route('login') }}">
                                         @csrf
                                         <div class="form-group">
                                             <input id="email" type="email"
