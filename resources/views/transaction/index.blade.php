@@ -28,18 +28,20 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
-                            <thead class="thead-light">
+                        <table class="table align-items-center table-flush table-striped table-bordered rs-table-bordered" id="dataTableHover">
+                            <thead>
                                 <tr>
-                                    <th width="15%">No Transaksi</th>
-                                    <th width="20%">Tanggal</th>
-                                    <th width="10%">Total</th>
+                                    <th width="10%">#</th>
+                                    <th>No Transaksi</th>
+                                    <th>Tanggal</th>
+                                    <th>Total</th>
                                     <th width="15%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($transaction as $transaction)
+                                @foreach ($transactions as $index => $transaction)
                                     <tr>
+                                        <td>{{ $index+1 }}</td>
                                         <td>{{ $transaction->no_invoice }}</td>
                                         <td>{{ Carbon\Carbon::parse($transaction->date)->isoFormat('DD MMMM Y') }}</td>
                                         <td>Rp. {{ currency($transaction->grand_total) }}</td>

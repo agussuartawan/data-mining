@@ -7,23 +7,24 @@ use App\Transaction;
 use App\FileList;
 use App\Imports\TransactionsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use DataTable;
 
 class TransactionController extends Controller
 {
 	public function index($id)
 	{
-		$transaction = [];
+		$transactions = [];
 		if ($id >= 0 && $id != 'latest') {
-			$transaction = Transaction::where('file_list_id', $id)->orderBy('no_invoice', 'desc')->get();
+			$transactions = Transaction::where('file_list_id', $id)->orderBy('no_invoice', 'desc')->get();
 		} elseif ($id == 'latest') {
 			$filelist_latest = FileList::select('id')->latest()->first();
 			if ($filelist_latest) {
-				$transaction = Transaction::where('file_list_id', $filelist_latest->id)->orderBy('no_invoice', 'desc')->get();
+				$transactions = Transaction::where('file_list_id', $filelist_latest->id)->orderBy('no_invoice', 'desc')->get();
 			}
 		}
-		$title = "Transaksi Penjualan";
 
-		return view('transaction.index', compact('transaction', 'title'));
+		$title = "Transaksi Penjualan";
+		return view('transaction.index', compact('title','transactions'));
 	}
 
 	public function create()
@@ -34,9 +35,9 @@ class TransactionController extends Controller
 
 	public function filelist()
 	{
+		$filelist = FileList::latest()->get();
 		$title = "Transaksi Penjualan";
-		$filelist = FileList::orderBy('created_at', 'desc')->get();
-		return view('transaction.filelist', compact('title', 'filelist'));
+		return view('transaction.filelist', compact('title','filelist'));
 	}
 
 	public function import(Request $request)
@@ -51,11 +52,7 @@ class TransactionController extends Controller
 			]
 		);
 
-		$file = $request->file('file');
-		$fileName = $file->getClientOriginalName();
-		$file->move('DataTransaction', $fileName);
-
-		Excel::import(new TransactionsImport, public_path('/DataTransaction/' . $fileName));
+		Excel::import(new TransactionsImport, $request->file('file'));
 
 		return redirect()->route('transaction.data', 'latest')->with('success', 'Import Berhasil');
 	}
@@ -64,5 +61,11 @@ class TransactionController extends Controller
 	{
 		$title = "Transaksi Penjualan";
 		return view('transaction.show', compact('transaction', 'title'));
+	}
+
+	public function dataTable($id)
+	{
+		
+
 	}
 }

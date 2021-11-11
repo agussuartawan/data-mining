@@ -26,6 +26,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required|min:3|max:50',
             'email' => 'required|email:rfc,dns|unique:users,email,' . $this->user->id,
+            'avatar' => 'image|file'
         ];
     }
 
@@ -37,7 +38,9 @@ class UpdateUserRequest extends FormRequest
             'name.max' => 'Nama harus terdiri dari maximal 50 huruf.',
             'email.required' => 'Email tidak boleh kosong.',
             'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah digunakan.'
+            'email.unique' => 'Email sudah digunakan.',
+            'avatar.image' => 'File harus berupa gambar.',
+            'avatar.file' => 'File harus berupa gambar.',
         ];
     }
 }

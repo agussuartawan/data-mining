@@ -35,7 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::get('transaction/{transaction}/show', 'TransactionController@show')
         ->name('transaction.show');
 
-
     #bundle
     Route::get('bundle/index', 'BundleController@index')
         ->name('bundle.index');
@@ -74,6 +73,15 @@ Route::middleware('auth')->group(function () {
 
     Route::put('user/{user}/edit', 'UserController@update')
         ->name('user.update');
+
+    Route::get('user/profile', 'UserController@profile')
+        ->name('user.profile');
+
+    Route::put('user/profile', 'UserController@profile_update')
+        ->name('user.profile.update');
+
+    Route::put('user/avatar/delete', 'UserController@avatar_delete')
+        ->name('delete.avatar');
 });
 
 Auth::routes();

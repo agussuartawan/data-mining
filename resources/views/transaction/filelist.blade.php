@@ -20,24 +20,23 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
-                            <thead class="thead-light">
+                        <table class="table align-items-center table-flush table-striped table-bordered rs-table-bordered" id="dataTableHover">
+                            <thead>
                                 <tr>
                                     <th width="10%">#</th>
                                     <th>Nama File</th>
                                     <th>Diupload sejak</th>
                                     <th>Aksi</th>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($filelist as $index => $filelist)
+                                @foreach ($filelist as $index => $file)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $filelist->file_name }}</td>
-                                        <td>{{ $filelist->created_at->diffForHumans() }}</td>
-                                        <td><a href="{{ route('transaction.data', $filelist->id) }}"
-                                                class="badge badge-info">lihat transaksi</a></td>
+                                        <td>{{ $index+1 }}</td>
+                                        <td>{{ $file->file_name }}</td>
+                                        <td>{{ Carbon\Carbon::parse($file->created_at)->diffForhumans() }}</td>
+                                        <td><a href="{{ route('transaction.data', $file->id) }}"
+                                            class="badge badge-info">lihat transaksi</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

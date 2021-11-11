@@ -27,8 +27,8 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush table-striped table-hover" id="dataTableHover">
-                            <thead class="thead-light">
+                        <table class="table align-items-center table-flush table-striped table-bordered rs-table-bordered" id="dataTableHover">
+                            <thead>
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>Nama Pengguna</th>
