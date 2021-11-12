@@ -18,32 +18,37 @@
                                     <label>Masukan nilai support</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="support" class="form-control @error('support') is-invalid @enderror" required="required"
+                                    <input type="text" name="support"
+                                        class="form-control @error('support') is-invalid @enderror" required="required"
                                         value="{{ old('support') }}">
-                                        @error('support')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                    @error('support')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                                 <div class="form-group input-group-sm">
                                     <label>Masukan nilai confidence</label>
                                     <i class="far fa-question-circle" rel="tooltip"
                                         title="Input dalam persen tanpa tanda (%)"></i>
-                                    <input type="text" name="confidence" class="form-control @error('confidence') is-invalid @enderror" required="required"
+                                    <input type="text" name="confidence"
+                                        class="form-control @error('confidence') is-invalid @enderror" required="required"
                                         value="{{ old('confidence') }}">
-                                        @error('confidence')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                    @error('confidence')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <label class="label">Pilih data transaksi</label>
                                 <div class="input-group input-group-sm mb-3">
-                                    <input type="text" class="form-control @error('filelist') text-danger is-invalid @enderror" id="file_list_name"
-                                        placeholder="{{ $errors->has('filelist') ? $errors->first('filelist') : 'Cari data transaksi'}}" readonly>
+                                    <input type="text"
+                                        class="form-control @error('filelist') text-danger is-invalid @enderror"
+                                        id="file_list_name"
+                                        placeholder="{{ $errors->has('filelist') ? $errors->first('filelist') : 'Cari data transaksi' }}"
+                                        readonly>
                                     <input type="text" name="filelist" id="file_list_id" readonly="" hidden="">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
@@ -91,7 +96,8 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush table-striped table-bordered rs-table-bordered" id="dataTableHover">
+                        <table class="table align-items-center table-flush table-striped table-bordered rs-table-bordered"
+                            id="dataTableHover">
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
@@ -109,7 +115,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $bundle->bundle_name }}</td>
-                                            <td>{{ Carbon/Carbon::parse($bundle->date)->isoFormat('DD MMMM Y') }}</td>
+                                            <td>{{ Carbon\Carbon::parse($bundle->date)->isoFormat('DD MMMM Y') }}</td>
                                             <td>{{ round($bundle->support_x_confidence * 100, 1) }}%</td>
                                             <td><a href="{{ route('bundle.modal-detail', $bundle->id) }}"
                                                     class="btn-detail badge badge-info"

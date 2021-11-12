@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +16,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Pak Trisno',
             'email' => 'owner@mail.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ]);
     }
