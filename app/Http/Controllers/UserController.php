@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use \App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Http\Request;
 use \App\Http\Requests\UpdateUserRequest;
 use Auth;
@@ -53,7 +54,7 @@ class UserController extends Controller
 
     public function profile_update(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $messages = [
             'name.required' => 'Nama tidak boleh kosong.',
             'name.min' => 'Nama harus terdiri dari minimal 3 huruf.',
@@ -67,14 +68,14 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
-            'email' => 'required|email:rfc,dns|unique:users,email,' . auth()->user()->id,
+            'email' => 'required|email:rfc,dns|unique:users,email,' . $user->id,
             'avatar' => 'image|file'
         ], $messages);
 
         if ($request->file('avatar')) {
             $file = $request->file('avatar');
             $file_name = 'avatar_' . md5($user->id) . '.' . $file->getClientOriginalExtension();
-            $file->move('avatar',$file_name);
+            $file->move('avatar', $file_name);
             $validatedData['avatar'] = $file_name;
             if ($user->avatar) {
                 File::delete('avatar/' . $user->avatar);
@@ -93,5 +94,13 @@ class UserController extends Controller
         File::delete('avatar/' . $user->avatar);
         $user->update(['avatar' => NULL]);
         return redirect()->route('user.profile')->with('success', 'Foto berhasil dihapus');
+    }
+
+    public function update_password(UpdatePasswordRequest $request)
+    {
+        $request->user()->update([
+            'password' => $request->get('password')
+        ]);
+        return redirect()->route('user.profile')->with('success', 'Password berhasil diubah');
     }
 }

@@ -21,25 +21,29 @@
                     <div class="text-center">
                         @if (auth()->user()->avatar)
                             <img src="{{ asset('') }}/avatar/{{ auth()->user()->avatar }}"
-                                class="img-thumbnail rounded-circle" style="max-width: 20%" id="avatar">                           
+                                class="img-thumbnail rounded-circle" style="max-width: 20%" id="avatar">
                         @else
                             <img src="https://ui-avatars.com/api/?background=ff1493&color=fff&size=128&rounded=true&name={{ auth()->user()->name }}"
-                            class="rounded-circle" style="max-width: 20%" id="avatar">
+                                class="rounded-circle" style="max-width: 20%" id="avatar">
                         @endif
                         <br>
                         <form action="{{ route('delete.avatar') }}" method="post" id="form-delete-avatar">
                             @csrf
                             @method('PUT')
-                            <a href="#" class="text-danger" onclick="document.getElementById('form-delete-avatar').submit(); return false;">Hapus foto</a>
+                            <a href="#" class="text-danger"
+                                onclick="document.getElementById('form-delete-avatar').submit(); return false;">Hapus
+                                foto</a>
                         </form>
                     </div>
-                    <form action="{{ route('user.profile.update', auth()->user()->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('user.profile.update', auth()->user()->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group row mt-3">
                             <label for="avatar" class="col-sm-2 col-form-label">Foto</label>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar" onchange="loadFile(event)">
+                                <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar"
+                                    name="avatar" onchange="loadFile(event)">
                                 @error('avatar')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -50,7 +54,8 @@
                         <div class="form-group row mt-3">
                             <label for="name" class="col-sm-2 col-form-label">Nama</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ auth()->user()->name }}" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                                    name="name" value="{{ auth()->user()->name }}" required>
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -61,7 +66,8 @@
                         <div class="form-group row">
                             <label for="email" class="col-sm-2 col-form-label">E-mail</label>
                             <div class="col-sm-10">
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ auth()->user()->email }}" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                                    name="email" value="{{ auth()->user()->email }}" required>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -70,9 +76,13 @@
                             </div>
                         </div>
                         <ul class="list-group">
-                            <li class="list-group-item">Diverifikasi pada {{ auth()->user()->email_verified_at ?? '-' }}</li>
-                            <li class="list-group-item">Bergabung sejak {{ Carbon\Carbon::parse(auth()->user()->created_at)->diffForhumans() }}</li>
-                            <li class="list-group-item">Terakhir diperbarui pada {{ Carbon\Carbon::parse(auth()->user()->updated_at)->diffForhumans() }}</li>
+                            <li class="list-group-item">Diverifikasi pada
+                                {{ Carbon\Carbon::parse(auth()->user()->email_verified_at)->diffForhumans() ?? '-' }}
+                            </li>
+                            <li class="list-group-item">Bergabung sejak
+                                {{ Carbon\Carbon::parse(auth()->user()->created_at)->diffForhumans() }}</li>
+                            <li class="list-group-item">Terakhir diperbarui pada
+                                {{ Carbon\Carbon::parse(auth()->user()->updated_at)->diffForhumans() }}</li>
                         </ul>
                         <button class="btn btn-block btn-success mt-3" type="submit">
                             <i class="fas fa-save"></i>
@@ -88,14 +98,16 @@
                     <h5 class="m-0 font-weight-bold text-primary">Ganti Password</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('user.store') }}" id="form">
+                    <form method="POST" action="{{ route('update.password') }}" id="form">
                         @csrf
+                        @method('PUT')
                         <div class="form-group">
                             <label for="old-password">Password Lama</label>
-                            <input id="old-password" type="password" class="form-control @error('password') is-invalid @enderror"
-                                name="email" required>
+                            <input id="old-password" type="password"
+                                class="form-control @error('current_password') is-invalid @enderror" name="current_password"
+                                required>
 
-                            @error('old-password')
+                            @error('current_password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -104,7 +116,7 @@
                         <div class="form-group">
                             <label for="password">Password Baru</label>
                             <input id="password" type="password"
-                                class="form-control @error('new_password') is-invalid @enderror" name="new_password" required>
+                                class="form-control @error('password') is-invalid @enderror" name="password" required>
 
                             @error('password')
                                 <span class="invalid-feedback" role="alert">

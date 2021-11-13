@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -82,6 +83,9 @@ Route::middleware('auth')->group(function () {
 
     Route::put('user/avatar/delete', 'UserController@avatar_delete')
         ->name('delete.avatar');
+
+    Route::put('user/password/update', 'UserController@update_password')
+        ->name('update.password');
 });
 
 Auth::routes();

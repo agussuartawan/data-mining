@@ -40,7 +40,7 @@ class StoreUserRequest extends FormRequest
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah digunakan.',
             'password.required' => 'Password tidak boleh kosong.',
-            'password.confirmed' => 'Mohon input ulang password'
+            'password.confirmed' => 'Mohon input ulang password.'
         ];
     }
 }

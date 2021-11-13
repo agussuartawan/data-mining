@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Pak Trisno',
             'email' => 'owner@mail.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'remember_token' => Str::random(10),
         ]);
     }
