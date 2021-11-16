@@ -361,7 +361,7 @@ class BundleController extends Controller
 
         // memasukan data itemset yang telah diseleksi kedalam tabel bundle
         $bundles = $this->insert_into_bundle(); // data produk bundel yang baru diproses
-        if(!$bundles){
+        if (!$bundles) {
             return redirect()->back()->with('error', 'Tidak ada aturan asosiasi yang memenuhi nilai minimum confidence, coba nilai minimum confidence yang lebih rendah');
         }
 
@@ -565,8 +565,10 @@ class BundleController extends Controller
                 $product_id['c'] = $laku->product_id_c;
                 $product_id['d'] = $tidak_laku->product_id;
 
+                $latest_id = Bundle::latest()->first()->id ?? 0;
+                $latest_id++;
                 $bundle = Bundle::create([
-                    'bundle_name' => 'Produk Bundel ' . Carbon::now(),
+                    'bundle_name' => 'Produk Bundel ' . $latest_id,
                     'date' => Carbon::today(),
                     'support' => $laku->support,
                     'confidence' => $laku->confidence,
