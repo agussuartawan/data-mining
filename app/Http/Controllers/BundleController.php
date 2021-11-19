@@ -378,7 +378,7 @@ class BundleController extends Controller
     {
         $date['from'] = $request->from;
         $date['to'] = $request->to;
-        $bundles = Bundle::whereBetween('date', $date)->orderBy('date', 'asc')->get();
+        $bundles = Bundle::with('product')->whereBetween('date', $date)->orderBy('date', 'asc')->get();
 
         $pdf = PDF::loadView('bundle.report_pdf', ['bundles' => $bundles, 'date' => $date])->setPaper('a4', 'landscape');
 
