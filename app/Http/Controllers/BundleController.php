@@ -565,7 +565,7 @@ class BundleController extends Controller
                 $product_id['c'] = $laku->product_id_c;
                 $product_id['d'] = $tidak_laku->product_id;
 
-                $latest_id = Bundle::latest()->first()->id ?? 0;
+                $latest_id = Bundle::latest('id')->first()->id ?? 0;
                 $latest_id++;
                 $bundle = Bundle::create([
                     'bundle_name' => 'Produk Bundel ' . $latest_id,

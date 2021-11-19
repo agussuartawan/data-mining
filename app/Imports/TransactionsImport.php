@@ -17,7 +17,7 @@ class TransactionsImport implements ToCollection
 	 */
 	public function collection(Collection $collection)
 	{
-		$latest_id = FileList::latest()->first()->id ?? 0;
+		$latest_id = FileList::latest('id')->first()->id ?? 0;
 		$latest_id++;
 		$fileName = "File Transaksi " . $latest_id;
 		$fileList = FileList::create([
