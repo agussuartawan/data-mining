@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
 
     # User
     Route::get('user/index', 'UserController@index')
-        ->name('user.index');a
+        ->name('user.index');
 
     Route::get('user/create', 'UserController@create')
         ->name('user.create');
