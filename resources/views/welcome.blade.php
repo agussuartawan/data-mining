@@ -117,34 +117,32 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $('#dataTableHover').DataTable({
-                searching: false,
-                paging: false,
-                info: false
+        $('#dataTableHover').DataTable({
+            searching: false,
+            paging: false,
+            info: false
+        });
+
+        $('body').on('click', '.btn-detail', function(event) {
+            event.preventDefault();
+
+            var me = $(this),
+                url = me.attr('href'),
+                title = me.attr('title');
+
+            $('.modal-detail-title').text(title);
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                beforeSend: function() {
+                    $('#cover-spin').show(0);
+                },
+                success: function(response) {
+                    $('.modal-detail-body').html(response);
+                    $('#cover-spin').hide(0);
+                }
             });
-
-            $('body').on('click', '.btn-detail', function(event) {
-                event.preventDefault();
-
-                var me = $(this),
-                    url = me.attr('href'),
-                    title = me.attr('title');
-
-                $('.modal-detail-title').text(title);
-                $.ajax({
-                    url: url,
-                    dataType: 'html',
-                    beforeSend: function() {
-                        $('#cover-spin').show(0);
-                    },
-                    success: function(response) {
-                        $('.modal-detail-body').html(response);
-                        $('#cover-spin').hide(0);
-                    }
-                });
-                $('#modal-detail').modal('show');
-            });
+            $('#modal-detail').modal('show');
         });
     </script>
 @endpush
