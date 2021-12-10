@@ -7,7 +7,6 @@ use App\Transaction;
 use App\FileList;
 use App\Imports\TransactionsImport;
 use Maatwebsite\Excel\Facades\Excel;
-use DataTable;
 
 class TransactionController extends Controller
 {
@@ -24,7 +23,7 @@ class TransactionController extends Controller
 		}
 
 		$title = "Transaksi Penjualan";
-		return view('transaction.index', compact('title','transactions'));
+		return view('transaction.index', compact('title', 'transactions'));
 	}
 
 	public function create()
@@ -37,7 +36,7 @@ class TransactionController extends Controller
 	{
 		$filelist = FileList::latest()->get();
 		$title = "Transaksi Penjualan";
-		return view('transaction.filelist', compact('title','filelist'));
+		return view('transaction.filelist', compact('title', 'filelist'));
 	}
 
 	public function import(Request $request)
@@ -61,11 +60,5 @@ class TransactionController extends Controller
 	{
 		$title = "Transaksi Penjualan";
 		return view('transaction.show', compact('transaction', 'title'));
-	}
-
-	public function dataTable($id)
-	{
-		
-
 	}
 }
